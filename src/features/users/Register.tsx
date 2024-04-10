@@ -200,13 +200,15 @@ const Register: React.FC = () => {
                 <PhoneInput
                   country="kg"
                   onlyCountries={['kg']}
-                  placeholder="Номер телефона"
                   containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
                   onChange={handlePhoneChange}
+                  defaultErrorMessage={getFieldError('phoneNumber')}
                   specialLabel="Номер телефона"
+                  disableDropdown
                   inputStyle={{ width: '100%' }}
                   inputProps={{
+                    name: 'phoneNumber',
                     required: true,
                   }}
                 />

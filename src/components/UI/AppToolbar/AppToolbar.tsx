@@ -1,7 +1,11 @@
 import { AppBar, Grid, Toolbar, Typography } from '@mui/material';
 import GuestMenu from './GuestMenu';
+import UserMenu from './UserMenu';
+import { useAppSelector } from '../../../app/hooks';
+import { selectUser } from '../../../features/users/usersSlice';
 
 const AppToolbar = () => {
+  const user = useAppSelector(selectUser);
   return (
     <AppBar position="sticky" sx={{ mb: 2 }}>
       <Toolbar>
@@ -12,7 +16,7 @@ const AppToolbar = () => {
           <Typography variant="body1" component="div" sx={{ flexGrow: 1 }}>
             Тут телефоны для связи
           </Typography>
-          <GuestMenu />
+          {user ? <UserMenu user={user} /> : <GuestMenu />}
         </Grid>
       </Toolbar>
     </AppBar>

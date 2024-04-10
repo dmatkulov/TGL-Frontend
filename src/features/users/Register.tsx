@@ -199,6 +199,7 @@ const Register: React.FC = () => {
               <Grid item xs={12}>
                 <PhoneInput
                   country="kg"
+                  onlyCountries={['kg']}
                   placeholder="Номер телефона"
                   containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}

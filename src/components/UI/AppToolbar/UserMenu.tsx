@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Avatar,
   CircularProgress,
   IconButton,
   Menu,
@@ -8,12 +7,13 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { User } from '../../../types';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { logOut } from '../../../features/users/usersThunks';
 import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { User } from '../../../types';
 
 interface Props {
   user: User;
@@ -38,15 +38,15 @@ const UserMenu: React.FC<Props> = ({ user }) => {
     <>
       {loading && <CircularProgress />}
       <Stack direction="row" alignItems="center">
-        <Typography color="text.primary">
+        <Typography color="inherit" onClick={handleClick}>
           {user.firstName} {user.lastName}
         </Typography>
         <IconButton
-          onMouseOver={handleClick}
+          onClick={handleClick}
           sx={{ display: 'flex', gap: 1 }}
           disableRipple
         >
-          <Avatar alt={user.firstName} sx={{ width: 24, height: 24 }} />
+          <AccountCircleIcon sx={{ width: 24, height: 24 }} />
         </IconButton>
       </Stack>
       <Menu

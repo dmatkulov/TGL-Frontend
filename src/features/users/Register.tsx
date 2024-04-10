@@ -111,7 +111,7 @@ const Register: React.FC = () => {
           sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
-            <Grid container item xs={6} direction="row" spacing={2}>
+            <Grid container item xs={12} sm={6} direction="row" spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -167,7 +167,7 @@ const Register: React.FC = () => {
               </Grid>
             </Grid>
 
-            <Grid container item xs={6} direction="row" spacing={2}>
+            <Grid container item xs={12} sm={6} direction="row" spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth

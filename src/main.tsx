@@ -5,14 +5,17 @@ import { RouterProvider } from 'react-router-dom';
 
 import { addInterceptors } from './utils/axiosApi';
 import { router } from './router/Router';
-import { store } from './app/store';
+import { persistor, store } from './app/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 addInterceptors(store);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <PersistGate persistor={persistor}>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </PersistGate>
   </React.StrictMode>,
 );

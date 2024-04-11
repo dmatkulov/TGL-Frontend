@@ -10,6 +10,7 @@ import Orders from '../features/users/containers/Orders';
 import Tracking from '../features/users/containers/Tracking';
 import Addresses from '../features/users/containers/Addresses';
 import OrdersHistory from '../features/users/containers/OrdersHistory';
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
@@ -30,23 +31,29 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: <UserPage />,
+        element: <ProtectedRoute />,
         children: [
           {
-            path: appRoutes.track,
-            element: <Tracking />,
-          },
-          {
-            path: appRoutes.orders,
-            element: <Orders />,
-          },
-          {
-            path: appRoutes.address,
-            element: <Addresses />,
-          },
-          {
-            path: appRoutes.history,
-            element: <OrdersHistory />,
+            path: appRoutes.profile,
+            element: <UserPage />,
+            children: [
+              {
+                path: appRoutes.tracking,
+                element: <Tracking />,
+              },
+              {
+                path: appRoutes.orders,
+                element: <Orders />,
+              },
+              {
+                path: appRoutes.address,
+                element: <Addresses />,
+              },
+              {
+                path: appRoutes.history,
+                element: <OrdersHistory />,
+              },
+            ],
           },
         ],
       },

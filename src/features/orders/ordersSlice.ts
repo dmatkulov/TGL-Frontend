@@ -29,9 +29,7 @@ export const ordersSlice = createSlice({
 });
 
 export const ordersReducer = ordersSlice.reducer;
-
 export const { toggleModal } = ordersSlice.actions;
-
 export const selectOrders = (state: RootState) => state.orders.items;
 export const selectOrdersLoading = (state: RootState) =>
   state.orders.fetchLoading;

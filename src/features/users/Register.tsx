@@ -24,8 +24,8 @@ import {
 import { register } from './usersThunks';
 
 import { RegisterMutation } from '../../types/types';
-import { appRoutes } from '../../utils/constants';
-import { regions } from '../../utils/constants';
+import { appRoutes, regions } from '../../utils/constants';
+import OrdersTable from '../orders/components/OrdersTable';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -94,6 +94,7 @@ const Register: React.FC = () => {
 
   return (
     <Container component="main">
+      <OrdersTable />
       <Box
         sx={{
           marginTop: 8,

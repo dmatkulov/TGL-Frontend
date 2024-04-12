@@ -9,10 +9,10 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { ProfileMutation } from '../../../types';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import { regions } from '../../../utils/constants';
+import { ProfileMutation } from '../../../types/typeProfile';
 
 const Profile = () => {
   const user = useAppSelector(selectUser);

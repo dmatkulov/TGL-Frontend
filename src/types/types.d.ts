@@ -11,16 +11,6 @@ export interface RegisterMutation {
   address: string;
 }
 
-export interface ProfileMutation {
-  email: string;
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  region: string;
-  settlement: string;
-  address: string;
-}
-
 export interface UserNav {
   id: number;
   name: string;

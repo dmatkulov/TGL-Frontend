@@ -23,7 +23,7 @@ import {
 } from './usersSlice';
 import { register } from './usersThunks';
 
-import { RegisterMutation } from '../../types';
+import { RegisterMutation } from '../../types/types';
 import { appRoutes } from '../../utils/constants';
 import { regions } from '../../utils/constants';
 

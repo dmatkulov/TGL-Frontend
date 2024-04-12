@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: <ProtectedRoute />,
+        // element: <ProtectedRoute />,
         children: [
           {
             path: appRoutes.profile,

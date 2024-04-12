@@ -1,4 +1,4 @@
-import { UserNav } from '../types';
+import { UserNav } from '../types/types';
 
 export const apiURL = 'http://localhost:8000';
 

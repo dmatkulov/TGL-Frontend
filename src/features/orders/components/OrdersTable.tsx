@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -9,10 +10,16 @@ import {
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
 import OrderModal from './OrderModal';
+import { useAppSelector } from '../../../app/hooks';
+import { selectOrdersLoading } from '../ordersSlice';
 
 const OrdersTable = () => {
+  const loading = useAppSelector(selectOrdersLoading);
+
   return (
     <>
+      <OrderModal />
+      {loading && <CircularProgress />}
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -29,7 +36,6 @@ const OrdersTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <OrderModal />
     </>
   );
 };

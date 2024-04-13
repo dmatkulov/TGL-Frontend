@@ -7,7 +7,12 @@ export interface Order {
   price: number;
 }
 
-export interface OrderAddress {
+export interface ShipmentAddress {
   address: string;
   date: Dayjs | null;
+}
+
+export interface ShipmentMutation {
+  address: string;
+  date: string;
 }

@@ -6,12 +6,13 @@ import {
   selectOrdersDeliveryLoading,
   toggleModal,
 } from '../ordersSlice';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { OrderAddress } from '../../../types/typeOrder';
+import { ShipmentAddress, ShipmentMutation } from '../../../types/typeOrder';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ru';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,31 +24,29 @@ const style = {
   borderRadius: 3,
   p: 4,
 };
+
+const initialState: ShipmentAddress = {
+  address: '',
+  date: dayjs(new Date()),
+};
 const OrderModal = () => {
   const dispatch = useAppDispatch();
   const open = useAppSelector(selectOrderModal);
   const setDelivery = useAppSelector(selectOrdersDeliveryLoading);
 
-  const [state, setState] = useState<OrderAddress>({
-    address: '',
-    date: dayjs(new Date()),
-  });
-
-  const onFormSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const stateMutation = {
-      state: state.address,
-      date: state.date?.format('DD-MM-YYYY'),
-    };
-
-    console.log(stateMutation);
-  };
+  const [state, setState] = useState<ShipmentAddress>(initialState);
+  const [isFilled, setIsFilled] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     setState((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const toggleResult = () => {
+    if (state.address.length > 0) {
+      setIsFilled(!isFilled);
+    }
   };
 
   const handleDateChange = (newValue: dayjs.Dayjs | null) => {
@@ -59,7 +58,25 @@ const OrderModal = () => {
 
   const handleClose = () => {
     dispatch(toggleModal(false));
+    setState(initialState);
+    setIsFilled(false);
   };
+
+  const dateFormatted = state.date
+    ? state.date.locale('ru').format('D MMMM YYYY')
+    : dayjs(new Date()).locale('ru').format('D MMMM YYYY');
+
+  const onFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const stateMutation: ShipmentMutation = {
+      address: state.address,
+      date: dateFormatted,
+    };
+
+    console.log(stateMutation);
+  };
+
   return (
     <>
       <Modal
@@ -69,42 +86,76 @@ const OrderModal = () => {
         aria-describedby="modal-modal-description"
       >
         <Box component="form" sx={style} onSubmit={onFormSubmit}>
-          <Typography gutterBottom variant="h5" component="h2" mb={3}>
-            Укажите адрес и время доставки
-          </Typography>
+          {!isFilled && (
+            <>
+              <Typography gutterBottom variant="h5" component="h2" mb={3}>
+                Укажите адрес и время доставки
+              </Typography>
 
-          <Grid container alignItems="center" justifyContent="space-between">
-            <Grid item xs={7} mb={2} mr={2} flexGrow={1}>
-              <TextField
-                fullWidth
-                required
-                name="address"
-                label="Адрес"
-                type="text"
-                value={state.address}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={4} mb={3}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['DatePicker']}>
-                  <DatePicker
-                    label="Дата доставки"
-                    name="date"
-                    defaultValue={dayjs(new Date())}
-                    value={state.date}
-                    format="DD-MM-YYYY"
-                    onChange={handleDateChange}
+              <Grid container mb={5}>
+                <Grid item xs={12} mb={2} flexGrow={1}>
+                  <TextField
+                    fullWidth
+                    required
+                    variant="standard"
+                    name="address"
+                    label="Адрес"
+                    type="text"
+                    value={state.address}
+                    onChange={handleChange}
                   />
-                </DemoContainer>
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" disabled={setDelivery}>
-              Оформить доставку
-            </Button>
-          </Grid>
+                </Grid>
+                <Grid item xs={12} mb={3}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Дата доставки"
+                      name="date"
+                      value={state.date}
+                      onChange={handleDateChange}
+                    />
+                  </LocalizationProvider>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    startIcon={<CheckCircleIcon />}
+                    color="success"
+                    onClick={toggleResult}
+                  >
+                    Подтвердить
+                  </Button>
+                </Grid>
+              </Grid>
+            </>
+          )}
+
+          {isFilled && (
+            <>
+              <Grid item xs={12} mb={3}>
+                <Typography gutterBottom variant="h5" component="h2" mb={3}>
+                  Пожалуйста, проверьте введенные данные перед отправкой:
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  <strong>Адрес:</strong> {state.address}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  <strong>Дата доставки:</strong> {dateFormatted}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} display="flex" gap={2}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={setDelivery}
+                >
+                  Оформить доставку
+                </Button>
+                <Button variant="text" onClick={toggleResult}>
+                  Редактировать
+                </Button>
+              </Grid>
+            </>
+          )}
         </Box>
       </Modal>
     </>

@@ -9,10 +9,10 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { ShipmentAddress, ShipmentMutation } from '../../../types/typeOrder';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
+import { ShipmentAddress, ShipmentMutation } from '../../../types/typeOrder';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -106,7 +106,10 @@ const OrderModal = () => {
                   />
                 </Grid>
                 <Grid item xs={12} mb={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <LocalizationProvider
+                    dateAdapter={AdapterDayjs}
+                    adapterLocale={'ru'}
+                  >
                     <DatePicker
                       label="Дата доставки"
                       name="date"

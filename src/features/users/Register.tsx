@@ -24,15 +24,17 @@ import {
 import { register } from './usersThunks';
 
 import { RegisterMutation } from '../../types/types';
-import { appRoutes } from '../../utils/constants';
-import { regions } from '../../utils/constants';
+import { appRoutes, regions } from '../../utils/constants';
+import { selectPups } from '../pups/pupsSlice';
+import { fetchPups } from '../pups/pupsThunks';
 
 const initialState: RegisterMutation = {
   email: '',
+  password: '',
+  pupID: '',
   firstName: '',
   lastName: '',
   middleName: '',
-  password: '',
   phoneNumber: '',
   region: '',
   settlement: '',
@@ -45,6 +47,7 @@ const Register: React.FC = () => {
   const error = useAppSelector(selectRegisterError);
 
   const loading = useAppSelector(selectRegisterLoading);
+  const pups = useAppSelector(selectPups);
 
   const [state, setState] = useState<RegisterMutation>(initialState);
 
@@ -78,12 +81,14 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     dispatch(setRegisterError(null));
+    dispatch(fetchPups());
   }, [dispatch]);
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
+      console.log({ register: state });
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);
@@ -143,7 +148,6 @@ const Register: React.FC = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  required
                   name="middleName"
                   label="Отчество"
                   type="text"
@@ -199,6 +203,7 @@ const Register: React.FC = () => {
               <Grid item xs={12}>
                 <PhoneInput
                   country="kg"
+                  masks={{ kg: '(...) ..-..-..' }}
                   onlyCountries={['kg']}
                   containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
@@ -264,6 +269,30 @@ const Register: React.FC = () => {
                   error={Boolean(getFieldError('address'))}
                   helperText={getFieldError('address')}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  select
+                  required
+                  name="pupID"
+                  label="ПВЗ"
+                  type="text"
+                  value={state.pupID}
+                  autoComplete="new-pupID"
+                  onChange={inputChangeHandler}
+                  error={Boolean(getFieldError('pupID'))}
+                  helperText={getFieldError('pupID')}
+                >
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                  {pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      {pup.region} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2" fontSize="small">

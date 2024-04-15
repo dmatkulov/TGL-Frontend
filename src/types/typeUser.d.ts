@@ -1,6 +1,7 @@
 export interface User {
   _id: string;
   email: string;
+  pupID: string;
   marketId: string;
   firstName: string;
   lastName: string;

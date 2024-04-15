@@ -1,10 +1,11 @@
 // Form mutations
 export interface RegisterMutation {
   email: string;
+  password: string;
+  pupID: string;
   firstName: string;
   lastName: string;
   middleName: string;
-  password: string;
   phoneNumber: string;
   region: string;
   settlement: string;

@@ -24,8 +24,7 @@ import {
 import { register } from './usersThunks';
 
 import { RegisterMutation } from '../../types/types';
-import { appRoutes } from '../../utils/constants';
-import { regions } from '../../utils/constants';
+import { appRoutes, regions } from '../../utils/constants';
 
 const initialState: RegisterMutation = {
   email: '',

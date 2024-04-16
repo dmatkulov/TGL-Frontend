@@ -9,6 +9,7 @@ import {
   persistStore,
 } from 'redux-persist';
 import { PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
+import { pupsReducer } from '../features/pups/pupsSlice';
 import { ordersReducer } from '../features/orders/ordersSlice';
 
 const usersPersistConfig = {
@@ -18,6 +19,7 @@ const usersPersistConfig = {
 
 const rootReducer = combineReducers({
   users: persistReducer(usersPersistConfig, usersReducer),
+  pups: pupsReducer,
   orders: ordersReducer,
 });
 

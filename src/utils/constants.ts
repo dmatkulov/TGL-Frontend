@@ -5,6 +5,7 @@ export const apiURL = 'http://localhost:8000';
 export const serverRoute = {
   users: '/users',
   sessions: '/users/sessions',
+  pups: '/pups',
 };
 
 export const appRoutes = {
@@ -49,7 +50,7 @@ export const regions = [
   },
   {
     id: 2,
-    name: 'Ыссык-Куль',
+    name: 'Иссык-Куль',
   },
   {
     id: 3,
@@ -69,6 +70,6 @@ export const regions = [
   },
   {
     id: 7,
-    name: 'Джалалабад',
+    name: 'Джалал-Абад',
   },
 ];

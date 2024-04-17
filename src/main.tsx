@@ -5,8 +5,8 @@ import { RouterProvider } from 'react-router-dom';
 
 import { addInterceptors } from './utils/axiosApi';
 import { router } from './router/Router';
-import {persistor, store} from './app/store';
-import {PersistGate} from 'redux-persist/integration/react';
+import { persistor, store } from './app/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 addInterceptors(store);
 

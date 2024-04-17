@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Box,
@@ -11,14 +11,14 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 
-import { login } from './usersThunk';
+import { login } from './usersThunks';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   selectLoginError,
   selectLoginLoading,
   setLoginError,
 } from './usersSlice';
-import { LoginMutation } from '../../types';
+import { LoginMutation } from '../../types/types';
 import { appRoutes } from '../../utils/constants';
 
 const Login: React.FC = () => {

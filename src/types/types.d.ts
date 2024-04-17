@@ -1,27 +1,11 @@
-// Models
-
-export interface User {
-  _id: string;
-  email: string;
-  marketId: string;
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  role: string;
-  token: string;
-  phoneNumber: string;
-  region: string;
-  settlement: string;
-  address: string;
-}
-
 // Form mutations
 export interface RegisterMutation {
   email: string;
+  password: string;
+  pupID: string;
   firstName: string;
   lastName: string;
   middleName: string;
-  password: string;
   phoneNumber: string;
   region: string;
   settlement: string;

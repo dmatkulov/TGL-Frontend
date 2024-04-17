@@ -59,12 +59,8 @@ const Profile = () => {
       {/* Modal */}
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogTitle>Редактирование профиля</DialogTitle>
-        <DialogContent
-          sx={{
-            mt: '20px',
-          }}
-        >
-          <form autoComplete="off">
+        <DialogContent>
+          <form autoComplete="off" style={{ paddingTop: '10px' }}>
             {/*onsubmit */}
             <Grid container direction="column" spacing={2}>
               <Grid item xs={12} container gap={'10px'}>

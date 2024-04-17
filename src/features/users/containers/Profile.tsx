@@ -13,6 +13,7 @@ import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import { regions } from '../../../utils/constants';
 import { ProfileMutation } from '../../../types/typeProfile';
+import Warehouses from '../../warehouses/Warehouses';
 
 const Profile = () => {
   const user = useAppSelector(selectUser);
@@ -45,15 +46,20 @@ const Profile = () => {
 
   return (
     <>
-      <Grid container direction="column" spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h2">ХардИмя ХардФамилия</Typography>
-          <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
+      <Grid container spacing={2} flexWrap="nowrap">
+        <Grid container direction="column" item>
+          <Grid item>
+            <Typography variant="h2">ХардИмя ХардФамилия</Typography>
+            <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" onClick={handleClickOpen}>
+              Редактировать профиль
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={handleClickOpen}>
-            Редактировать профиль
-          </Button>
+        <Grid item>
+          <Warehouses />
         </Grid>
       </Grid>
       {/* Modal */}

@@ -30,23 +30,28 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: <UserPage />,
         children: [
           {
-            path: appRoutes.track,
-            element: <Tracking />,
-          },
-          {
-            path: appRoutes.orders,
-            element: <Orders />,
-          },
-          {
-            path: appRoutes.address,
-            element: <Addresses />,
-          },
-          {
-            path: appRoutes.history,
-            element: <OrdersHistory />,
+            path: appRoutes.profile,
+            element: <UserPage/>,
+            children: [
+              {
+                path: appRoutes.tracking,
+                element: <Tracking/>,
+              },
+              {
+                path: appRoutes.orders,
+                element: <Orders/>,
+              },
+              {
+                path: appRoutes.address,
+                element: <Addresses/>,
+              },
+              {
+                path: appRoutes.history,
+                element: <OrdersHistory/>,
+              },
+            ],
           },
         ],
       },

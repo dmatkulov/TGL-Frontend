@@ -20,7 +20,7 @@ export interface RegisterMutation {
   email: string;
   firstName: string;
   lastName: string;
-  middleName?: string;
+  middleName: string;
   password: string;
   phoneNumber: string;
   region: string;

@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogContent,
@@ -14,6 +13,7 @@ import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import { regions } from '../../../utils/constants';
 import { ProfileMutation } from '../../../types/typeProfile';
+import Warehouses from '../../warehouses/Warehouses';
 
 const Profile = () => {
   const user = useAppSelector(selectUser);
@@ -59,9 +59,7 @@ const Profile = () => {
           </Grid>
         </Grid>
         <Grid item>
-          <Box>
-            Code gonna be here
-          </Box>
+          <Warehouses />
         </Grid>
       </Grid>
       {/* Modal */}

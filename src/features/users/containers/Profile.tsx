@@ -46,13 +46,13 @@ const Profile = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item>
-          <Grid item xs={12}>
+      <Grid container spacing={2} flexWrap="nowrap">
+        <Grid container direction="column" item>
+          <Grid item>
             <Typography variant="h2">ХардИмя ХардФамилия</Typography>
             <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item>
             <Button variant="contained" onClick={handleClickOpen}>
               Редактировать профиль
             </Button>

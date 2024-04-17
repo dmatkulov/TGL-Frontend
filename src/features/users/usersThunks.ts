@@ -5,6 +5,7 @@ import {
   RegisterMutation,
   RegisterResponse,
   ValidationError,
+  WarehouseResponse,
 } from '../../types/types';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';

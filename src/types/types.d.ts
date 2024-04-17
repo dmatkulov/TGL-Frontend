@@ -44,3 +44,11 @@ export interface ValidationError {
 export interface GlobalError {
   error: string;
 }
+
+// Warehouses
+
+export interface WarehouseResponse {
+  name: string;
+  address: string;
+  phoneNumber: string;
+}

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogContent,
@@ -45,15 +46,22 @@ const Profile = () => {
 
   return (
     <>
-      <Grid container direction="column" spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h2">ХардИмя ХардФамилия</Typography>
-          <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
+      <Grid container spacing={2}>
+        <Grid item>
+          <Grid item xs={12}>
+            <Typography variant="h2">ХардИмя ХардФамилия</Typography>
+            <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Button variant="contained" onClick={handleClickOpen}>
+              Редактировать профиль
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={handleClickOpen}>
-            Редактировать профиль
-          </Button>
+        <Grid item>
+          <Box>
+            Code gonna be here
+          </Box>
         </Grid>
       </Grid>
       {/* Modal */}

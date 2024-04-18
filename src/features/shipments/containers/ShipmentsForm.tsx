@@ -1,4 +1,4 @@
-import {Box, Grid, MenuItem, Select, TextField} from '@mui/material';
+import {Box, Button, Grid, TextField} from '@mui/material';
 
 const ShipmentsForm = () => {
   return (
@@ -18,31 +18,47 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="trackNumber"
-              label="номер трека"
+              label="Номер трека"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               fullWidth
               required
-              name="pup"
-              label="ПВЗ"
+              name="weight"
+              label="Масса"
+              type="number"
             />
           </Grid>
           <Grid item xs={12}>
-            <Select
-              required
+            <TextField
               fullWidth
-            >
-              <MenuItem>
-                Отправлен
-              </MenuItem>
-              <MenuItem>
-                В китае
-              </MenuItem>
-            </Select>
+              required
+              name="height"
+              label="Высота"
+              type="number"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              required
+              name="length"
+              label="Длина"
+              type="number"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              required
+              name="width"
+              label="Ширина"
+              type="number"
+            />
           </Grid>
         </Grid>
+        <Button type="submit" sx={{ mt: 3 }}>Add shipment</Button>
       </Box>
     </>
   );

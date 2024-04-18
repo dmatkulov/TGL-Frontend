@@ -11,6 +11,7 @@ import {
 import { PURGE, REGISTER, REHYDRATE } from 'redux-persist/es/constants';
 import { pupsReducer } from '../features/pups/pupsSlice';
 import { ordersReducer } from '../features/orders/ordersSlice';
+import { warehousesReducer } from '../features/warehouses/warehousesSlice';
 
 const usersPersistConfig = {
   key: 'techGear:users',
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   users: persistReducer(usersPersistConfig, usersReducer),
   pups: pupsReducer,
   orders: ordersReducer,
+  warehouses: warehousesReducer,
 });
 
 export const store = configureStore({

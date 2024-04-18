@@ -11,6 +11,7 @@ import Tracking from '../features/users/containers/Tracking';
 import Addresses from '../features/users/containers/Addresses';
 import OrdersHistory from '../features/users/containers/OrdersHistory';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
+import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 
 export const router = createBrowserRouter([
   {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
             element: <OrdersHistory />,
           },
         ],
+      },
+      {
+        path: appRoutes.warehouse,
+        element: <WarehouseForm />,
       },
       {
         path: appRoutes.notFound,

@@ -64,6 +64,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
           horizontal: 'right',
         }}
       >
+        {user.role === "admin" || user.role === "super" || user.role === "manager" && (
+          <MenuItem onClick={() => navigate(appRoutes.profileAdmin)}>Профиль</MenuItem>
+        )}
         <MenuItem onClick={() => navigate(appRoutes.profile)}>Профиль</MenuItem>
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>
       </Menu>

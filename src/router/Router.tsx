@@ -11,6 +11,9 @@ import Tracking from '../features/users/containers/Tracking';
 import Addresses from '../features/users/containers/Addresses';
 import OrdersHistory from '../features/users/containers/OrdersHistory';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
+import AdminPage from '../features/users/AdminPage';
+import Statistics from '../features/users/containers/Statistics';
+import Staff from '../features/users/containers/Staff';
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +55,26 @@ export const router = createBrowserRouter([
           {
             path: appRoutes.history,
             element: <OrdersHistory />,
+          },
+        ],
+      },
+      {
+        path: appRoutes.profileAdmin,
+        element: (
+          <AdminPage />
+        ),
+        children: [
+          {
+            path: appRoutes.statistics,
+            element: <Statistics />,
+          },
+          {
+            path: appRoutes.pups,
+            element: <Addresses />,
+          },
+          {
+            path: appRoutes.staff,
+            element: <Staff />,
           },
         ],
       },

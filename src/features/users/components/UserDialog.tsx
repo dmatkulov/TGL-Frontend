@@ -1,7 +1,16 @@
-import {Button, Dialog, DialogContent, DialogTitle, Grid, MenuItem, TextField} from '@mui/material';
-import {regions} from '../../../utils/constants';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 import React from 'react';
-import {ProfileMutation} from '../../../types/typeProfile';
+import { ProfileMutation } from '../../../types/typeProfile';
+import { useAppSelector } from '../../../app/hooks';
+import { regionsState } from '../../regions/regionsSlice';
 
 interface Props {
   state: ProfileMutation;
@@ -11,7 +20,14 @@ interface Props {
   inputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
 }
 
-const UserDialog: React.FC<Props> = ({ state, open, handleClose, handleUpdateProfile, inputChangeHandler }) => {
+const UserDialog: React.FC<Props> = ({
+  state,
+  open,
+  handleClose,
+  handleUpdateProfile,
+  inputChangeHandler,
+}) => {
+  const regions = useAppSelector(regionsState);
   return (
     <>
       {/* Modal */}
@@ -80,7 +96,7 @@ const UserDialog: React.FC<Props> = ({ state, open, handleClose, handleUpdatePro
                     Выберите регион
                   </MenuItem>
                   {regions.map((region) => (
-                    <MenuItem key={region.id} value={region.name}>
+                    <MenuItem key={region._id} value={region.name}>
                       {region.name}
                     </MenuItem>
                   ))}

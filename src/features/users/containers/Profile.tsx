@@ -1,17 +1,15 @@
 import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import { ProfileMutation } from '../../../types/typeProfile';
 import Warehouses from '../../warehouses/Warehouses';
-import {update} from '../usersThunks';
+import { update } from '../usersThunks';
 import UserDialog from '../components/UserDialog';
 
 const Profile = () => {
   const dispatch = useAppDispatch();
-
   const user = useAppSelector(selectUser);
-  const regions = useAppSelector(regionsState);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
     email: user?.email || '',
@@ -51,8 +49,12 @@ const Profile = () => {
       <Grid container spacing={2} flexWrap="nowrap">
         <Grid container direction="column" item>
           <Grid item>
-            <Typography variant="h2">{ user?.firstName } { user?.lastName }</Typography>
-            <Typography variant="h4">Ваш персональный код: { user?.marketId }</Typography>
+            <Typography variant="h2">
+              {user?.firstName} {user?.lastName}
+            </Typography>
+            <Typography variant="h4">
+              Ваш персональный код: {user?.marketId}
+            </Typography>
           </Grid>
           <Grid item>
             <Button variant="contained" onClick={handleClickOpen}>
@@ -66,11 +68,11 @@ const Profile = () => {
       </Grid>
 
       <UserDialog
-        state={ state }
-        open={ open }
-        handleClose={ handleClose }
-        handleUpdateProfile={ handleUpdateProfile }
-        inputChangeHandler={ inputChangeHandler }
+        state={state}
+        open={open}
+        handleClose={handleClose}
+        handleUpdateProfile={handleUpdateProfile}
+        inputChangeHandler={inputChangeHandler}
       />
     </>
   );

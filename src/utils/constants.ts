@@ -6,6 +6,7 @@ export const serverRoute = {
   users: '/users',
   sessions: '/users/sessions',
   pups: '/pups',
+  prices: '/price',
 };
 
 export const appRoutes = {
@@ -22,6 +23,7 @@ export const appRoutes = {
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',
   staff: '/admin-profile/staff',
+  warehouse: '/profile/warehouseForm',
 };
 
 export const userLinks: UserNav[] = [

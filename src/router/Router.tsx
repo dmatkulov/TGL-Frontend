@@ -14,6 +14,7 @@ import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import AdminPage from '../features/users/AdminPage';
 import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
+import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +78,8 @@ export const router = createBrowserRouter([
             element: <Staff />,
           },
         ],
+        path: appRoutes.warehouse,
+        element: <WarehouseForm />,
       },
       {
         path: appRoutes.notFound,

@@ -65,7 +65,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         }}
       >
         <MenuItem onClick={() => navigate(appRoutes.profile)}>Профиль</MenuItem>
-        <MenuItem onClick={() => navigate(appRoutes.warehouse)}>Добавить склад</MenuItem>
+        <MenuItem onClick={() => navigate(appRoutes.warehouse)}>
+          Добавить склад
+        </MenuItem>
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>
       </Menu>
     </>

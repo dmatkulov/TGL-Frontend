@@ -44,34 +44,3 @@ export const userLinks: UserNav[] = [
     navLink: appRoutes.history,
   },
 ];
-
-export const regions = [
-  {
-    id: 1,
-    name: 'Чуй',
-  },
-  {
-    id: 2,
-    name: 'Иссык-Куль',
-  },
-  {
-    id: 3,
-    name: 'Ош',
-  },
-  {
-    id: 4,
-    name: 'Талас',
-  },
-  {
-    id: 5,
-    name: 'Баткен',
-  },
-  {
-    id: 6,
-    name: 'Нарын',
-  },
-  {
-    id: 7,
-    name: 'Джалал-Абад',
-  },
-];

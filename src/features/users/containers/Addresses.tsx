@@ -5,7 +5,7 @@ const Addresses = () => {
   return (
     <>
       <PageTitle title="Адреса складов" />
-      <PupList/>
+      <PupList />
     </>
   );
 };

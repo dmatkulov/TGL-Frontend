@@ -6,6 +6,7 @@ export const serverRoute = {
   users: '/users',
   sessions: '/users/sessions',
   pups: '/pups',
+  prices: '/price',
 };
 
 export const appRoutes = {

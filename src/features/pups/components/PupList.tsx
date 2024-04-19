@@ -1,12 +1,7 @@
-import { selectPups, selectPupsLoading } from '../pupsSlice';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { useEffect } from 'react';
-import { fetchPups } from '../pupsThunks';
-import { CircularProgress, Stack } from '@mui/material';
-import {selectPupCreating, selectPups, selectPupsLoading} from '../pupsSlice';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import React, {useEffect, useState} from 'react';
-import {createPup, fetchPups} from '../pupsThunks';
+import { selectPupCreating, selectPups, selectPupsLoading } from '../pupsSlice';
+import { createPup, fetchPups } from '../pupsThunks';
 import {
   Button,
   CircularProgress,
@@ -16,16 +11,17 @@ import {
   Grid,
   MenuItem,
   Stack,
-  TextField
+  TextField,
 } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
-import {PupMutation} from "../../../types/typePup";
-import {appRoutes, regions} from '../../../utils/constants';
-import {useNavigate} from 'react-router-dom';
-import {selectUser} from '../../users/usersSlice';
-import {LoadingButton} from '@mui/lab';
+import { PupMutation } from '../../../types/typePup';
+import { appRoutes } from '../../../utils/constants';
+import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../../users/usersSlice';
+import { LoadingButton } from '@mui/lab';
+import { regionsState } from '../../regions/regionsSlice';
 
 const initialState: PupMutation = {
   region: '',
@@ -36,7 +32,8 @@ const initialState: PupMutation = {
 const PupList = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectPupsLoading);
-  const pups  = useAppSelector(selectPups);
+  const pups = useAppSelector(selectPups);
+  const regions = useAppSelector(regionsState);
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -72,16 +69,17 @@ const PupList = () => {
     setState(initialState);
   };
 
-
   return (
     <>
       {loading && <CircularProgress />}
       <Stack>
-        {user?.role === 'admin' || user?.role === 'manager' || user?.role === 'super' && (
-          <Grid item>
-            <Button onClick={handleClickOpen}>Добавить склад</Button>
-          </Grid>
-        )}
+        {user?.role === 'admin' ||
+          user?.role === 'manager' ||
+          (user?.role === 'super' && (
+            <Grid item>
+              <Button onClick={handleClickOpen}>Добавить склад</Button>
+            </Grid>
+          ))}
         {pups.map((pup) => (
           <PupItem key={pup._id} pupItem={pup} />
         ))}
@@ -95,26 +93,26 @@ const PupList = () => {
             <form autoComplete="off" onSubmit={submitFormHandler}>
               <Grid container direction="column" spacing={2}>
                 <Grid item xs={12} container gap={'10px'}>
-                    <TextField
-                      fullWidth
-                      select
-                      required
-                      name="region"
-                      label="Регион"
-                      type="text"
-                      value={state.region}
-                      autoComplete="new-region"
-                      onChange={inputChangeHandler}
-                    >
-                      <MenuItem value="" disabled>
-                        Выберите регион
+                  <TextField
+                    fullWidth
+                    select
+                    required
+                    name="region"
+                    label="Регион"
+                    type="text"
+                    value={state.region}
+                    autoComplete="new-region"
+                    onChange={inputChangeHandler}
+                  >
+                    <MenuItem value="" disabled>
+                      Выберите регион
+                    </MenuItem>
+                    {regions.map((region) => (
+                      <MenuItem key={region._id} value={region.name}>
+                        {region.name}
                       </MenuItem>
-                      {regions.map((region) => (
-                        <MenuItem key={region.id} value={region.name}>
-                          {region.name}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+                    ))}
+                  </TextField>
 
                   <TextField
                     fullWidth

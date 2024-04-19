@@ -36,9 +36,7 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.profile,
         element: (
-          <ProtectedRoute>
             <UserPage />
-          </ProtectedRoute>
         ),
         children: [
           {
@@ -61,9 +59,7 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profileAdmin,
-        element: (
-          <AdminPage />
-        ),
+        element: <AdminPage />,
         children: [
           {
             path: appRoutes.statistics,
@@ -77,13 +73,15 @@ export const router = createBrowserRouter([
             path: appRoutes.staff,
             element: <Staff />,
           },
+          {
+            path: appRoutes.warehouse,
+            element: (
+              <ProtectedRoute>
+                <WarehouseForm />
+              </ProtectedRoute>
+            ),
+          },
         ],
-        path: appRoutes.warehouse,
-        element: (
-          <ProtectedRoute>
-            <WarehouseForm />
-          </ProtectedRoute>
-        ),
       },
       {
         path: appRoutes.notFound,

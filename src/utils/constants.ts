@@ -23,7 +23,7 @@ export const appRoutes = {
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',
   staff: '/admin-profile/staff',
-  warehouse: '/profile/warehouseForm',
+  warehouse: 'warehouseForm',
 };
 
 export const userLinks: UserNav[] = [

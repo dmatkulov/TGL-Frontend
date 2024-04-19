@@ -6,12 +6,7 @@ const ShipmentsForm = () => {
       <Box component="form">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              required
-              name="userMarketId"
-              label="Маркет"
-            />
+            <TextField fullWidth required name="userMarketId" label="Маркет" />
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -58,7 +53,9 @@ const ShipmentsForm = () => {
             />
           </Grid>
         </Grid>
-        <Button type="submit" sx={{ mt: 3 }}>Add shipment</Button>
+        <Button type="submit" sx={{ mt: 3 }}>
+          Add shipment
+        </Button>
       </Box>
     </>
   );

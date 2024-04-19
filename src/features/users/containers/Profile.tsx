@@ -11,7 +11,7 @@ const Profile = () => {
   const dispatch = useAppDispatch();
 
   const user = useAppSelector(selectUser);
-
+  const regions = useAppSelector(regionsState);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
     email: user?.email || '',

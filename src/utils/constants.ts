@@ -19,7 +19,11 @@ export const appRoutes = {
   orders: '/profile/orders',
   address: '/profile/address',
   history: '/profile/history',
-  warehouse: '/profile/warehouseForm',
+  profileAdmin: '/admin-profile',
+  statistics: '/admin-profile/statistics',
+  pups: '/admin-profile/pups',
+  staff: '/admin-profile/staff',
+  warehouse: 'warehouseForm',
 };
 
 export const userLinks: UserNav[] = [
@@ -45,33 +49,21 @@ export const userLinks: UserNav[] = [
   },
 ];
 
-export const regions = [
+export const adminLinks: UserNav[] = [
   {
     id: 1,
-    name: 'Чуй',
+    name: 'Статистика',
+    navLink: appRoutes.statistics,
   },
   {
     id: 2,
-    name: 'Иссык-Куль',
+    name: 'Склады',
+    navLink: appRoutes.pups,
   },
   {
     id: 3,
-    name: 'Ош',
-  },
-  {
-    id: 4,
-    name: 'Талас',
-  },
-  {
-    id: 5,
-    name: 'Баткен',
-  },
-  {
-    id: 6,
-    name: 'Нарын',
-  },
-  {
-    id: 7,
-    name: 'Джалал-Абад',
+    name: 'Сотрудники',
+    navLink: appRoutes.staff,
   },
 ];
+

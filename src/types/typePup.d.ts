@@ -1,7 +1,9 @@
+import { Region } from './types.Regions';
+
 export interface Pup {
   _id: string;
   name: string;
-  region: string;
+  region: Region;
   settlement: string;
   address: string;
   phoneNumber: string;

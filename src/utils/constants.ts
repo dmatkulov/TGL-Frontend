@@ -18,6 +18,7 @@ export const appRoutes = {
   orders: '/profile/orders',
   address: '/profile/address',
   history: '/profile/history',
+  warehouse: '/profile/warehouseForm',
 };
 
 export const userLinks: UserNav[] = [

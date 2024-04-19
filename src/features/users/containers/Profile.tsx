@@ -8,16 +8,16 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import { regions } from '../../../utils/constants';
 import { ProfileMutation } from '../../../types/typeProfile';
 import Warehouses from '../../warehouses/Warehouses';
+import { regionsState } from '../../regions/regionsSlice';
 
 const Profile = () => {
   const user = useAppSelector(selectUser);
-
+  const regions = useAppSelector(regionsState);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
     email: user?.email || '',
@@ -128,7 +128,7 @@ const Profile = () => {
                     Выберите регион
                   </MenuItem>
                   {regions.map((region) => (
-                    <MenuItem key={region.id} value={region.name}>
+                    <MenuItem key={region._id} value={region.name}>
                       {region.name}
                     </MenuItem>
                   ))}

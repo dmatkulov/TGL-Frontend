@@ -1,3 +1,8 @@
+import { selectPups, selectPupsLoading } from '../pupsSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useEffect } from 'react';
+import { fetchPups } from '../pupsThunks';
+import { CircularProgress, Stack } from '@mui/material';
 import {selectPupCreating, selectPups, selectPupsLoading} from '../pupsSlice';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import React, {useEffect, useState} from 'react';
@@ -78,10 +83,7 @@ const PupList = () => {
           </Grid>
         )}
         {pups.map((pup) => (
-          <PupItem
-            key={pup._id}
-            pupItem={pup}
-          />
+          <PupItem key={pup._id} pupItem={pup} />
         ))}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>Новый склад:</DialogTitle>

@@ -19,6 +19,10 @@ export const appRoutes = {
   orders: '/profile/orders',
   address: '/profile/address',
   history: '/profile/history',
+  profileAdmin: '/admin-profile',
+  statistics: '/admin-profile/statistics',
+  pups: '/admin-profile/pups',
+  staff: '/admin-profile/staff',
   warehouse: '/profile/warehouseForm',
 };
 
@@ -44,3 +48,22 @@ export const userLinks: UserNav[] = [
     navLink: appRoutes.history,
   },
 ];
+
+export const adminLinks: UserNav[] = [
+  {
+    id: 1,
+    name: 'Статистика',
+    navLink: appRoutes.statistics,
+  },
+  {
+    id: 2,
+    name: 'Склады',
+    navLink: appRoutes.pups,
+  },
+  {
+    id: 3,
+    name: 'Сотрудники',
+    navLink: appRoutes.staff,
+  },
+];
+

@@ -58,7 +58,11 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.warehouse,
-        element: <WarehouseForm />,
+        element: (
+          <ProtectedRoute>
+            <WarehouseForm />
+          </ProtectedRoute>
+        ),
       },
       {
         path: appRoutes.notFound,

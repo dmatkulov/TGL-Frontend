@@ -50,13 +50,6 @@ const AppToolbar = () => {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               TechGear Logistics
             </Typography>
-            <Typography
-              variant="body1"
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-            >
-              <Link to="/">Контакты</Link>
-            </Typography>
             <Box sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>
               {user ? <UserMenu user={user} /> : <GuestMenu />}
             </Box>

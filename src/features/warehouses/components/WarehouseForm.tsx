@@ -3,12 +3,15 @@ import {useNavigate} from 'react-router-dom';
 import {Box, Container, Grid, TextField, Typography,} from '@mui/material';
 import {LoadingButton} from '@mui/lab';
 import {Warehouse} from '../../../types/types.Warehouses';
-import {useAppDispatch} from '../../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {isWarehousesCreateLoading, isWarehousesLoading} from '../warehousesSlice';
+import {createWarehouse} from '../warehousesThunks';
 
 
 const WarehouseForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
 
 
   const [state, setState] = useState<Warehouse>({
@@ -16,7 +19,6 @@ const WarehouseForm: React.FC = () => {
     address: '',
     phoneNumber: ''
   });
-
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -31,6 +33,9 @@ const WarehouseForm: React.FC = () => {
     event.preventDefault();
 
     try {
+      await dispatch(createWarehouse(state));
+      setState({name: '', address: '', phoneNumber: ''});
+      // navigate('/') ToDo можно перенаправить после создание на главную
     } catch (e) {
       console.error(e);
     }
@@ -94,6 +99,8 @@ const WarehouseForm: React.FC = () => {
               <LoadingButton
                 type={'submit'}
                 variant="contained"
+                loading={isCreateLoading}
+                disabled={isCreateLoading}
                 sx={{marginTop: 1, marginLeft: 2, width: 690}}
               >
                 Сохранить

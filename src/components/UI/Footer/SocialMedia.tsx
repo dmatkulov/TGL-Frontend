@@ -38,6 +38,7 @@ const SocialMedia: React.FC<Props> = ({
     <>
       <Link
         href={href}
+        target="_blank"
         sx={{
           display: 'flex',
           alignItems: 'center',

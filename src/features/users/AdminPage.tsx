@@ -2,8 +2,6 @@ import { Grid } from '@mui/material';
 import Profile from './containers/Profile';
 import { Outlet } from 'react-router-dom';
 import AdminNavigation from './components/AdminNavigation';
-import { useAppSelector } from '../../app/hooks';
-import { selectUser } from './usersSlice';
 
 const AdminPage = () => {
   return (

@@ -15,3 +15,8 @@ export interface PupMutation {
   address: string;
   phoneNumber: string;
 }
+
+export interface PupResponse {
+  message: string;
+  pups: Pup[];
+}

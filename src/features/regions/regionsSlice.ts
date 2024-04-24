@@ -23,7 +23,7 @@ const regionsSlice = createSlice({
     });
     builder.addCase(fetchRegions.fulfilled, (state, { payload }) => {
       if (payload) {
-        state.regions = payload;
+        state.regions = payload.regions;
       } else {
         throw new Error('Something wrong with data fetch: REGIONS');
       }

@@ -14,6 +14,8 @@ const Warehouses = () => {
 
   const [textToCopy, setTextToCopy] = useState('');
 
+  console.log(state);
+
   const onCopy = async () => {
     if (textToCopy === '' && user?.marketId) {
       const string =

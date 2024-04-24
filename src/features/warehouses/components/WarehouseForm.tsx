@@ -1,17 +1,12 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { Warehouse } from '../../../types/types.Warehouses';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import {
-  isWarehousesCreateLoading,
-  isWarehousesLoading,
-} from '../warehousesSlice';
+import { isWarehousesCreateLoading } from '../warehousesSlice';
 import { createWarehouse } from '../warehousesThunks';
 
 const WarehouseForm: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
 

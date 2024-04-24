@@ -1,64 +1,77 @@
-import {Box, CardMedia, Container, Typography} from '@mui/material';
+import {
+  Box,
+  CardMedia,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from '@mui/material';
 import img from '..//..//../assets/car.png';
 import tt from '..//..//../assets/tt.svg';
 import inst from '..//..//../assets/instagram.svg';
 import wtsp from '..//..//../assets/whatsapp.svg';
+import SocialMedia from './SocialMedia';
+import PlaceIcon from '@mui/icons-material/Place';
 
 const Footer = () => {
   return (
-    <Container sx={{display: 'flex', flexDirection: 'raw',alignItems:'center', height: '300px', pt: 3, pb: 4}}>
-
-      <Box
-        sx={{p: 2, width: '100%'}}
+    <Container sx={{ pt: 3 }}>
+      <Grid
+        container
+        sx={{
+          pt: 3,
+          pb: 4,
+        }}
       >
-        <CardMedia
-          sx={{width:200}}
-          component="img"
-          alt="Изображение"
-          image={img}
-        />
-      </Box>
-
-      <Box
-        sx={{p: 5, width: '100%'}}
-      >
-        <Typography sx={{color:'white'}}>
-          Наш Адрес: 7mkr 50a/1, Bishkek, Kyrgyzstan 720070
-        </Typography>
-
-      </Box>
-
-      <Box
-        sx={{display:'flex',gap:5, p: 5, width: '100%'}}
-      >
-        <Box>
+        <Grid item xs={3}>
           <CardMedia
-            sx={{width: 50, height: 50}}
+            sx={{ width: 200 }}
             component="img"
             alt="Изображение"
-            image={tt}
+            image={img}
           />
-        </Box>
+        </Grid>
 
-        <Box>
-          <CardMedia
-            sx={{width: 50, height: 50}}
-            component="img"
-            alt="Изображение"
-            image={inst}
+        <Grid item xs={6}>
+          <Stack direction="row" spacing={1} color="white">
+            <PlaceIcon color="inherit" />
+            <Box>
+              <Typography gutterBottom variant="body1">
+                <strong>Наш Адрес:</strong> 7-й микрорайон, 50а/1 стр
+              </Typography>
+              <Typography gutterBottom variant="body1">
+                Октябрьский район, Бишкек, 720028
+              </Typography>
+            </Box>
+          </Stack>
+        </Grid>
+
+        <Grid item xs={3} gap={2} display="flex" flexDirection="column">
+          <SocialMedia
+            tiktok
+            title="Мы в ТикТок"
+            alt="ТикТок"
+            href="https://www.tiktok.com/@techgear.logistics"
+            imagePath={tt}
           />
-        </Box>
 
-        <Box>
-          <CardMedia
-            sx={{width: 50, height: 50}}
-            component="img"
-            alt="Изображение"
-            image={wtsp}
+          <SocialMedia
+            instagram
+            title="Мы в Инстаграм"
+            alt="Инстаграм"
+            href="https://www.instagram.com/cargo.878_kg"
+            imagePath={inst}
           />
-        </Box>
-      </Box>
 
+          <SocialMedia
+            whatsapp
+            title="Написать в WhatsApp"
+            alt="WhatsApp"
+            href="https://wa.me/996222601960?text=Здравствуйте,"
+            imagePath={wtsp}
+          />
+        </Grid>
+      </Grid>
     </Container>
   );
 };

@@ -23,6 +23,7 @@ export const appRoutes = {
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',
   staff: '/admin-profile/staff',
+  shipments:'/admin-profile/shipments',
   warehouse: 'warehouseForm',
 };
 
@@ -57,13 +58,18 @@ export const adminLinks: UserNav[] = [
   },
   {
     id: 2,
-    name: 'Склады',
+    name: 'ПВЗ',
     navLink: appRoutes.pups,
   },
   {
     id: 3,
     name: 'Сотрудники',
     navLink: appRoutes.staff,
+  },
+  {
+    id: 4,
+    name: 'Заказы клиентов',
+    navLink: appRoutes.shipments,
   },
 ];
 

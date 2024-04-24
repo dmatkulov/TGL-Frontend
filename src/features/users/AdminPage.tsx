@@ -1,8 +1,9 @@
-import {Grid} from '@mui/material';
+import { Grid } from '@mui/material';
 import Profile from './containers/Profile';
-import {Outlet} from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import AdminNavigation from './components/AdminNavigation';
-
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from './usersSlice';
 
 const AdminPage = () => {
   return (
@@ -12,7 +13,7 @@ const AdminPage = () => {
           <Profile />
         </Grid>
         <Grid item xs={4} pr={2} borderRight="1px solid #f5f5f5">
-          <AdminNavigation/>
+          <AdminNavigation />
         </Grid>
         <Grid item xs={8} pl={2}>
           <Outlet />

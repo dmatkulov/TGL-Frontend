@@ -16,8 +16,7 @@ import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
 import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
-import Warehouses from '../features/warehouses/Warehouses';
-import WarehousesList from '../features/users/containers/WarehousesList';
+import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
 
 export const router = createBrowserRouter([
   {

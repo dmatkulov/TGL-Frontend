@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
 import { LoadingButton } from '@mui/lab';
 import { regionsState } from '../../regions/regionsSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 const initialState: PupMutation = {
   region: '',
@@ -42,6 +43,7 @@ const PupList = () => {
 
   useEffect(() => {
     dispatch(fetchPups());
+    dispatch(fetchRegions());
   }, [dispatch]);
 
   const handleClickOpen = () => {
@@ -73,11 +75,13 @@ const PupList = () => {
     <>
       {loading && <CircularProgress />}
       <Stack>
-        {user?.role !== 'client'  && (
-            <Grid item>
-              <Button onClick={handleClickOpen}>Добавить склад</Button>
-            </Grid>
-          )}
+        {user?.role === 'super' && (
+          <Grid item>
+            <Button variant="contained" onClick={handleClickOpen}>
+              Добавить склад
+            </Button>
+          </Grid>
+        )}
         {pups.map((pup) => (
           <PupItem key={pup._id} pupItem={pup} />
         ))}
@@ -106,7 +110,7 @@ const PupList = () => {
                       Выберите регион
                     </MenuItem>
                     {regions.map((region) => (
-                      <MenuItem key={region._id} value={region.name}>
+                      <MenuItem key={region._id} value={region._id}>
                         {region.name}
                       </MenuItem>
                     ))}

@@ -3,11 +3,15 @@ import { PupMutation, PupResponse } from '../../types/typePup';
 import { serverRoute } from '../../utils/constants';
 import axiosApi from '../../utils/axiosApi';
 
-export const fetchPups = createAsyncThunk<PupResponse>(
+export const fetchPups = createAsyncThunk<PupResponse | undefined>(
   'pups/fetchAll',
   async () => {
-    const response = await axiosApi.get<PupResponse>(serverRoute.pups);
-    return response.data ?? [];
+    try {
+      const response = await axiosApi.get<PupResponse>(serverRoute.pups);
+      return response.data ?? [];
+    } catch (e) {
+      console.log('Caught on try - FETCH ALL PUPS ', e);
+    }
   },
 );
 

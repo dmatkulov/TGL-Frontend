@@ -1,15 +1,17 @@
 import { Pup } from '../../types/typePup';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { fetchPups } from './pupsThunks';
+import {createPup, fetchPups} from './pupsThunks';
 
 interface PupsState {
   items: Pup[];
+  creating: boolean;
   fetchLoading: boolean;
 }
 
 const initialState: PupsState = {
   items: [],
+  creating: false,
   fetchLoading: false,
 };
 
@@ -28,6 +30,15 @@ export const pupsSlice = createSlice({
       })
       .addCase(fetchPups.rejected, (state) => {
         state.fetchLoading = false;
+      })
+      .addCase(createPup.pending,(state) => {
+        state.creating = true;
+      })
+      .addCase(createPup.fulfilled,(state) => {
+        state.creating = false;
+      })
+      .addCase(createPup.rejected,(state) => {
+        state.creating = false;
       });
   },
 });
@@ -36,3 +47,4 @@ export const pupsReducer = pupsSlice.reducer;
 
 export const selectPups = (state: RootState) => state.pups.items;
 export const selectPupsLoading = (state: RootState) => state.pups.fetchLoading;
+export const selectPupCreating = (state: RootState) => state.pups.creating;

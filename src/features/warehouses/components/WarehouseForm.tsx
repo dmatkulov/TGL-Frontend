@@ -1,36 +1,41 @@
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {Box, Container, Grid, TextField, Typography,} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
-import {Warehouse} from '../../../types/types.Warehouses';
-import {useAppDispatch} from '../../../app/hooks';
-
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Warehouse } from '../../../types/types.Warehouses';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import {
+  isWarehousesCreateLoading,
+  isWarehousesLoading,
+} from '../warehousesSlice';
+import { createWarehouse } from '../warehousesThunks';
 
 const WarehouseForm: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
+  const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
 
   const [state, setState] = useState<Warehouse>({
     name: '',
     address: '',
-    phoneNumber: ''
+    phoneNumber: '',
   });
 
-
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
 
     setState((prevState) => {
-      return {...prevState, [name]: value};
+      return { ...prevState, [name]: value };
     });
   };
-
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
+      await dispatch(createWarehouse(state));
+      setState({ name: '', address: '', phoneNumber: '' });
+      // navigate('/') ToDo можно перенаправить после создание на главную
     } catch (e) {
       console.error(e);
     }
@@ -51,10 +56,18 @@ const WarehouseForm: React.FC = () => {
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{mt: 3, width: '100%'}}
+          sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
-            <Grid container item xs={12} sm={6} direction="row" spacing={2} sx={{margin: 'auto'}}>
+            <Grid
+              container
+              item
+              xs={12}
+              sm={6}
+              direction="row"
+              spacing={2}
+              sx={{ margin: 'auto' }}
+            >
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -94,7 +107,9 @@ const WarehouseForm: React.FC = () => {
               <LoadingButton
                 type={'submit'}
                 variant="contained"
-                sx={{marginTop: 1, marginLeft: 2, width: 690}}
+                loading={isCreateLoading}
+                disabled={isCreateLoading}
+                sx={{ marginTop: 1, marginLeft: 2, width: 690 }}
               >
                 Сохранить
               </LoadingButton>

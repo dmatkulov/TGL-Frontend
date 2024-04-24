@@ -13,7 +13,7 @@ const Layout = () => {
       <Container component="main" sx={{ minHeight: '70vh', pt: 4, mb: 4 }}>
         <Outlet />
       </Container>
-      <Box component="footer" bgcolor="#f5f5f5">
+      <Box component="footer" bgcolor="primary.main">
         <Footer />
       </Box>
     </>

@@ -10,6 +10,8 @@ const ProtectedRoute: FC<Props> = ({ children }) => {
   const user = useAppSelector(selectUser);
   if (!user) {
     return <Navigate to={appRoutes.login} />;
+  } else if (user.role === 'client') {
+    return <Navigate to={appRoutes.home} />;
   }
   return children;
 };

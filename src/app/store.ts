@@ -14,6 +14,7 @@ import { ordersReducer } from '../features/orders/ordersSlice';
 import { warehousesReducer } from '../features/warehouses/warehousesSlice';
 import { pricesReducer } from '../features/prices/pricesSlice';
 import { regionsReducer } from '../features/regions/regionsSlice';
+import { shipmentsReducer } from '../features/shipments/shipmentsSlice';
 
 const usersPersistConfig = {
   key: 'techGear:users',
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   warehouses: warehousesReducer,
   prices: pricesReducer,
   regions: regionsReducer,
+  shipments: shipmentsReducer,
 });
 
 export const store = configureStore({

@@ -16,6 +16,7 @@ import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
 import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
+import Shipments from '../features/shipments/containers/Shipments';
 
 export const router = createBrowserRouter([
   {
@@ -75,8 +76,12 @@ export const router = createBrowserRouter([
             element: <Staff />,
           },
           {
-            path: appRoutes.shipments,
+            path: appRoutes.shipmentForm,
             element: <ShipmentsForm />,
+          },
+          {
+            path: appRoutes.shipments,
+            element: <Shipments/>
           },
           {
             path: appRoutes.warehouse,

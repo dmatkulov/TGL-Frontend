@@ -7,6 +7,7 @@ export const serverRoute = {
   sessions: '/users/sessions',
   pups: '/pups',
   prices: '/price',
+  shipments: '/shipments',
 };
 
 export const appRoutes = {
@@ -23,7 +24,8 @@ export const appRoutes = {
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',
   staff: '/admin-profile/staff',
-  shipments:'/admin-profile/shipments',
+  shipmentForm: '/admin-profile/shipmentForm',
+  shipments: '/admin-profile/shipments',
   warehouse: 'warehouseForm',
 };
 
@@ -68,8 +70,12 @@ export const adminLinks: UserNav[] = [
   },
   {
     id: 4,
-    name: 'Заказы клиентов',
+    name: 'Добавить посылку',
+    navLink: appRoutes.shipmentForm,
+  },
+  {
+    id: 5,
+    name: 'Все посылки',
     navLink: appRoutes.shipments,
   },
 ];
-

@@ -73,13 +73,11 @@ const PupList = () => {
     <>
       {loading && <CircularProgress />}
       <Stack>
-        {user?.role === 'admin' ||
-          user?.role === 'manager' ||
-          (user?.role === 'super' && (
+        {user?.role !== 'client'  && (
             <Grid item>
               <Button onClick={handleClickOpen}>Добавить склад</Button>
             </Grid>
-          ))}
+          )}
         {pups.map((pup) => (
           <PupItem key={pup._id} pupItem={pup} />
         ))}

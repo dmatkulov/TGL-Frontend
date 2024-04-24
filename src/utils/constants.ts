@@ -7,6 +7,11 @@ export const serverRoute = {
   prices: '/price',
 };
 
+export const Roles = {
+  admin: 'admin',
+  manager: 'manager',
+};
+
 export const appRoutes = {
   notFound: '*',
   home: '/',
@@ -25,4 +30,6 @@ export const appRoutes = {
   adminWarehousesAdd: '/admin-profile/warehouses-form',
   adminWarehouses: '/admin-profile/warehouses',
   calculate: '/calculate',
+  addStaff: '/admin-profile/add-staff',
+  warehouse: 'warehouseForm',
 };

@@ -82,6 +82,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             >
               Добавить склад в Китае
             </MenuItem>,
+            <MenuItem onClick={() => navigate(appRoutes.addStaff)}>
+              Создать сотрудника
+            </MenuItem>
           ]
         )}
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>

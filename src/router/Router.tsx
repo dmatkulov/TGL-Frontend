@@ -17,6 +17,7 @@ import Staff from '../features/users/containers/Staff';
 import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
 import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
+import AddStaff from '../features/users/containers/AddStaff';
 
 export const router = createBrowserRouter([
   {
@@ -86,6 +87,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <WarehouseForm />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.addStaff,
+            element: (
+              <ProtectedRoute>
+                <AddStaff />
               </ProtectedRoute>
             ),
           },

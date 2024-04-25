@@ -7,6 +7,7 @@ export const serverRoute = {
   prices: '/price',
   shipments: '/shipments',
   companyAddresses: '/company-addresses',
+  companyAddressesAdd: '/company-addresses/add',
 };
 
 export const appRoutes = {

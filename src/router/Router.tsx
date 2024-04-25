@@ -18,7 +18,7 @@ import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
 import Shipments from '../features/shipments/containers/Shipments';
 import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
-import CompanyAddresses from '../features/users/containers/CompanyAddress/CompanyAddresses';
+import CompanyAddresses from '../features/companyAddress/CompanyAddresses';
 
 export const router = createBrowserRouter([
   {

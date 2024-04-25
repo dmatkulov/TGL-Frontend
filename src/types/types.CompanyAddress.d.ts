@@ -5,6 +5,12 @@ export interface CompanyAddress {
   postCode: string;
   city: string;
 }
+export interface CompanyAddressMutation {
+  address: string;
+  district: string;
+  postCode: string;
+  city: string;
+}
 
 export interface CompanyAddressResponse {
   message: string;

@@ -7,14 +7,29 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
 import OrderModal from './OrderModal';
-import { useAppSelector } from '../../../app/hooks';
-import { selectOrdersLoading } from '../ordersSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectOrders, selectOrdersLoading } from '../ordersSlice';
+import { useEffect } from 'react';
+import { selectUser } from '../../users/usersSlice';
+import { fetchOrders } from '../ordersThunk';
 
 const OrdersTable = () => {
+  const dispatch = useAppDispatch();
   const loading = useAppSelector(selectOrdersLoading);
+  const orders = useAppSelector(selectOrders);
+  const user = useAppSelector(selectUser);
+
+  const marketId = user?.marketId;
+
+  useEffect(() => {
+    if (marketId) {
+      dispatch(fetchOrders(marketId));
+    }
+  }, [dispatch, marketId]);
 
   return (
     <>
@@ -27,12 +42,29 @@ const OrdersTable = () => {
               <TableCell>Трекинговый номер</TableCell>
               <TableCell align="left">Адрес</TableCell>
               <TableCell align="left">Стоимость</TableCell>
+              <TableCell align="left">Статус</TableCell>
               <TableCell align="left">Доставка заказа</TableCell>
               <TableCell align="left">Отмена заказа</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <OrdersRowItem />
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <OrdersRowItem
+                  order={order}
+                  marketId={marketId || ''}
+                  key={order._id}
+                />
+              ))
+            ) : (
+              <TableRow>
+                <TableCell>
+                  <Typography variant="body1">
+                    У вас пока нет заказов.
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

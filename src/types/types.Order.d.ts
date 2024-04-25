@@ -4,7 +4,11 @@ export interface Order {
   _id: string;
   trackerNumber: number;
   PUP: string;
-  price: number;
+  status: string;
+  price: {
+    usd: string;
+    som: string;
+  };
 }
 
 export interface ShipmentAddress {
@@ -19,5 +23,5 @@ export interface ShipmentMutation {
 
 export interface OrdersResponse {
   message: string;
-  orders: Order[]
+  shipments: Order[];
 }

@@ -18,7 +18,7 @@ import {
   selectLoginLoading,
   setLoginError,
 } from './usersSlice';
-import {LoginMutation} from '../../types/types.User';
+import { LoginMutation } from '../../types/types.User';
 import { appRoutes } from '../../utils/constants';
 
 const Login: React.FC = () => {

@@ -2,7 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import {
-  CompanyAddress,
   CompanyAddressEditRequest,
   CompanyAddressMutation,
   CompanyAddressResponse,

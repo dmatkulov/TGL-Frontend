@@ -19,5 +19,5 @@ export interface ShipmentMutation {
 
 export interface OrdersResponse {
   message: string;
-  orders: Order[]
+  orders: Order[];
 }

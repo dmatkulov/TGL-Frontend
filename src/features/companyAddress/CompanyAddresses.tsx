@@ -23,7 +23,6 @@ import {
   uploadCompanyAddress,
 } from './companyAddressThunks';
 import {
-  CompanyAddress,
   CompanyAddressEditRequest,
   CompanyAddressMutation,
 } from '../../types/types.CompanyAddress';

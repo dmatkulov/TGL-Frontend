@@ -15,7 +15,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 
 const Footer = () => {
   return (
-    <Container sx={{ pt: 3 }}>
+    <Container sx={{ pt: 3 }} maxWidth="xl">
       <Grid
         container
         sx={{

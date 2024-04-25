@@ -24,4 +24,5 @@ export const appRoutes = {
   shipments: '/admin-profile/shipments',
   adminWarehousesAdd: '/admin-profile/warehouses-form',
   adminWarehouses: '/admin-profile/warehouses',
+  calculate: '/calculate',
 };

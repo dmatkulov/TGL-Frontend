@@ -14,8 +14,6 @@ const Warehouses = () => {
 
   const [textToCopy, setTextToCopy] = useState('');
 
-  console.log(state);
-
   const onCopy = async () => {
     if (textToCopy === '' && user?.marketId) {
       const string =
@@ -54,9 +52,11 @@ const Warehouses = () => {
       <>
         <Typography>收货人：{state[0].name}</Typography>
         <Typography>电话：{state[0].phoneNumber}</Typography>
-        <Typography>{state[0].address + user?.marketId}</Typography>
+        <Typography sx={{ mb: 3 }}>
+          {state[0].address + user?.marketId}
+        </Typography>
         <CopyToClipboard text={textToCopy} onCopy={onCopy}>
-          <Button>Copy</Button>
+          <Button variant="contained">Скопировать</Button>
         </CopyToClipboard>
       </>
     );

@@ -4,7 +4,7 @@ import PupList from '../../pups/components/PupList';
 const Addresses = () => {
   return (
     <>
-      <PageTitle title="Адреса складов" />
+      <PageTitle title="Адреса ПВЗ" />
       <PupList />
     </>
   );

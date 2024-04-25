@@ -5,10 +5,16 @@ import { Warehouse } from '../../../types/types.Warehouses';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { isWarehousesCreateLoading } from '../warehousesSlice';
 import { createWarehouse } from '../warehousesThunks';
+import PhoneInput from 'react-phone-input-2';
+import {selectRegisterError} from '../../users/usersSlice';
+import {useNavigate} from 'react-router-dom';
+import {appRoutes} from '../../../utils/constants';
 
 const WarehouseForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
+  const error = useAppSelector(selectRegisterError);
+  const navigate = useNavigate();
 
   const [state, setState] = useState<Warehouse>({
     name: '',
@@ -24,13 +30,25 @@ const WarehouseForm: React.FC = () => {
     });
   };
 
+  const handlePhoneChange = (value: string) => {
+    setState((prevState) => ({ ...prevState, phoneNumber: value }));
+  };
+
+  const getFieldError = (fieldName: string) => {
+    try {
+      return error?.errors[fieldName].message;
+    } catch {
+      return undefined;
+    }
+  };
+
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
       await dispatch(createWarehouse(state));
       setState({ name: '', address: '', phoneNumber: '' });
-      // navigate('/') ToDo можно перенаправить после создание на главную
+      navigate(appRoutes.adminWarehouses);
     } catch (e) {
       console.error(e);
     }
@@ -68,7 +86,7 @@ const WarehouseForm: React.FC = () => {
                   fullWidth
                   required
                   name="name"
-                  label="name"
+                  label="Название"
                   type="text"
                   value={state.name}
                   autoComplete="new-name"
@@ -80,7 +98,7 @@ const WarehouseForm: React.FC = () => {
                   fullWidth
                   required
                   name="address"
-                  label="address"
+                  label="Aдрес"
                   type="text"
                   value={state.address}
                   autoComplete="new-address"
@@ -88,15 +106,21 @@ const WarehouseForm: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  required
-                  name="phoneNumber"
-                  label="phoneNumber"
-                  type="text"
+                <PhoneInput
+                  country="cn"
+                  masks={{ cn: '(..) ...-....-....' }}
+                  onlyCountries={['cn']}
+                  containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
-                  autoComplete="new-phoneNumber"
-                  onChange={inputChangeHandler}
+                  onChange={handlePhoneChange}
+                  defaultErrorMessage={getFieldError('phoneNumber')}
+                  specialLabel="Номер телефона*"
+                  disableDropdown
+                  inputStyle={{ width: '100%' }}
+                  inputProps={{
+                    name: 'phoneNumber',
+                    required: true,
+                  }}
                 />
               </Grid>
               <LoadingButton

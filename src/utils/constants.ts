@@ -5,6 +5,7 @@ export const serverRoute = {
   sessions: '/users/sessions',
   pups: '/pups',
   prices: '/price',
+  shipments: '/shipments',
 };
 
 export const appRoutes = {
@@ -21,6 +22,7 @@ export const appRoutes = {
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',
   staff: '/admin-profile/staff',
+  shipmentForm: '/admin-profile/shipmentForm',
   shipments: '/admin-profile/shipments',
   adminWarehousesAdd: '/admin-profile/warehouses-form',
   adminWarehouses: '/admin-profile/warehouses',

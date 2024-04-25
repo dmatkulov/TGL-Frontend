@@ -21,8 +21,6 @@ const Profile = () => {
     address: user?.address || '',
   });
   const isAdmin = user?.role === 'super' || 'admin';
-
-  console.log(user)
   const handleClickOpen = () => {
     setOpen(true);
   };

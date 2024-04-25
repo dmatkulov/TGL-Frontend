@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ShipmentData } from '../../types/types.Shipments';
-import { fetchShipments } from './shipmentsThunk';
+import { createShipment, fetchShipments } from './shipmentsThunk';
 import { RootState } from '../../app/store';
 
 interface shipmentsState {
@@ -30,6 +30,18 @@ export const shipmentsSlice = createSlice({
       })
       .addCase(fetchShipments.rejected, (state) => {
         state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+    builder
+      .addCase(createShipment.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(createShipment.fulfilled, (state) => {
+        state.shipmentsLoading = false;
+      })
+      .addCase(createShipment.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
       });
   },
 });

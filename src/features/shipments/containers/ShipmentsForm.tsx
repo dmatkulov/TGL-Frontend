@@ -4,19 +4,21 @@ import { createShipment } from '../shipmentsThunk';
 import { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
 
+const initialState: ShipmentMutation = {
+  userMarketId: '',
+  trackerNumber: '',
+  weight: 0,
+  dimensions: {
+    height: 0,
+    width: 0,
+    length: 0,
+  },
+};
+
 const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
 
-  const [state, setState] = useState<ShipmentMutation>({
-    userMarketId: '',
-    trackerNumber: '',
-    weight: 0,
-    dimensions: {
-      height: 0,
-      width: 0,
-      length: 0,
-    },
-  });
+  const [state, setState] = useState<ShipmentMutation>(initialState);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -41,8 +43,8 @@ const ShipmentsForm = () => {
 
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(state);
     await dispatch(createShipment(state));
+    setState(initialState);
   };
 
   return (

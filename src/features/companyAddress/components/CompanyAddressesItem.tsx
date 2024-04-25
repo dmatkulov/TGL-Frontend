@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { CompanyAddress } from '../../../types/types.CompanyAddress';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { deleteCompanyAddress } from '../companyAddressThunks';
@@ -22,7 +22,6 @@ const CompanyAddressesItem: FC<CompanyAddress> = ({
     await dispatch(deleteCompanyAddress(_id));
     navigate(appRoutes.adminCompanyAddress);
   };
-  const editHandler = async () => {};
 
   return (
     <Box>
@@ -42,9 +41,6 @@ const CompanyAddressesItem: FC<CompanyAddress> = ({
         >
           Delete
         </LoadingButton>
-        <Button onClick={editHandler} variant="contained" color="warning">
-          Edit
-        </Button>
       </Box>
     </Box>
   );

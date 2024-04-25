@@ -12,6 +12,11 @@ export interface CompanyAddressMutation {
   city: string;
 }
 
+export interface CompanyAddressEditRequest {
+  id: string;
+  data: CompanyAddressMutation;
+}
+
 export interface CompanyAddressResponse {
   message: string;
   addresses: CompanyAddress[];

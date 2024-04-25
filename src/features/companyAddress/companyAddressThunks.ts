@@ -2,6 +2,8 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import {
+  CompanyAddress,
+  CompanyAddressEditRequest,
   CompanyAddressMutation,
   CompanyAddressResponse,
 } from '../../types/types.CompanyAddress';
@@ -46,3 +48,18 @@ export const deleteCompanyAddress = createAsyncThunk<void, string>(
     }
   },
 );
+export const updateCompanyAddress = createAsyncThunk<
+  void,
+  CompanyAddressEditRequest
+>('companyAddresses/edit', async (arg) => {
+  try {
+    console.log('inside thunk ', arg);
+    const response = await axiosApi.patch(
+      serverRoute.companyAddresses + '/' + arg.id,
+      arg,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('Caught on try - UPLOAD NEW ADDRESS ', e);
+  }
+});

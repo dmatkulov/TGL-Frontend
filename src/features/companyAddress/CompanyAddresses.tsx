@@ -19,9 +19,14 @@ import {
 import React, { useEffect, useState } from 'react';
 import {
   fetchCompanyAddresses,
+  updateCompanyAddress,
   uploadCompanyAddress,
 } from './companyAddressThunks';
-import { CompanyAddressMutation } from '../../types/types.CompanyAddress';
+import {
+  CompanyAddress,
+  CompanyAddressEditRequest,
+  CompanyAddressMutation,
+} from '../../types/types.CompanyAddress';
 import { LoadingButton } from '@mui/lab';
 
 const initialState: CompanyAddressMutation = {
@@ -37,6 +42,7 @@ const CompanyAddresses = () => {
   const isCreating = useAppSelector(isCompanyAddressesCreating);
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<CompanyAddressMutation>(initialState);
+  const [editToggle, setEditToggle] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCompanyAddresses());
@@ -46,7 +52,20 @@ const CompanyAddresses = () => {
     setOpen(true);
   };
 
+  const editHandler = async () => {
+    setOpen(true);
+    const tempVar: CompanyAddressMutation = {
+      address: addresses[0].address,
+      city: addresses[0].city,
+      district: addresses[0].district,
+      postCode: addresses[0].postCode,
+    };
+    setState(tempVar);
+    setEditToggle(true);
+  };
+
   const handleClose = () => {
+    setState(initialState);
     setOpen(false);
   };
 
@@ -59,8 +78,18 @@ const CompanyAddresses = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    await dispatch(uploadCompanyAddress(state));
+
+    if (editToggle) {
+      const tempVar: CompanyAddressEditRequest = {
+        id: addresses[0]._id,
+        data: state,
+      };
+      await dispatch(updateCompanyAddress(tempVar));
+    } else if (!editToggle) {
+      await dispatch(uploadCompanyAddress(state));
+    }
     setState(initialState);
+    setEditToggle(false);
     setOpen(false);
   };
 
@@ -91,6 +120,9 @@ const CompanyAddresses = () => {
         <Button variant="contained" onClick={handleClickOpen}>
           Добавить адрес
         </Button>
+        <Button variant="contained" onClick={editHandler}>
+          Редактировать адрес
+        </Button>
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>Новый адрес:</DialogTitle>
           <DialogContent
@@ -98,6 +130,11 @@ const CompanyAddresses = () => {
               mt: '20px',
             }}
           >
+            <Typography>
+              В настоящее время нет поддержки обработки нескольких адресов.
+              Пользуйтесь этой функцией только если в базе данных нет ни одного
+              адреса или для редактирования существующего адреса.
+            </Typography>
             <form autoComplete="off" onSubmit={submitFormHandler}>
               <Grid container direction="column" spacing={2}>
                 <Grid item xs={12} container gap={'10px'}>
@@ -148,7 +185,7 @@ const CompanyAddresses = () => {
                     disabled={isCreating}
                     loading={isCreating}
                   >
-                    Добавить
+                    {editToggle ? 'Обновить' : 'Добавить'}
                   </LoadingButton>
                 </Grid>
               </Grid>

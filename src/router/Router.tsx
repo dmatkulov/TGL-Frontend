@@ -16,6 +16,7 @@ import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
 import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
+import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
 
 export const router = createBrowserRouter([
   {
@@ -36,9 +37,7 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: (
-            <UserPage />
-        ),
+        element: <UserPage />,
         children: [
           {
             path: appRoutes.tracking,
@@ -79,7 +78,11 @@ export const router = createBrowserRouter([
             element: <ShipmentsForm />,
           },
           {
-            path: appRoutes.warehouse,
+            path: appRoutes.adminWarehouses,
+            element: <WarehousesList />,
+          },
+          {
+            path: appRoutes.adminWarehousesAdd,
             element: (
               <ProtectedRoute>
                 <WarehouseForm />

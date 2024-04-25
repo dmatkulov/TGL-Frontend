@@ -38,7 +38,10 @@ export const update = createAsyncThunk<
   }
 >('users/update', async (profileMutation, { rejectWithValue }) => {
   try {
-    const response = await axiosApi.put(`${ serverRoute.users }/update`, profileMutation);
+    const response = await axiosApi.put(
+      `${serverRoute.users}/update`,
+      profileMutation,
+    );
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 422) {

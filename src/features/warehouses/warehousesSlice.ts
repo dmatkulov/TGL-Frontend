@@ -25,7 +25,7 @@ const WarehouseSlice = createSlice({
     });
     builder.addCase(fetchWarehouseData.fulfilled, (state, { payload }) => {
       if (payload) {
-        state.warehouses = payload;
+        state.warehouses = payload.warehouses;
       }
       state.isLoading = false;
     });

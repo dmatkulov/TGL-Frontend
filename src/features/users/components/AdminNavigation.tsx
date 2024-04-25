@@ -1,9 +1,15 @@
-import {Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
-import {adminLinks} from '../../../utils/constants';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
+import { adminLinks } from '../../../utils/constants';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import {useNavigate} from 'react-router-dom';
-import {useState} from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const AdminNavigation = () => {
   const navigate = useNavigate();

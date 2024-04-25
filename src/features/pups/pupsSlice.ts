@@ -1,7 +1,7 @@
 import { Pup } from '../../types/typePup';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import {createPup, fetchPups} from './pupsThunks';
+import { createPup, fetchPups } from './pupsThunks';
 
 interface PupsState {
   items: Pup[];
@@ -24,20 +24,20 @@ export const pupsSlice = createSlice({
       .addCase(fetchPups.pending, (state) => {
         state.fetchLoading = true;
       })
-      .addCase(fetchPups.fulfilled, (state, { payload: pups }) => {
+      .addCase(fetchPups.fulfilled, (state, { payload }) => {
         state.fetchLoading = false;
-        state.items = pups;
+        state.items = payload.pups;
       })
       .addCase(fetchPups.rejected, (state) => {
         state.fetchLoading = false;
       })
-      .addCase(createPup.pending,(state) => {
+      .addCase(createPup.pending, (state) => {
         state.creating = true;
       })
-      .addCase(createPup.fulfilled,(state) => {
+      .addCase(createPup.fulfilled, (state) => {
         state.creating = false;
       })
-      .addCase(createPup.rejected,(state) => {
+      .addCase(createPup.rejected, (state) => {
         state.creating = false;
       });
   },

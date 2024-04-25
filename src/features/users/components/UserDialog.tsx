@@ -7,10 +7,11 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import React from 'react';
-import { ProfileMutation } from '../../../types/typeProfile';
-import { useAppSelector } from '../../../app/hooks';
+import React, { useEffect } from 'react';
+import { ProfileMutation } from '../../../types/types.Profile';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 interface Props {
   state: ProfileMutation;
@@ -28,6 +29,12 @@ const UserDialog: React.FC<Props> = ({
   inputChangeHandler,
 }) => {
   const regions = useAppSelector(regionsState);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchRegions());
+  }, [dispatch]);
+
   return (
     <>
       {/* Modal */}
@@ -40,7 +47,7 @@ const UserDialog: React.FC<Props> = ({
         >
           <form autoComplete="off">
             {/*onsubmit */}
-            <Grid container direction="column" spacing={2}>
+            <Grid container direction="column" spacing={2} pt={2}>
               <Grid item xs={12} container gap={'10px'}>
                 <TextField
                   id="firstName"
@@ -89,14 +96,13 @@ const UserDialog: React.FC<Props> = ({
                   label="Регион"
                   type="text"
                   value={state.region}
-                  autoComplete="new-region"
                   onChange={inputChangeHandler}
                 >
                   <MenuItem value="" disabled>
                     Выберите регион
                   </MenuItem>
                   {regions.map((region) => (
-                    <MenuItem key={region._id} value={region.name}>
+                    <MenuItem key={region._id} value={region._id}>
                       {region.name}
                     </MenuItem>
                   ))}

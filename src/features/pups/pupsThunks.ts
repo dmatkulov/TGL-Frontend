@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { PupMutation, PupResponse } from '../../types/typePup';
+import { PupMutation, PupResponse } from '../../types/types.Pup';
 import { serverRoute } from '../../utils/constants';
 import axiosApi from '../../utils/axiosApi';
 

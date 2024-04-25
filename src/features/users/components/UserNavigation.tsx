@@ -6,10 +6,41 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import { useNavigate } from 'react-router-dom';
-import { userLinks } from '../../../utils/constants';
+import { appRoutes } from '../../../utils/constants';
 import { useState } from 'react';
+import { UserNav } from '../../../types/types.User';
+import PinDropIcon from '@mui/icons-material/PinDrop';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import HistoryIcon from '@mui/icons-material/History';
+
+const userLinks: UserNav[] = [
+  {
+    id: 1,
+    name: 'Трекинг по номеру',
+    navLink: appRoutes.tracking,
+    icon: <PinDropIcon color="primary" />,
+  },
+  {
+    id: 2,
+    name: 'Мои заказы',
+    navLink: appRoutes.orders,
+    icon: <LocalShippingIcon color="primary" />,
+  },
+  {
+    id: 3,
+    name: 'Адреса складов',
+    navLink: appRoutes.address,
+    icon: <WarehouseIcon color="primary" />,
+  },
+  {
+    id: 4,
+    name: 'История заказов',
+    navLink: appRoutes.history,
+    icon: <HistoryIcon color="primary" />,
+  },
+];
 
 const UserNavigation = () => {
   const navigate = useNavigate();
@@ -17,22 +48,27 @@ const UserNavigation = () => {
 
   return (
     <>
-      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <Box sx={{ width: '100%', maxWidth: 320, bgcolor: 'background.paper' }}>
         <nav>
           <List>
             {userLinks.map((link) => (
-              <ListItem key={link.id}>
+              <ListItem key={link.id} disableGutters>
                 <ListItemButton
                   selected={selectedLink === link.id}
                   onClick={() => {
                     setSelectedLink(link.id);
                     navigate(link.navLink);
                   }}
+                  sx={{ borderRadius: 2 }}
                 >
-                  <ListItemIcon>
-                    <AccountTreeIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={link.name} />
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={link.name}
+                    primaryTypographyProps={{
+                      fontSize: 20,
+                      color: selectedLink === link.id ? 'primary' : 'inherit',
+                    }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}

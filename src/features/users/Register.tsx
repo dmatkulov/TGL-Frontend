@@ -19,12 +19,12 @@ import {
   setRegisterError,
 } from './usersSlice';
 import { register } from './usersThunks';
-import { RegisterMutation } from '../../types/types';
 import { appRoutes } from '../../utils/constants';
 import { selectPups } from '../pups/pupsSlice';
 import { fetchPups } from '../pups/pupsThunks';
 import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
+import {RegisterMutation} from '../../types/types.User';
 
 const initialState: RegisterMutation = {
   email: '',

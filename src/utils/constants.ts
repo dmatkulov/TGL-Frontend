@@ -1,5 +1,3 @@
-import { UserNav } from '../types/types';
-
 export const apiURL = 'http://localhost:8000';
 
 export const serverRoute = {
@@ -28,60 +26,5 @@ export const appRoutes = {
   shipments: '/admin-profile/shipments',
   adminWarehousesAdd: '/admin-profile/warehouses-form',
   adminWarehouses: '/admin-profile/warehouses',
+  calculate: '/calculate',
 };
-
-export const userLinks: UserNav[] = [
-  {
-    id: 1,
-    name: 'Трекинг по номеру',
-    navLink: appRoutes.tracking,
-  },
-  {
-    id: 2,
-    name: 'Мои заказы',
-    navLink: appRoutes.orders,
-  },
-  {
-    id: 3,
-    name: 'Адреса складов',
-    navLink: appRoutes.address,
-  },
-  {
-    id: 4,
-    name: 'История заказов',
-    navLink: appRoutes.history,
-  },
-];
-
-export const adminLinks: UserNav[] = [
-  {
-    id: 1,
-    name: 'Статистика',
-    navLink: appRoutes.statistics,
-  },
-  {
-    id: 2,
-    name: 'ПВЗ',
-    navLink: appRoutes.pups,
-  },
-  {
-    id: 3,
-    name: 'Сотрудники',
-    navLink: appRoutes.staff,
-  },
-  {
-    id: 4,
-    name: 'Добавить посылку',
-    navLink: appRoutes.shipmentForm,
-  },
-  {
-    id: 5,
-    name: 'Все посылки',
-    navLink: appRoutes.shipments,
-  },
-  {
-    id: 5,
-    name: 'Склад в Китае',
-    navLink: appRoutes.adminWarehouses,
-  },
-];

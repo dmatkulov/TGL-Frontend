@@ -2,11 +2,11 @@ import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import { ProfileMutation } from '../../../types/typeProfile';
+import { ProfileMutation } from '../../../types/types.Profile';
 import Warehouses from '../../warehouses/Warehouses';
 import { update } from '../usersThunks';
 import UserDialog from '../components/UserDialog';
-
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 const Profile = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
@@ -16,12 +16,11 @@ const Profile = () => {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     middleName: user?.middleName || '',
-    region: user?.region || '',
+    region: user?.region._id || '',
     settlement: user?.settlement || '',
     address: user?.address || '',
   });
-  const isAdmin = user?.role === 'super' || 'admin';
-
+  const isAdmin = user?.role === 'super' || user?.role === 'admin';
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -49,20 +48,30 @@ const Profile = () => {
     <>
       <Grid container spacing={2} flexWrap="nowrap">
         <Grid container direction="column" item>
-          <Grid item>
-            <Typography variant="h2">
+          <Grid item flexGrow={1}>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="h1"
+              fontWeight="bold"
+            >
               {user?.firstName} {user?.lastName}
             </Typography>
             {isAdmin ? (
               <></>
             ) : (
-              <Typography variant="h4">
+              <Typography variant="subtitle1">
                 Ваш персональный код: {user?.marketId}
               </Typography>
             )}
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={handleClickOpen}>
+            <Button
+              startIcon={<BorderColorIcon />}
+              onClick={handleClickOpen}
+              color="secondary"
+              sx={{ textTransform: 'none' }}
+            >
               Редактировать профиль
             </Button>
           </Grid>

@@ -16,6 +16,7 @@ import { NavLink } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import DrawerMenu from './DrawerMenu';
 import GuestMenu from './GuestMenu';
+import { appRoutes } from '../../../utils/constants';
 
 const Link = styled(NavLink)({
   color: 'inherit',
@@ -49,6 +50,9 @@ const AppToolbar = () => {
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               TechGear Logistics
+            </Typography>
+            <Typography component="div" sx={{ flexGrow: 1 }}>
+              <Link to={appRoutes.calculate}>Калькулятор</Link>
             </Typography>
             <Box sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>
               {user ? <UserMenu user={user} /> : <GuestMenu />}

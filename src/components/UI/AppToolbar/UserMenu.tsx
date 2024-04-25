@@ -13,7 +13,7 @@ import { logOut } from '../../../features/users/usersThunks';
 import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { User } from '../../../types/typeUser';
+import { User } from '../../../types/types.User';
 
 interface Props {
   user: User;

@@ -49,13 +49,13 @@ const Profile = () => {
       <Grid container spacing={2} flexWrap="nowrap">
         <Grid container direction="column" item>
           <Grid item>
-            <Typography variant="h2">
+            <Typography variant="h6" component="h1">
               {user?.firstName} {user?.lastName}
             </Typography>
             {isAdmin ? (
               <></>
             ) : (
-              <Typography variant="h4">
+              <Typography variant="subtitle1">
                 Ваш персональный код: {user?.marketId}
               </Typography>
             )}

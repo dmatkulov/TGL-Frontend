@@ -10,7 +10,11 @@ const Layout = () => {
       <header>
         <AppToolbar />
       </header>
-      <Container component="main" sx={{ minHeight: '70vh', pt: 4, mb: 4 }}>
+      <Container
+        maxWidth="xl"
+        component="main"
+        sx={{ minHeight: '100vh', pt: 4, mb: 4 }}
+      >
         <Outlet />
       </Container>
       <Box component="footer" bgcolor="primary.main">

@@ -1,4 +1,4 @@
-import { Price, PriceResponse } from '../../types/types.Price';
+import { Price } from '../../types/types.Price';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { createPrice, fetchPrice, updatePrice } from './pricesThunks';
@@ -7,8 +7,8 @@ interface PriceState {
   item: Price | null;
   fetchLoading: boolean;
   createLoading: boolean;
-  priceResponse: PriceResponse | null;
-  priceFieldError: PriceResponse | null;
+  priceResponse: string | null;
+  priceFieldError: string | null;
   editLoading: boolean;
 }
 
@@ -38,9 +38,10 @@ export const pricesSlice = createSlice({
       .addCase(fetchPrice.pending, (state) => {
         state.fetchLoading = true;
       })
-      .addCase(fetchPrice.fulfilled, (state, { payload: price }) => {
+      .addCase(fetchPrice.fulfilled, (state, { payload: priceResponse }) => {
         state.fetchLoading = false;
-        state.item = price;
+        state.item = priceResponse.price;
+        state.priceResponse = priceResponse.message;
       })
       .addCase(fetchPrice.rejected, (state) => {
         state.fetchLoading = false;
@@ -50,9 +51,9 @@ export const pricesSlice = createSlice({
       .addCase(createPrice.pending, (state) => {
         state.createLoading = true;
       })
-      .addCase(createPrice.fulfilled, (state, { payload: message }) => {
+      .addCase(createPrice.fulfilled, (state, { payload: priceResponse }) => {
         state.createLoading = false;
-        state.priceResponse = message;
+        state.priceResponse = priceResponse.message;
       })
       .addCase(createPrice.rejected, (state) => {
         state.createLoading = false;

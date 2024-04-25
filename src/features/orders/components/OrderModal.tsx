@@ -11,11 +11,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
-import { ShipmentAddress, ShipmentMutation } from '../../../types/typeOrder';
+import { ShipmentAddress, ShipmentMutation } from '../../../types/types.Order';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const style = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',

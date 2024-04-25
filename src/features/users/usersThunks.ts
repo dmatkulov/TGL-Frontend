@@ -1,6 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   GlobalError,
+  IStaff,
+  Staff,
+  UpdateUserArg,
   ValidationError,
 } from '../../types/types';
 import axiosApi from '../../utils/axiosApi';
@@ -49,6 +52,31 @@ export const update = createAsyncThunk<
     throw e;
   }
 });
+
+export const createStaff = createAsyncThunk<null, IStaff>(
+  'users/staff',
+  async (staffMutation) => {
+    return await axiosApi.post(serverRoute.staff, staffMutation);
+  },
+);
+
+export const getStaff = createAsyncThunk<Staff, string>(
+  'users/getStaff',
+  async (id) => {
+    const staffResponse = await axiosApi.get<Staff>('/users/' + id);
+    return staffResponse.data;
+  },
+);
+
+export const updateStaff = createAsyncThunk<void, UpdateUserArg>(
+  'users/updateStaff',
+  async (userId, userMutation) => {
+    return await axiosApi.put(
+      `${serverRoute.users}/update/${userId}`,
+      userMutation,
+    );
+  },
+);
 
 export const login = createAsyncThunk<
   RegisterResponse,

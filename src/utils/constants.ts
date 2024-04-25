@@ -5,12 +5,13 @@ export const serverRoute = {
   sessions: '/users/sessions',
   pups: '/pups',
   prices: '/price',
+  staff: '/users/staff',
 };
 
-export const Roles = {
-  admin: 'admin',
-  manager: 'manager',
-};
+export const Roles = [
+  { id: 1, name: 'admin' },
+  { id: 2, name: 'manager' },
+];
 
 export const appRoutes = {
   notFound: '*',
@@ -31,5 +32,6 @@ export const appRoutes = {
   adminWarehouses: '/admin-profile/warehouses',
   calculate: '/calculate',
   addStaff: '/admin-profile/add-staff',
+  editStaff: '/admin-profile/edit-staff/:id',
   warehouse: 'warehouseForm',
 };

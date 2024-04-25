@@ -1,25 +1,29 @@
-import { GlobalError, ValidationError } from '../../types/types';
+import { GlobalError, Staff, ValidationError } from '../../types/types';
 import { createSlice } from '@reduxjs/toolkit';
-import { login, logOut, register } from './usersThunks';
+import { createStaff, getStaff, login, logOut, register } from './usersThunks';
 import { RootState } from '../../app/store';
 import { User } from '../../types/types.User';
 
 interface UserState {
   user: User | null;
+  staff: Staff | null;
   registerLoading: boolean;
   registerError: ValidationError | null;
   loginLoading: boolean;
   loginError: GlobalError | null;
   logOutLoading: boolean;
+  getStaffLoading: boolean;
 }
 
 const initialState: UserState = {
   user: null,
+  staff: null,
   registerLoading: false,
   registerError: null,
   loginLoading: false,
   loginError: null,
   logOutLoading: false,
+  getStaffLoading: false,
 };
 
 export const usersSlice = createSlice({
@@ -52,6 +56,29 @@ export const usersSlice = createSlice({
       });
 
     builder
+      .addCase(createStaff.pending, (state) => {
+        state.registerLoading = true;
+      })
+      .addCase(createStaff.fulfilled, (state) => {
+        state.registerLoading = false;
+      })
+      .addCase(createStaff.rejected, (state) => {
+        state.registerLoading = false;
+      });
+
+    builder
+      .addCase(getStaff.pending, (state) => {
+        state.getStaffLoading = true;
+      })
+      .addCase(getStaff.fulfilled, (state, { payload: staff }) => {
+        state.getStaffLoading = false;
+        state.staff = staff;
+      })
+      .addCase(getStaff.rejected, (state) => {
+        state.getStaffLoading = false;
+      });
+
+    builder
       .addCase(login.pending, (state) => {
         state.loginLoading = true;
         state.loginError = null;
@@ -80,12 +107,15 @@ export const usersSlice = createSlice({
 
 export const usersReducer = usersSlice.reducer;
 export const selectUser = (state: RootState) => state.users.user;
+export const selectStaff = (state: RootState) => state.users.staff;
 export const selectRegisterLoading = (state: RootState) =>
   state.users.registerLoading;
 export const selectRegisterError = (state: RootState) =>
   state.users.registerError;
 export const selectLoginLoading = (state: RootState) =>
   state.users.loginLoading;
+export const selectGetStaffLoading = (state: RootState) =>
+  state.users.getStaffLoading;
 export const selectLoginError = (state: RootState) => state.users.loginError;
 export const selectLogOutLoading = (state: RootState) =>
   state.users.logOutLoading;

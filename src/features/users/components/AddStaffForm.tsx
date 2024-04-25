@@ -26,6 +26,7 @@ import { regionsState } from '../../regions/regionsSlice';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
+  isEdit?: boolean;
   existingStaff?: IStaff;
 }
 
@@ -45,6 +46,7 @@ const initialState: IStaff = {
 
 const AddStaffForm: React.FC<AddStaffFormProps> = ({
   onSubmit,
+  isEdit = false,
   existingStaff = initialState,
 }) => {
   const navigate = useNavigate();
@@ -53,6 +55,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
   const loading = useAppSelector(selectRegisterLoading);
   const pups = useAppSelector(selectPups);
   const regions = useAppSelector(regionsState);
+  const roles = Roles;
 
   const [formData, setFormData] = useState<IStaff>(existingStaff);
 
@@ -208,7 +211,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 name="region"
                 label="Регион"
                 type="text"
-                value={formData.region}
+                value={regions.length > 0 ? formData.region : ''}
                 autoComplete="new-region"
                 onChange={inputChangeHandler}
                 error={Boolean(getError('region'))}
@@ -217,11 +220,12 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 <MenuItem value="" disabled>
                   Выберите область
                 </MenuItem>
-                {regions.map((region) => (
-                  <MenuItem key={region._id} value={region._id}>
-                    {region.name}
-                  </MenuItem>
-                ))}
+                {regions.length > 0 &&
+                  regions.map((region) => (
+                    <MenuItem key={region._id} value={region._id}>
+                      {region.name}
+                    </MenuItem>
+                  ))}
               </TextField>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -260,7 +264,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 name="pupID"
                 label="ПВЗ"
                 type="text"
-                value={formData.pupID}
+                value={pups.length > 0 ? formData.firstName : ''}
                 autoComplete="new-pupID"
                 onChange={inputChangeHandler}
                 error={Boolean(getError('pupID'))}
@@ -269,12 +273,13 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 <MenuItem value="" disabled>
                   Выберите ближайший ПВЗ
                 </MenuItem>
-                {pups.map((pup) => (
-                  <MenuItem key={pup._id} value={pup._id}>
-                    <b>{pup.name}</b>
-                    {pup.region.name} обл., {pup.address}, {pup.settlement}
-                  </MenuItem>
-                ))}
+                {pups.length > 0 &&
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))}
               </TextField>
             </Grid>
 
@@ -286,7 +291,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 name="role"
                 label="Роль"
                 type="text"
-                value={formData.role}
+                value={roles.length > 0 ? formData.role : ''}
                 autoComplete="new-Role"
                 onChange={inputChangeHandler}
                 error={Boolean(getError('Role'))}
@@ -295,12 +300,12 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 <MenuItem value="" disabled>
                   Роль сотрудника
                 </MenuItem>
-                <MenuItem key={Roles.admin}>
-                  <b>{Roles.admin}</b>
-                </MenuItem>
-                <MenuItem key={Roles.manager}>
-                  <b>{Roles.manager}</b>
-                </MenuItem>
+                {pups.length > 0 &&
+                  roles.map((role) => (
+                    <MenuItem key={role.id}>
+                      <b>{role.name}</b>
+                    </MenuItem>
+                  ))}
               </TextField>
             </Grid>
             <Grid
@@ -324,7 +329,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                   disabled={loading}
                   loading={loading}
                 >
-                  Зарегистрировать
+                  {isEdit ? 'Обновить' : 'Зарегестрировать'}
                 </LoadingButton>
               </Grid>
               <Grid item textAlign="center">

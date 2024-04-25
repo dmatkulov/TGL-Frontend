@@ -3,13 +3,14 @@ import { Grid } from '@mui/material';
 import { useAppDispatch } from '../../../app/hooks';
 import { IStaff } from '../../../types/types';
 import AddStaffForm from '../components/AddStaffForm';
+import { createStaff } from '../usersThunks';
 
 const AddStaff: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const onFormSubmit = async (cocktailMutation: IStaff) => {
+  const onFormSubmit = async (staffMutation: IStaff) => {
     try {
-      // await dispatch(createCocktail(cocktailMutation)).unwrap();
+      await dispatch(createStaff(staffMutation)).unwrap();
     } catch {
       //
     }

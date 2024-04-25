@@ -15,6 +15,21 @@ export interface GlobalError {
   error: string;
 }
 
+export interface Staff {
+  _id: string;
+  email: string;
+  password: string;
+  pupID: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  phoneNumber: string;
+  region: string;
+  settlement: string;
+  address: string;
+  role: string;
+}
+
 export interface IStaff {
   email: string;
   password: string;
@@ -27,4 +42,9 @@ export interface IStaff {
   settlement: string;
   address: string;
   role: string;
+}
+
+export interface UpdateUserArg {
+  userId: string;
+  userMutation: IStaff;
 }

@@ -4,7 +4,7 @@ import {
   Container,
   Grid,
   Stack,
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import img from '..//..//../assets/car.png';
 import tt from '..//..//../assets/tt.svg';
@@ -14,6 +14,36 @@ import SocialMedia from './SocialMedia';
 import PlaceIcon from '@mui/icons-material/Place';
 
 const Footer = () => {
+  const isSmallScreen = useMediaQuery('(max-width:660px)');
+
+  let social = (
+    <>
+      <SocialMedia
+        tiktok
+        title="Мы в ТикТок"
+        alt="ТикТок"
+        href="https://www.tiktok.com/@techgear.logistics"
+        imagePath={tt}
+      />
+
+      <SocialMedia
+        instagram
+        title="Мы в Инстаграм"
+        alt="Инстаграм"
+        href="https://www.instagram.com/cargo.878_kg"
+        imagePath={inst}
+      />
+
+      <SocialMedia
+        whatsapp
+        title="Написать в WhatsApp"
+        alt="WhatsApp"
+        href="https://wa.me/996222601960?text=Здравствуйте,"
+        imagePath={wtsp}
+      />
+    </>
+  )
+
   return (
     <Container sx={{ pt: 3 }}>
       <Grid
@@ -23,7 +53,7 @@ const Footer = () => {
           pb: 4,
         }}
       >
-        <Grid item xs={3}>
+        <Grid item xs={3} sx={{ display: isSmallScreen ? 'none' : '' }}>
           <CardMedia
             sx={{ width: 200 }}
             component="img"
@@ -46,31 +76,13 @@ const Footer = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={3} gap={2} display="flex" flexDirection="column">
-          <SocialMedia
-            tiktok
-            title="Мы в ТикТок"
-            alt="ТикТок"
-            href="https://www.tiktok.com/@techgear.logistics"
-            imagePath={tt}
-          />
-
-          <SocialMedia
-            instagram
-            title="Мы в Инстаграм"
-            alt="Инстаграм"
-            href="https://www.instagram.com/cargo.878_kg"
-            imagePath={inst}
-          />
-
-          <SocialMedia
-            whatsapp
-            title="Написать в WhatsApp"
-            alt="WhatsApp"
-            href="https://wa.me/996222601960?text=Здравствуйте,"
-            imagePath={wtsp}
-          />
-        </Grid>
+        { isSmallScreen ?
+          <Grid container gap={2} display="flex" flexDirection="row" wrap="wrap">
+            { social }
+          </Grid> :
+          <Grid item xs={3} gap={2} display="flex" flexDirection="column">
+            { social }
+          </Grid>}
       </Grid>
     </Container>
   );

@@ -4,7 +4,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText,
+  ListItemText, useMediaQuery,
 } from '@mui/material';
 import { adminLinks } from '../../../utils/constants';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
@@ -12,14 +12,20 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const AdminNavigation = () => {
+  const isSmallScreen = useMediaQuery('(max-width:760px)');
+
   const navigate = useNavigate();
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
 
   return (
     <>
-      <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+      <Box sx={{ bgcolor: 'background.paper' }}>
         <nav>
-          <List>
+          <List
+            sx={{
+              display: isSmallScreen ? 'flex' : '',
+              flexWrap: isSmallScreen ? 'wrap' : '',
+            }}>
             {adminLinks.map((link) => (
               <ListItem key={link.id}>
                 <ListItemButton

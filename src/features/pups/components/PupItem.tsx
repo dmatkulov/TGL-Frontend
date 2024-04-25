@@ -8,7 +8,7 @@ interface Props {
 const PupItem: React.FC<Props> = ({ pupItem }) => {
   return (
     <Grid m={1}>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {pupItem.name}

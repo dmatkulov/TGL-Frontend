@@ -30,7 +30,6 @@ const UserDialog: React.FC<Props> = ({
   const regions = useAppSelector(regionsState);
   return (
     <>
-      {/* Modal */}
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogTitle>Редактирование профиля</DialogTitle>
         <DialogContent
@@ -41,7 +40,7 @@ const UserDialog: React.FC<Props> = ({
           <form autoComplete="off">
             {/*onsubmit */}
             <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'}>
+              <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
                 <TextField
                   id="firstName"
                   label="Имя"

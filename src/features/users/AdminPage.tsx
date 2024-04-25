@@ -1,12 +1,14 @@
-import { Grid } from '@mui/material';
+import {Grid, useMediaQuery} from '@mui/material';
 import Profile from './containers/Profile';
 import { Outlet } from 'react-router-dom';
 import AdminNavigation from './components/AdminNavigation';
 
 const AdminPage = () => {
+  const isSmallScreen = useMediaQuery('(max-width:760px)');
+
   return (
     <>
-      <Grid container>
+      <Grid container direction={ isSmallScreen ? 'column' : 'row' }>
         <Grid item xs={12} bgcolor="#f5f5f5" px={3} mb={5}>
           <Profile />
         </Grid>

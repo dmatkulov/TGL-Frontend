@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import {Button, Grid, Typography, useMediaQuery} from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
@@ -8,6 +8,8 @@ import { update } from '../usersThunks';
 import UserDialog from '../components/UserDialog';
 
 const Profile = () => {
+  const isSmallScreen = useMediaQuery('(max-width:860px)');
+
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
@@ -50,24 +52,24 @@ const Profile = () => {
       <Grid container spacing={2} flexWrap="nowrap">
         <Grid container direction="column" item>
           <Grid item>
-            <Typography variant="h2">
-              {user?.firstName} {user?.lastName}
+            <Typography variant={ isSmallScreen ? 'h4' : 'h2' }>
+              {user?.firstName} { user?.lastName }
             </Typography>
-            {isAdmin ? (
+            { isAdmin ? (
               <></>
             ) : (
-              <Typography variant="h4">
-                Ваш персональный код: {user?.marketId}
+              <Typography variant={ isSmallScreen ? 'h6' : 'h4' }>
+                Ваш персональный код: { user?.marketId }
               </Typography>
             )}
           </Grid>
           <Grid item>
-            <Button variant="contained" onClick={handleClickOpen}>
+            <Button variant="contained" onClick={ handleClickOpen }>
               Редактировать профиль
             </Button>
           </Grid>
         </Grid>
-        {isAdmin ? (
+        { isAdmin ? (
           <></>
         ) : (
           <Grid item>

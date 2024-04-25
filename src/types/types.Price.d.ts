@@ -16,4 +16,5 @@ export interface UpdatePriceArg {
 
 export interface PriceResponse {
   message: string;
+  price: Price;
 }

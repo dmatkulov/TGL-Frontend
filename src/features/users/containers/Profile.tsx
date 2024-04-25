@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import { ProfileMutation } from '../../../types/typeProfile';
+import { ProfileMutation } from '../../../types/types.Profile';
 import Warehouses from '../../warehouses/Warehouses';
 import { update } from '../usersThunks';
 import UserDialog from '../components/UserDialog';
@@ -16,12 +16,13 @@ const Profile = () => {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     middleName: user?.middleName || '',
-    region: user?.region || '',
+    region: user?.region._id || '',
     settlement: user?.settlement || '',
     address: user?.address || '',
   });
   const isAdmin = user?.role === 'super' || 'admin';
 
+  console.log(user)
   const handleClickOpen = () => {
     setOpen(true);
   };

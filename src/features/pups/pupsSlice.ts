@@ -1,4 +1,4 @@
-import { Pup } from '../../types/typePup';
+import { Pup } from '../../types/types.Pup';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { createPup, fetchPups } from './pupsThunks';
@@ -26,7 +26,9 @@ export const pupsSlice = createSlice({
       })
       .addCase(fetchPups.fulfilled, (state, { payload }) => {
         state.fetchLoading = false;
-        state.items = payload.pups;
+        if (payload) {
+          state.items = payload.pups;
+        }
       })
       .addCase(fetchPups.rejected, (state) => {
         state.fetchLoading = false;

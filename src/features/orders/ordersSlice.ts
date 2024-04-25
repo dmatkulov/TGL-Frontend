@@ -1,4 +1,4 @@
-import { Order } from '../../types/typeOrder';
+import { Order } from '../../types/types.Order';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 

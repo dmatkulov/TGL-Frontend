@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
-import { Warehouse } from '../../types/types.Warehouses';
+import { Warehouse, WarehouseResponse } from '../../types/types.Warehouses';
 
 export const fetchWarehouseData = createAsyncThunk<
-  Warehouse[] | undefined,
+  WarehouseResponse | undefined,
   undefined
 >('warehouse/fetchWarehouseData', async () => {
-  const response = await axiosApi.get<Warehouse[]>('/warehouse');
+  const response = await axiosApi.get<WarehouseResponse>('/warehouse');
   if (response) {
     return response.data;
   }

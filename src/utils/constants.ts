@@ -26,7 +26,8 @@ export const appRoutes = {
   staff: '/admin-profile/staff',
   shipmentForm: '/admin-profile/shipmentForm',
   shipments: '/admin-profile/shipments',
-  warehouse: 'warehouseForm',
+  adminWarehousesAdd: '/admin-profile/warehouses-form',
+  adminWarehouses: '/admin-profile/warehouses',
 };
 
 export const userLinks: UserNav[] = [
@@ -77,5 +78,10 @@ export const adminLinks: UserNav[] = [
     id: 5,
     name: 'Все посылки',
     navLink: appRoutes.shipments,
+  },
+  {
+    id: 5,
+    name: 'Склад в Китае',
+    navLink: appRoutes.adminWarehouses,
   },
 ];

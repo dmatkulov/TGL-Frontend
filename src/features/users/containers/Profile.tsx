@@ -20,6 +20,7 @@ const Profile = () => {
     settlement: user?.settlement || '',
     address: user?.address || '',
   });
+  const isAdmin = user?.role === 'super' || 'admin';
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -52,9 +53,13 @@ const Profile = () => {
             <Typography variant="h2">
               {user?.firstName} {user?.lastName}
             </Typography>
-            <Typography variant="h4">
-              Ваш персональный код: {user?.marketId}
-            </Typography>
+            {isAdmin ? (
+              <></>
+            ) : (
+              <Typography variant="h4">
+                Ваш персональный код: {user?.marketId}
+              </Typography>
+            )}
           </Grid>
           <Grid item>
             <Button variant="contained" onClick={handleClickOpen}>
@@ -62,9 +67,13 @@ const Profile = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item>
-          <Warehouses />
-        </Grid>
+        {isAdmin ? (
+          <></>
+        ) : (
+          <Grid item>
+            <Warehouses />
+          </Grid>
+        )}
       </Grid>
 
       <UserDialog

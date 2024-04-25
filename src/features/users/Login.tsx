@@ -48,7 +48,7 @@ const Login: React.FC = () => {
 
     try {
       await dispatch(login(state)).unwrap();
-        navigate(appRoutes.profile);
+      navigate(appRoutes.profile);
     } catch (e) {
       console.error(e);
     }

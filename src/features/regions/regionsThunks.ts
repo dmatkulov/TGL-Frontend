@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
-import { Region } from '../../types/types.Regions';
+import { RegionResponse } from '../../types/types.Regions';
 
-export const fetchRegions = createAsyncThunk<Region[] | undefined>(
+export const fetchRegions = createAsyncThunk<RegionResponse | undefined>(
   'regions/fetch',
   async () => {
     try {
-      const response = await axiosApi.get<Region[]>('/regions');
+      const response = await axiosApi.get<RegionResponse>('/regions');
       if (response) {
         return response.data;
       }

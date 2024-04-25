@@ -4,5 +4,6 @@ export interface Warehouse {
   phoneNumber: string;
 }
 export interface WarehouseResponse {
+  message: string;
   warehouses: Warehouse[];
 }

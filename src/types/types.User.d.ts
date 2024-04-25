@@ -1,4 +1,5 @@
-import {Region} from './types.Regions';
+import { Region } from './types.Regions';
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 
 export interface User {
   _id: string;
@@ -33,6 +34,7 @@ export interface UserNav {
   id: number;
   name: string;
   navLink: string;
+  icon: ReactJSXElement;
 }
 
 export interface LoginMutation {

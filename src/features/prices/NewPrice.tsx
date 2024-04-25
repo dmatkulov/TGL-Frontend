@@ -22,7 +22,7 @@ const NewPrice: React.FC = () => {
     <>
       {response && (
         <Alert severity="error" sx={{ mb: 3 }}>
-          {response.message}
+          {response}
         </Alert>
       )}
       <PriceForm onSubmit={onFormSubmit} loading={isCreating} />

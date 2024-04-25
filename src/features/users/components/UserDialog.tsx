@@ -7,11 +7,11 @@ import {
   MenuItem,
   TextField,
 } from '@mui/material';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { ProfileMutation } from '../../../types/types.Profile';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
-import {fetchRegions} from '../../regions/regionsThunks';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 interface Props {
   state: ProfileMutation;
@@ -29,10 +29,10 @@ const UserDialog: React.FC<Props> = ({
   inputChangeHandler,
 }) => {
   const regions = useAppSelector(regionsState);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchRegions())
+    dispatch(fetchRegions());
   }, [dispatch]);
 
   return (
@@ -47,7 +47,7 @@ const UserDialog: React.FC<Props> = ({
         >
           <form autoComplete="off">
             {/*onsubmit */}
-            <Grid container direction="column" spacing={2}>
+            <Grid container direction="column" spacing={2} pt={2}>
               <Grid item xs={12} container gap={'10px'}>
                 <TextField
                   id="firstName"

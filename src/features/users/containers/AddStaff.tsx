@@ -7,7 +7,6 @@ import { createStaff } from '../usersThunks';
 
 const AddStaff: React.FC = () => {
   const dispatch = useAppDispatch();
-
   const onFormSubmit = async (staffMutation: IStaff) => {
     try {
       await dispatch(createStaff(staffMutation)).unwrap();

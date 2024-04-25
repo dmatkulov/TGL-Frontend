@@ -12,7 +12,6 @@ export const Roles = [
   { id: 1, name: 'admin' },
   { id: 2, name: 'manager' },
 ];
-
 export const appRoutes = {
   notFound: '*',
   home: '/',

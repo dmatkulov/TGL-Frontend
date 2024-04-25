@@ -81,7 +81,7 @@ const PriceForm: React.FC<Props> = ({
 
       {priceFieldError && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {priceFieldError.message}
+          {priceFieldError}
         </Alert>
       )}
 

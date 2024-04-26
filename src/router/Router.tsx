@@ -18,6 +18,7 @@ import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
 import Shipments from '../features/shipments/containers/Shipments';
 import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
+import Calculator from '../components/UI/Calculator/Calculator';
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.login,
         element: <Login />,
+      },
+      {
+        path: appRoutes.calculate,
+        element: <Calculator />,
       },
       {
         path: appRoutes.profile,

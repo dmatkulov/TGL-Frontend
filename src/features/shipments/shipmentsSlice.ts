@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ShipmentData } from '../../types/types.Shipments';
-import { createShipment, fetchShipments } from './shipmentsThunk';
+import {
+  createShipment,
+  fetchShipments,
+  fetchShipmentsByUser,
+} from './shipmentsThunk';
 import { RootState } from '../../app/store';
 
 interface shipmentsState {
@@ -40,6 +44,18 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
       })
       .addCase(createShipment.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+    builder
+      .addCase(fetchShipmentsByUser.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(fetchShipmentsByUser.fulfilled, (state, { payload }) => {
+        state.shipments = payload.shipments;
+        state.shipmentsLoading = false;
+      })
+      .addCase(fetchShipmentsByUser.rejected, (state) => {
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });

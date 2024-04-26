@@ -5,7 +5,6 @@ import {
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
-
 export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   'shipments/fetchAll',
   async () => {
@@ -31,3 +30,17 @@ export const createShipment = createAsyncThunk<
   );
   return response.data;
 });
+
+export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
+  'shipments/fetchByUser',
+  async (arg) => {
+    try {
+      const response = await axiosApi.get(
+        serverRoute.shipments + '?marketId=' + arg,
+      );
+      return response.data ?? [];
+    } catch (e) {
+      console.log('Caught on try - FETCH SHIPMENTS BY USER - ', e);
+    }
+  },
+);

@@ -5,7 +5,14 @@ export interface ShipmentData {
     lastName: string;
   };
   userMarketId: number;
-  pupId: string;
+  pupId: {
+    _id: string;
+    name: string;
+    address: string;
+    settlement: string;
+    region: string;
+    phoneNumber: string;
+  };
   status: string;
   dimensions: {
     height: number;
@@ -13,12 +20,31 @@ export interface ShipmentData {
     length: number;
   };
   weight: number;
+  delivery: boolean;
   price: {
     usd: number;
     som: number;
   };
   trackerNumber: number;
   isPaid: boolean;
+}
+
+export interface Shipment {
+  _id: string;
+  status: string;
+  pupId: {
+    _id: string;
+    name: string;
+    address: string;
+    settlement: string;
+    region: string;
+    phoneNumber: string;
+  };
+  price: {
+    usd: number;
+    som: number;
+  };
+  trackerNumber: number;
 }
 
 export interface ShipmentMutation {

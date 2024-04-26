@@ -4,9 +4,9 @@ import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
 import { getStaff, updateStaff } from '../usersThunks';
-import { IStaff } from '../../../types/types';
 import { CircularProgress, Grid } from '@mui/material';
 import AddStaffForm from '../components/AddStaffForm';
+import { IStaff } from '../../../types/types.User';
 
 const EditStaff: React.FC = () => {
   const navigate = useNavigate();
@@ -41,10 +41,12 @@ const EditStaff: React.FC = () => {
   if (!isFetching && staff) {
     const mutation = {
       ...staff,
-      region: staff.region,
-      pupID: staff.pupID,
+      region: staff.region._id,
+      pupID: staff.pupID._id,
       role: staff.role,
     };
+
+    console.log(mutation);
 
     form = (
       <AddStaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { IStaff } from '../../../types/types';
 import {
   selectRegisterError,
   selectRegisterLoading,
@@ -23,6 +22,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
+import { IStaff } from '../../../types/types.User';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
@@ -88,12 +88,14 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
     event.preventDefault();
     try {
       onSubmit(formData);
-      navigate(appRoutes.profile);
+      navigate(appRoutes.staff);
       setFormData(initialState);
     } catch (e) {
       console.error(e);
     }
   };
+
+  console.log(formData);
 
   return (
     <Container component="main">
@@ -106,10 +108,11 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
         }}
       >
         <Typography component="h1" variant="h5">
-          Регистрация Сотрудника
+          {isEdit ? 'Обновление Сотрудника' : 'Регистрация Сотрудника'}
         </Typography>
         <Box
           component="form"
+          autoComplete="off"
           onSubmit={submitFormHandler}
           sx={{ mt: 3, width: '100%' }}
         >
@@ -155,20 +158,24 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 helperText={getError('middleName')}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                required
-                name="password"
-                label="Пароль"
-                type="password"
-                value={formData.password}
-                autoComplete="new-password"
-                onChange={inputChangeHandler}
-                error={Boolean(getError('password'))}
-                helperText={getError('password')}
-              />
-            </Grid>
+            {isEdit ? (
+              <></>
+            ) : (
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  required
+                  name="password"
+                  label="Пароль"
+                  type="password"
+                  value={formData.password}
+                  autoComplete="new-password"
+                  onChange={inputChangeHandler}
+                  error={Boolean(getError('password'))}
+                  helperText={getError('password')}
+                />
+              </Grid>
+            )}
             <Grid item xs={12} sm={6}>
               <PhoneInput
                 country="kg"
@@ -201,6 +208,32 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 error={Boolean(getError('email'))}
                 helperText={getError('email')}
               />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                required
+                name="role"
+                label="Роль"
+                type="text"
+                value={roles.length > 0 ? formData.role : ''}
+                autoComplete="new-role"
+                onChange={inputChangeHandler}
+                error={Boolean(getError('role'))}
+                helperText={getError('role')}
+              >
+                <MenuItem value="" disabled>
+                  Роль сотрудника
+                </MenuItem>
+                {roles.length > 0 &&
+                  roles.map((role) => (
+                    <MenuItem key={role.id} value={role.name}>
+                      {role.name}
+                    </MenuItem>
+                  ))}
+              </TextField>
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -264,7 +297,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 name="pupID"
                 label="ПВЗ"
                 type="text"
-                value={pups.length > 0 ? formData.firstName : ''}
+                value={pups.length > 0 ? formData.pupID : ''}
                 autoComplete="new-pupID"
                 onChange={inputChangeHandler}
                 error={Boolean(getError('pupID'))}
@@ -278,32 +311,6 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                     <MenuItem key={pup._id} value={pup._id}>
                       <b>{pup.name}</b>
                       {pup.region.name} обл., {pup.address}, {pup.settlement}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                select
-                required
-                name="role"
-                label="Роль"
-                type="text"
-                value={roles.length > 0 ? formData.role : ''}
-                autoComplete="new-Role"
-                onChange={inputChangeHandler}
-                error={Boolean(getError('Role'))}
-                helperText={getError('Role')}
-              >
-                <MenuItem value="" disabled>
-                  Роль сотрудника
-                </MenuItem>
-                {pups.length > 0 &&
-                  roles.map((role) => (
-                    <MenuItem key={role.id}>
-                      <b>{role.name}</b>
                     </MenuItem>
                   ))}
               </TextField>

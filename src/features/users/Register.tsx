@@ -24,7 +24,7 @@ import { selectPups } from '../pups/pupsSlice';
 import { fetchPups } from '../pups/pupsThunks';
 import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
-import {RegisterMutation} from '../../types/types.User';
+import { RegisterMutation } from '../../types/types.User';
 
 const initialState: RegisterMutation = {
   email: '',

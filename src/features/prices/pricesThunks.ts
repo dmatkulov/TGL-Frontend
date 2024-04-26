@@ -1,7 +1,11 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
-import {serverRoute} from '../../utils/constants';
-import {PriceMutation, PriceResponse, UpdatePriceArg,} from '../../types/types.Price';
+import { serverRoute } from '../../utils/constants';
+import {
+  PriceMutation,
+  PriceResponse,
+  UpdatePriceArg,
+} from '../../types/types.Price';
 
 export const fetchPrice = createAsyncThunk<PriceResponse>(
   'prices/fetchPrice',
@@ -25,7 +29,10 @@ export const createPrice = createAsyncThunk<PriceResponse, PriceMutation>(
 export const updatePrice = createAsyncThunk<PriceResponse, UpdatePriceArg>(
   'prices/update',
   async ({ id, priceMutation }) => {
-    const response = await axiosApi.put<PriceResponse>(`${serverRoute.prices}/${id}`, priceMutation);
+    const response = await axiosApi.put<PriceResponse>(
+      `${serverRoute.prices}/${id}`,
+      priceMutation,
+    );
     return response.data;
   },
 );

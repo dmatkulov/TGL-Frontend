@@ -1,18 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  GlobalError,
-  IStaff,
-  Staff,
-  UpdateUserArg,
-  ValidationError,
-} from '../../types/types';
+import { GlobalError, ValidationError } from '../../types/types';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import { isAxiosError } from 'axios';
 import { RootState } from '../../app/store';
 import { unsetUser } from './usersSlice';
 import { ProfileMutation } from '../../types/types.Profile';
-import {LoginMutation, RegisterMutation, RegisterResponse} from '../../types/types.User';
+import {
+  IStaff,
+  IStaffResponse,
+  IStaffResponseData,
+  LoginMutation,
+  RegisterMutation,
+  RegisterResponse,
+  UpdateUserArg,
+  UsersRequestParams,
+} from '../../types/types.User';
 
 export const register = createAsyncThunk<
   RegisterResponse,
@@ -60,10 +63,36 @@ export const createStaff = createAsyncThunk<null, IStaff>(
   },
 );
 
-export const getStaff = createAsyncThunk<Staff, string>(
+export const getStaffData = createAsyncThunk<
+  IStaffResponseData,
+  UsersRequestParams | undefined,
+  { state: RootState }
+>('users/getStaffData', async (params, { rejectWithValue }) => {
+  try {
+    const queryParams: Record<string, string | undefined> = {};
+    if (params) {
+      if (params.region) queryParams.region = params.region;
+      if (params.settlement) queryParams.settlement = params.settlement;
+      if (params.role) queryParams.role = params.role;
+    }
+
+    const response = await axiosApi.get<IStaffResponseData>('/users', {
+      params: queryParams,
+    });
+    return response.data ?? [];
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 422) {
+      return rejectWithValue(e.response.data);
+    }
+
+    throw e;
+  }
+});
+
+export const getStaff = createAsyncThunk<IStaffResponse, string>(
   'users/getStaff',
   async (id) => {
-    const staffResponse = await axiosApi.get<Staff>('/users/' + id);
+    const staffResponse = await axiosApi.get<IStaffResponse>('/users/' + id);
     return staffResponse.data;
   },
 );

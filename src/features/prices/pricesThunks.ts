@@ -29,23 +29,14 @@ export const createPrice = createAsyncThunk<
     );
     return response.data;
   } catch (e) {
-    if (isAxiosError(e) && e.response && e.response.status === 422) {
-      return rejectWithValue(e.response.data);
+    if (isAxiosError(e) && e.response) {
+      if (e.response.status === 422) {
+        return rejectWithValue(e.response.data);
+      }
     }
     throw e;
   }
 });
-
-// export const createPrice = createAsyncThunk<PriceResponse, PriceMutation>(
-//   'prices/createPrice',
-//   async (priceMutation) => {
-//     const response = await axiosApi.post<PriceResponse>(
-//       serverRoute.prices,
-//       priceMutation,
-//     );
-//     return response.data;
-//   },
-// );
 
 export const updatePrice = createAsyncThunk<
   PriceResponse,
@@ -63,6 +54,7 @@ export const updatePrice = createAsyncThunk<
     if (isAxiosError(e) && e.response && e.response.status === 422) {
       return rejectWithValue(e.response.data);
     }
+
     throw e;
   }
 });

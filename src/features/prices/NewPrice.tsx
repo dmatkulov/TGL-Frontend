@@ -3,11 +3,18 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { PriceMutation } from '../../types/types.Price';
 import { createPrice } from './pricesThunks';
 import PriceForm from './components/PriceForm';
-import { selectPriceCreateLoading } from './pricesSlice';
+import {
+  selectPriceCreateLoading,
+  selectPriceError,
+  selectPriceResponse,
+} from './pricesSlice';
+import ToastMessage from '../../components/UI/ToastContainer/ToastMessage';
 
 const NewPrice: React.FC = () => {
   const dispatch = useAppDispatch();
   const isCreating = useAppSelector(selectPriceCreateLoading);
+  const error = useAppSelector(selectPriceError);
+  const success = useAppSelector(selectPriceResponse);
 
   const onFormSubmit = async (priceMutation: PriceMutation) => {
     try {
@@ -18,6 +25,8 @@ const NewPrice: React.FC = () => {
   };
   return (
     <>
+      {success && <ToastMessage message={success} success />}
+      {error && <ToastMessage message={error} error />}
       <PriceForm onSubmit={onFormSubmit} loading={isCreating} />
     </>
   );

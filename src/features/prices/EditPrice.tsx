@@ -5,16 +5,19 @@ import {
   selectPrice,
   selectPriceEditLoading,
   selectPriceLoading,
+  selectPriceResponse,
 } from './pricesSlice';
 import { CircularProgress } from '@mui/material';
 import PriceForm from './components/PriceForm';
 import { PriceMutation } from '../../types/types.Price';
+import ToastMessage from '../../components/UI/ToastContainer/ToastMessage';
 
 const EditPrice: React.FC = () => {
   const dispatch = useAppDispatch();
   const price = useAppSelector(selectPrice);
   const isFetching = useAppSelector(selectPriceLoading);
   const isEditing = useAppSelector(selectPriceEditLoading);
+  const priceResponse = useAppSelector(selectPriceResponse);
 
   const doFetchOne = useCallback(async () => {
     try {
@@ -52,7 +55,12 @@ const EditPrice: React.FC = () => {
     );
   }
 
-  return <>{form}</>;
+  return (
+    <>
+      {priceResponse && <ToastMessage success message={priceResponse} />}
+      {form}
+    </>
+  );
 };
 
 export default EditPrice;

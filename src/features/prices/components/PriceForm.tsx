@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PriceMutation } from '../../../types/types.Price';
-import { Alert, Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Grid, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import PageTitle from '../../users/components/PageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -9,6 +9,7 @@ import {
   setPriceFieldError,
   unsetPriceMessage,
 } from '../pricesSlice';
+import ToastMessage from '../../../components/UI/ToastContainer/ToastMessage';
 
 interface Props {
   onSubmit: (mutation: PriceMutation) => void;
@@ -29,9 +30,9 @@ const PriceForm: React.FC<Props> = ({
   loading,
 }) => {
   const dispatch = useAppDispatch();
-  const priceFieldError = useAppSelector(selectPriceError);
-
   const [state, setState] = useState<PriceMutation>(initialPrice);
+  const error = useAppSelector(selectPriceError);
+
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -51,22 +52,16 @@ const PriceForm: React.FC<Props> = ({
       !isNaN(Number(state.deliveryPrice))
     ) {
       onSubmit(state);
-      setState(initialState);
+      if (!isEdit) {
+        setState(initialState);
+      }
     } else {
       dispatch(
         setPriceFieldError({
-          message:
-            'Введите корректные числовые значения для курса и цены доставки',
+          message: 'Введите корректные числовые значения!',
         }),
       );
-
-      setTimeout(clearError, 1500);
     }
-  };
-
-  const clearError = () => {
-    dispatch(setPriceFieldError(null));
-    setState(initialState);
   };
 
   return (
@@ -79,11 +74,7 @@ const PriceForm: React.FC<Props> = ({
     >
       <PageTitle title={isEdit ? 'Обновить' : 'Создать'} />
 
-      {priceFieldError && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {priceFieldError}
-        </Alert>
-      )}
+      {error && <ToastMessage message={error} error />}
 
       <Grid container direction="column" spacing={2} mt={4} alignItems="center">
         <Grid item xs={8}>
@@ -94,8 +85,8 @@ const PriceForm: React.FC<Props> = ({
             onChange={inputChangeHandler}
             name="exchangeRate"
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">usd</InputAdornment>
+              endAdornment: (
+                <InputAdornment position="start">USD</InputAdornment>
               ),
             }}
             required
@@ -109,8 +100,8 @@ const PriceForm: React.FC<Props> = ({
             onChange={inputChangeHandler}
             name="deliveryPrice"
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">kgs</InputAdornment>
+              endAdornment: (
+                <InputAdornment position="start">Сом</InputAdornment>
               ),
             }}
             required

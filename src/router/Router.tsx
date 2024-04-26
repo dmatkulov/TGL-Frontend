@@ -16,7 +16,9 @@ import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
 import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
+import Shipments from '../features/shipments/containers/Shipments';
 import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
+import CompanyAddresses from '../features/companyAddress/CompanyAddresses';
 
 export const router = createBrowserRouter([
   {
@@ -74,8 +76,12 @@ export const router = createBrowserRouter([
             element: <Staff />,
           },
           {
-            path: appRoutes.shipments,
+            path: appRoutes.shipmentForm,
             element: <ShipmentsForm />,
+          },
+          {
+            path: appRoutes.shipments,
+            element: <Shipments />,
           },
           {
             path: appRoutes.adminWarehouses,
@@ -86,6 +92,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <WarehouseForm />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.adminCompanyAddress,
+            element: (
+              <ProtectedRoute>
+                <CompanyAddresses />
               </ProtectedRoute>
             ),
           },

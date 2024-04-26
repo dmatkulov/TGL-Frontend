@@ -3,28 +3,26 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { PriceMutation } from '../../types/types.Price';
 import { createPrice } from './pricesThunks';
 import PriceForm from './components/PriceForm';
-import { selectPriceCreateLoading, selectPriceResponse } from './pricesSlice';
-import { Alert } from '@mui/material';
+import {
+  selectPriceCreateLoading,
+  selectPriceError,
+  selectPriceResponse,
+} from './pricesSlice';
+import ToastMessage from '../../components/UI/ToastContainer/ToastMessage';
 
 const NewPrice: React.FC = () => {
   const dispatch = useAppDispatch();
   const isCreating = useAppSelector(selectPriceCreateLoading);
-  const response = useAppSelector(selectPriceResponse);
+  const success = useAppSelector(selectPriceResponse);
+  const error = useAppSelector(selectPriceError);
 
   const onFormSubmit = async (priceMutation: PriceMutation) => {
-    try {
-      await dispatch(createPrice(priceMutation)).unwrap();
-    } catch (e) {
-      console.log(e);
-    }
+    await dispatch(createPrice(priceMutation)).unwrap();
   };
   return (
     <>
-      {response && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {response.message}
-        </Alert>
-      )}
+      {success && <ToastMessage message={success} success />}
+      {error && <ToastMessage message={error} error />}
       <PriceForm onSubmit={onFormSubmit} loading={isCreating} />
     </>
   );

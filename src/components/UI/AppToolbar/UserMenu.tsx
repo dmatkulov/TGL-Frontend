@@ -13,7 +13,7 @@ import { logOut } from '../../../features/users/usersThunks';
 import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { User } from '../../../types/typeUser';
+import { User } from '../../../types/types.User';
 
 interface Props {
   user: User;
@@ -69,20 +69,12 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             Профиль
           </MenuItem>
         ) : (
-          [
-            <MenuItem
-              key="profileAdmin"
-              onClick={() => navigate(appRoutes.profileAdmin)}
-            >
-              Профиль руководства
-            </MenuItem>,
-            <MenuItem
-              key="warehouse"
-              onClick={() => navigate(appRoutes.adminWarehousesAdd)}
-            >
-              Добавить склад в Китае
-            </MenuItem>,
-          ]
+          <MenuItem
+            key="profileAdmin"
+            onClick={() => navigate(appRoutes.profileAdmin)}
+          >
+            Профиль руководства
+          </MenuItem>
         )}
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>
       </Menu>

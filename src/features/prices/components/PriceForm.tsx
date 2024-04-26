@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import PageTitle from '../../users/components/PageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
-  selectPriceError,
+  selectPriceFieldError,
   setPriceFieldError,
   unsetPriceMessage,
 } from '../pricesSlice';
@@ -29,9 +29,9 @@ const PriceForm: React.FC<Props> = ({
   loading,
 }) => {
   const dispatch = useAppDispatch();
-  const priceFieldError = useAppSelector(selectPriceError);
-
   const [state, setState] = useState<PriceMutation>(initialPrice);
+  const error = useAppSelector(selectPriceFieldError);
+
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -46,27 +46,29 @@ const PriceForm: React.FC<Props> = ({
 
   const submitFormHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !isNaN(Number(state.exchangeRate)) &&
-      !isNaN(Number(state.deliveryPrice))
-    ) {
-      onSubmit(state);
-      setState(initialState);
-    } else {
-      dispatch(
-        setPriceFieldError({
-          message:
-            'Введите корректные числовые значения для курса и цены доставки',
-        }),
-      );
-
-      setTimeout(clearError, 1500);
+    try {
+      if (
+        !isNaN(Number(state.exchangeRate)) &&
+        !isNaN(Number(state.deliveryPrice))
+      ) {
+        onSubmit(state);
+        if (!isEdit) {
+          setState(initialState);
+        }
+      } else {
+        dispatch(setPriceFieldError('Введите корректные числовые значения!'));
+        setTimeout(clearError, 1500);
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const clearError = () => {
-    dispatch(setPriceFieldError(null));
-    setState(initialState);
+    dispatch(unsetPriceMessage());
+    if (!isEdit) {
+      setState(initialState);
+    }
   };
 
   return (
@@ -79,14 +81,13 @@ const PriceForm: React.FC<Props> = ({
     >
       <PageTitle title={isEdit ? 'Обновить' : 'Создать'} />
 
-      {priceFieldError && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {priceFieldError.message}
-        </Alert>
-      )}
-
       <Grid container direction="column" spacing={2} mt={4} alignItems="center">
-        <Grid item xs={8}>
+        {error && (
+          <Grid item>
+            <Alert severity="error">{error}</Alert>
+          </Grid>
+        )}
+        <Grid item xs>
           <TextField
             id="title"
             label="Курс"
@@ -94,8 +95,8 @@ const PriceForm: React.FC<Props> = ({
             onChange={inputChangeHandler}
             name="exchangeRate"
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">usd</InputAdornment>
+              endAdornment: (
+                <InputAdornment position="start">USD</InputAdornment>
               ),
             }}
             required
@@ -109,8 +110,8 @@ const PriceForm: React.FC<Props> = ({
             onChange={inputChangeHandler}
             name="deliveryPrice"
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">kgs</InputAdornment>
+              endAdornment: (
+                <InputAdornment position="start">Сом</InputAdornment>
               ),
             }}
             required

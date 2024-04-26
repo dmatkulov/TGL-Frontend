@@ -16,7 +16,7 @@ import {
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
-import { PupMutation } from '../../../types/typePup';
+import { PupMutation } from '../../../types/types.Pup';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';

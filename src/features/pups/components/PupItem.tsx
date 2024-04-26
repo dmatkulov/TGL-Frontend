@@ -1,4 +1,4 @@
-import { Pup } from '../../../types/typePup';
+import { Pup } from '../../../types/types.Pup';
 import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
 import React from 'react';
 

@@ -21,17 +21,24 @@ const UserPage = () => {
     ) {
       navigate(appRoutes.profileAdmin);
     }
-  }, [user]);
+  }, [navigate, user]);
   return (
     <>
       <Grid container direction={ isSmallScreen ? 'column' : 'row' }>
-        <Grid item xs={12} bgcolor="#f5f5f5" px={3} mb={5}>
+        <Grid
+          item
+          xs={12}
+          px={3}
+          mb={5}
+          pb={4}
+          sx={{ borderBottom: '1px solid #5F9EA0' }}
+        >
           <Profile />
         </Grid>
-        <Grid item xs={4} pr={2} borderRight="1px solid #f5f5f5">
+        <Grid item xs={3} pr={2}>
           <UserNavigation />
         </Grid>
-        <Grid item xs={8} pl={2}>
+        <Grid item xs={9} px={3} pt={2}>
           <Outlet />
         </Grid>
       </Grid>

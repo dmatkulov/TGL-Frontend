@@ -16,3 +16,8 @@ export interface ShipmentMutation {
   address: string;
   date: string;
 }
+
+export interface OrdersResponse {
+  message: string;
+  orders: Order[];
+}

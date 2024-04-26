@@ -1,17 +1,16 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  GlobalError,
-  LoginMutation,
-  RegisterMutation,
-  RegisterResponse,
-  ValidationError,
-} from '../../types/types';
+import { GlobalError, ValidationError } from '../../types/types';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import { isAxiosError } from 'axios';
 import { RootState } from '../../app/store';
 import { unsetUser } from './usersSlice';
-import { ProfileMutation } from '../../types/typeProfile';
+import { ProfileMutation } from '../../types/types.Profile';
+import {
+  LoginMutation,
+  RegisterMutation,
+  RegisterResponse,
+} from '../../types/types.User';
 
 export const register = createAsyncThunk<
   RegisterResponse,

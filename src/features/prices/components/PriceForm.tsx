@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { PriceMutation } from '../../../types/types.Price';
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Alert, Box, Button, Grid, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import PageTitle from '../../users/components/PageTitle';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
-  selectPriceError,
+  selectPriceFieldError,
   setPriceFieldError,
   unsetPriceMessage,
 } from '../pricesSlice';
-import ToastMessage from '../../../components/UI/ToastContainer/ToastMessage';
 
 interface Props {
   onSubmit: (mutation: PriceMutation) => void;
@@ -31,7 +30,7 @@ const PriceForm: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const [state, setState] = useState<PriceMutation>(initialPrice);
-  const error = useAppSelector(selectPriceError);
+  const error = useAppSelector(selectPriceFieldError);
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,20 +46,28 @@ const PriceForm: React.FC<Props> = ({
 
   const submitFormHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      !isNaN(Number(state.exchangeRate)) &&
-      !isNaN(Number(state.deliveryPrice))
-    ) {
-      onSubmit(state);
-      if (!isEdit) {
-        setState(initialState);
+    try {
+      if (
+        !isNaN(Number(state.exchangeRate)) &&
+        !isNaN(Number(state.deliveryPrice))
+      ) {
+        onSubmit(state);
+        if (!isEdit) {
+          setState(initialState);
+        }
+      } else {
+        dispatch(setPriceFieldError('Введите корректные числовые значения!'));
+        setTimeout(clearError, 1500);
       }
-    } else {
-      dispatch(
-        setPriceFieldError({
-          message: 'Введите корректные числовые значения!',
-        }),
-      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const clearError = () => {
+    dispatch(unsetPriceMessage());
+    if (!isEdit) {
+      setState(initialState);
     }
   };
 
@@ -74,10 +81,13 @@ const PriceForm: React.FC<Props> = ({
     >
       <PageTitle title={isEdit ? 'Обновить' : 'Создать'} />
 
-      {error && <ToastMessage message={error} error />}
-
       <Grid container direction="column" spacing={2} mt={4} alignItems="center">
-        <Grid item xs={8}>
+        {error && (
+          <Grid item>
+            <Alert severity="error">{error}</Alert>
+          </Grid>
+        )}
+        <Grid item xs>
           <TextField
             id="title"
             label="Курс"

@@ -13,15 +13,11 @@ import ToastMessage from '../../components/UI/ToastContainer/ToastMessage';
 const NewPrice: React.FC = () => {
   const dispatch = useAppDispatch();
   const isCreating = useAppSelector(selectPriceCreateLoading);
-  const error = useAppSelector(selectPriceError);
   const success = useAppSelector(selectPriceResponse);
+  const error = useAppSelector(selectPriceError);
 
   const onFormSubmit = async (priceMutation: PriceMutation) => {
-    try {
-      await dispatch(createPrice(priceMutation)).unwrap();
-    } catch (e) {
-      console.log(e);
-    }
+    await dispatch(createPrice(priceMutation)).unwrap();
   };
   return (
     <>

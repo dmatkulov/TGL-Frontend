@@ -9,6 +9,7 @@ interface PriceState {
   createLoading: boolean;
   priceSuccessMsg: string | null;
   priceErrorMsg: string | null;
+  priceFieldError: string | null;
   editLoading: boolean;
 }
 
@@ -18,6 +19,7 @@ const initialState: PriceState = {
   createLoading: false,
   priceSuccessMsg: null,
   priceErrorMsg: null,
+  priceFieldError: null,
   editLoading: false,
 };
 
@@ -26,11 +28,12 @@ export const pricesSlice = createSlice({
   initialState,
   reducers: {
     setPriceFieldError: (state, { payload }) => {
-      state.priceErrorMsg = payload;
+      state.priceFieldError = payload;
     },
     unsetPriceMessage: (state) => {
       state.priceSuccessMsg = null;
       state.priceErrorMsg = null;
+      state.priceFieldError = null;
     },
   },
   extraReducers: (builder) => {
@@ -85,5 +88,7 @@ export const selectPriceResponse = (state: RootState) =>
   state.prices.priceSuccessMsg;
 export const selectPriceError = (state: RootState) =>
   state.prices.priceErrorMsg;
+export const selectPriceFieldError = (state: RootState) =>
+  state.prices.priceFieldError;
 export const selectPriceEditLoading = (state: RootState) =>
   state.prices.editLoading;

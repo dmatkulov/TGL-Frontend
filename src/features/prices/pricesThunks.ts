@@ -48,7 +48,6 @@ export const updatePrice = createAsyncThunk<
       `${serverRoute.prices}/${id}`,
       priceMutation,
     );
-    console.log(response.data.message);
     return response.data;
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 422) {

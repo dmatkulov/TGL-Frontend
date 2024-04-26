@@ -32,13 +32,8 @@ const EditPrice: React.FC = () => {
   }, [doFetchOne]);
 
   const onFormSubmit = async (priceMutation: PriceMutation) => {
-    try {
-      if (price) {
-        await dispatch(updatePrice({ id: price._id, priceMutation })).unwrap();
-        await dispatch(fetchPrice());
-      }
-    } catch (e) {
-      console.log(e);
+    if (price) {
+      await dispatch(updatePrice({ id: price._id, priceMutation })).unwrap();
     }
   };
 

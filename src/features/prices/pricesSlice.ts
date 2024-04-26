@@ -41,7 +41,6 @@ export const pricesSlice = createSlice({
       .addCase(fetchPrice.fulfilled, (state, { payload: priceResponse }) => {
         state.fetchLoading = false;
         state.item = priceResponse.price;
-        state.priceResponse = priceResponse.message;
       })
       .addCase(fetchPrice.rejected, (state) => {
         state.fetchLoading = false;
@@ -55,8 +54,9 @@ export const pricesSlice = createSlice({
         state.createLoading = false;
         state.priceResponse = priceResponse.message;
       })
-      .addCase(createPrice.rejected, (state) => {
+      .addCase(createPrice.rejected, (state, { payload: errorResponse }) => {
         state.createLoading = false;
+        state.priceFieldError = errorResponse?.message || null;
       });
 
     builder
@@ -66,8 +66,9 @@ export const pricesSlice = createSlice({
       .addCase(updatePrice.fulfilled, (state) => {
         state.editLoading = false;
       })
-      .addCase(updatePrice.rejected, (state) => {
+      .addCase(updatePrice.rejected, (state, { payload: errorResponse }) => {
         state.editLoading = false;
+        state.priceFieldError = errorResponse?.message || null;
       });
   },
 });

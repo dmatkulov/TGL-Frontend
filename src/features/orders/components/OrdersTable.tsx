@@ -59,6 +59,7 @@ const OrdersTable = () => {
                     pupId={item.pupId}
                     price={item.price}
                     trackerNumber={item.trackerNumber}
+                    delivery={item.delivery}
                   />
                 ))}
               </TableBody>

@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectOrdersCancelLoading, toggleModal } from '../ordersSlice';
 import { FC } from 'react';
 import { Shipment } from '../../../types/types.Shipments';
-import { selectUser } from '../../users/usersSlice';
 
 const OrdersRowItem: FC<Shipment> = ({
   _id,
@@ -14,13 +13,13 @@ const OrdersRowItem: FC<Shipment> = ({
   price,
   trackerNumber,
   status,
+  delivery,
 }) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector(selectUser);
   const cancelLoading = useAppSelector(selectOrdersCancelLoading);
 
   const showModal = () => {
-    dispatch(toggleModal(true));
+    dispatch(toggleModal({ toggle: true, id: { _id } }));
   };
 
   return (
@@ -38,7 +37,7 @@ const OrdersRowItem: FC<Shipment> = ({
             startIcon={<LocalShippingIcon />}
             onClick={showModal}
           >
-            Доставка
+            {delivery.status ? 'Отменить доставку' : 'Заказать доставку'}
           </Button>
         </TableCell>
         <TableCell align="left">

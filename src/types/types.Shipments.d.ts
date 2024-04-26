@@ -20,7 +20,12 @@ export interface ShipmentData {
     length: number;
   };
   weight: number;
-  delivery: boolean;
+  delivery: {
+    status: boolean;
+    date: string;
+    address: string;
+    phoneNumber: string;
+  };
   price: {
     usd: number;
     som: number;
@@ -43,6 +48,12 @@ export interface Shipment {
   price: {
     usd: number;
     som: number;
+  };
+  delivery: {
+    status: boolean;
+    date: string;
+    address: string;
+    phoneNumber: string;
   };
   trackerNumber: number;
 }

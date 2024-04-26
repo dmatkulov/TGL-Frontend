@@ -44,6 +44,9 @@ export const updatePrice = createAsyncThunk<
   { rejectValue: GlobalErrorMessage }
 >('prices/update', async ({ id, priceMutation }, { rejectWithValue }) => {
   try {
+export const updatePrice = createAsyncThunk<PriceResponse, UpdatePriceArg>(
+  'prices/update',
+  async ({ id, priceMutation }) => {
     const response = await axiosApi.put<PriceResponse>(
       `${serverRoute.prices}/${id}`,
       priceMutation,

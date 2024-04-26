@@ -6,21 +6,24 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
+  TableRow, useMediaQuery,
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
 import OrderModal from './OrderModal';
 import { useAppSelector } from '../../../app/hooks';
 import { selectOrdersLoading } from '../ordersSlice';
+import OrdersItem from './OrdersItem';
 
 const OrdersTable = () => {
+  const isSmallScreen = useMediaQuery('(max-width:705px)');
+
   const loading = useAppSelector(selectOrdersLoading);
 
   return (
     <>
       <OrderModal />
       {loading && <CircularProgress />}
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ display: isSmallScreen ? 'none' : '' }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -36,6 +39,7 @@ const OrdersTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      { isSmallScreen && <OrdersItem/> }
     </>
   );
 };

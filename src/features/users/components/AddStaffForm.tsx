@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
 import { IStaff } from '../../../types/types.User';
+import { getStaffData } from '../usersThunks';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
@@ -88,14 +89,19 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
     event.preventDefault();
     try {
       onSubmit(formData);
+      if (formData.role === 'admin') {
+        await dispatch(getStaffData({ role: 'admin' }));
+      } else if (formData.role === 'manager') {
+        await dispatch(getStaffData({ role: 'manager' }));
+      } else if (formData.role === 'client') {
+        await dispatch(getStaffData({ role: 'client' }));
+      }
       navigate(appRoutes.staff);
       setFormData(initialState);
     } catch (e) {
       console.error(e);
     }
   };
-
-  console.log(formData);
 
   return (
     <Container component="main">
@@ -121,20 +127,6 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
               <TextField
                 fullWidth
                 required
-                name="lastName"
-                label="Фамилия"
-                type="text"
-                value={formData.lastName}
-                autoComplete="new-lastName"
-                onChange={inputChangeHandler}
-                error={Boolean(getError('lastName'))}
-                helperText={getError('lastName')}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                required
                 name="firstName"
                 label="Имя"
                 type="text"
@@ -143,6 +135,20 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                 onChange={inputChangeHandler}
                 error={Boolean(getError('firstName'))}
                 helperText={getError('firstName')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="lastName"
+                label="Фамилия"
+                type="text"
+                value={formData.lastName}
+                autoComplete="new-lastName"
+                onChange={inputChangeHandler}
+                error={Boolean(getError('lastName'))}
+                helperText={getError('lastName')}
               />
             </Grid>
             <Grid item xs={12} sm={6}>

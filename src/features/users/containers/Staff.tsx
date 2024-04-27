@@ -24,6 +24,14 @@ const Staff: React.FC = () => {
   const [getClientLoading, setClientLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    dispatch(getStaffData());
+  }, [dispatch]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!loading) {
       setAdminLoading(false);
       setManagerLoading(false);

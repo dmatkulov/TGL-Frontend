@@ -59,7 +59,8 @@ export const update = createAsyncThunk<
 export const createStaff = createAsyncThunk<null, IStaff>(
   'users/staff',
   async (staffMutation) => {
-    return await axiosApi.post(serverRoute.staff, staffMutation);
+    await axiosApi.post(serverRoute.staff, staffMutation);
+    return null;
   },
 );
 
@@ -79,7 +80,28 @@ export const getStaffData = createAsyncThunk<
     const response = await axiosApi.get<IStaffResponseData>('/users', {
       params: queryParams,
     });
-    return response.data ?? [];
+
+    const roles = response.data.users.map((user) => user.role);
+    const hasAllRoles =
+      roles.includes('admin') &&
+      roles.includes('manager') &&
+      roles.includes('client') &&
+      roles.includes('super');
+
+    if (hasAllRoles) {
+      const sortedData = response.data.users.sort((a, b) => {
+        const rolesOrder: Record<string, number> = {
+          admin: 0,
+          manager: 1,
+          client: 2,
+          super: 3,
+        };
+        return rolesOrder[a.role] - rolesOrder[b.role];
+      });
+      return { message: response.data.message, users: sortedData };
+    } else {
+      return response.data;
+    }
   } catch (e) {
     if (isAxiosError(e) && e.response && e.response.status === 422) {
       return rejectWithValue(e.response.data);
@@ -99,11 +121,15 @@ export const getStaff = createAsyncThunk<IStaffResponse, string>(
 
 export const updateStaff = createAsyncThunk<void, UpdateUserArg>(
   'users/updateStaff',
-  async (userId, userMutation) => {
-    return await axiosApi.put(
-      `${serverRoute.users}/update/${userId}`,
-      userMutation,
-    );
+  async ({ userId, userMutation }) => {
+    try {
+      await axiosApi.patch(
+        `${serverRoute.users}/update/${userId}`,
+        userMutation,
+      );
+    } catch (e) {
+      console.log(e);
+    }
   },
 );
 

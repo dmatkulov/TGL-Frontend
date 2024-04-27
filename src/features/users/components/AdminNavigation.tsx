@@ -15,6 +15,8 @@ import StoreIcon from '@mui/icons-material/Store';
 import PeopleIcon from '@mui/icons-material/People';
 import LocalGroceryStoreIcon from '@mui/icons-material/LocalGroceryStore';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
+import FeedIcon from '@mui/icons-material/Feed';
+import HomeIcon from '@mui/icons-material/Home';
 
 const adminLinks: UserNav[] = [
   {
@@ -43,9 +45,21 @@ const adminLinks: UserNav[] = [
   },
   {
     id: 5,
+    name: 'Создать заказ',
+    navLink: appRoutes.shipmentForm,
+    icon: <FeedIcon color="primary" />,
+  },
+  {
+    id: 6,
     name: 'Склад в Китае',
     navLink: appRoutes.adminWarehouses,
     icon: <WarehouseIcon color="primary" />,
+  },
+  {
+    id: 7,
+    name: 'Физический адрес',
+    navLink: appRoutes.adminCompanyAddress,
+    icon: <HomeIcon color="primary" />,
   },
 ];
 

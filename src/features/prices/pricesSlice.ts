@@ -7,7 +7,8 @@ interface PriceState {
   item: Price | null;
   fetchLoading: boolean;
   createLoading: boolean;
-  priceResponse: string | null;
+  priceSuccessMsg: string | null;
+  priceErrorMsg: string | null;
   priceFieldError: string | null;
   editLoading: boolean;
 }
@@ -16,7 +17,8 @@ const initialState: PriceState = {
   item: null,
   fetchLoading: false,
   createLoading: false,
-  priceResponse: null,
+  priceSuccessMsg: null,
+  priceErrorMsg: null,
   priceFieldError: null,
   editLoading: false,
 };
@@ -29,7 +31,8 @@ export const pricesSlice = createSlice({
       state.priceFieldError = payload;
     },
     unsetPriceMessage: (state) => {
-      state.priceResponse = null;
+      state.priceSuccessMsg = null;
+      state.priceErrorMsg = null;
       state.priceFieldError = null;
     },
   },
@@ -41,7 +44,6 @@ export const pricesSlice = createSlice({
       .addCase(fetchPrice.fulfilled, (state, { payload: priceResponse }) => {
         state.fetchLoading = false;
         state.item = priceResponse.price;
-        state.priceResponse = priceResponse.message;
       })
       .addCase(fetchPrice.rejected, (state) => {
         state.fetchLoading = false;
@@ -51,23 +53,26 @@ export const pricesSlice = createSlice({
       .addCase(createPrice.pending, (state) => {
         state.createLoading = true;
       })
-      .addCase(createPrice.fulfilled, (state, { payload: priceResponse }) => {
+      .addCase(createPrice.fulfilled, (state, { payload: errorResponse }) => {
         state.createLoading = false;
-        state.priceResponse = priceResponse.message;
+        state.priceSuccessMsg = errorResponse?.message || null;
       })
-      .addCase(createPrice.rejected, (state) => {
+      .addCase(createPrice.rejected, (state, { payload: errorResponse }) => {
         state.createLoading = false;
+        state.priceErrorMsg = errorResponse?.message || null;
       });
 
     builder
       .addCase(updatePrice.pending, (state) => {
         state.editLoading = true;
       })
-      .addCase(updatePrice.fulfilled, (state) => {
+      .addCase(updatePrice.fulfilled, (state, { payload: priceResponse }) => {
         state.editLoading = false;
+        state.priceSuccessMsg = priceResponse?.message || null;
       })
-      .addCase(updatePrice.rejected, (state) => {
+      .addCase(updatePrice.rejected, (state, { payload: errorResponse }) => {
         state.editLoading = false;
+        state.priceErrorMsg = errorResponse?.message || null;
       });
   },
 });
@@ -80,8 +85,10 @@ export const selectPriceLoading = (state: RootState) =>
 export const selectPriceCreateLoading = (state: RootState) =>
   state.prices.createLoading;
 export const selectPriceResponse = (state: RootState) =>
-  state.prices.priceResponse;
+  state.prices.priceSuccessMsg;
 export const selectPriceError = (state: RootState) =>
+  state.prices.priceErrorMsg;
+export const selectPriceFieldError = (state: RootState) =>
   state.prices.priceFieldError;
 export const selectPriceEditLoading = (state: RootState) =>
   state.prices.editLoading;

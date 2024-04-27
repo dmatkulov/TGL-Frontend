@@ -21,6 +21,8 @@ import CompanyAddresses from '../features/companyAddress/CompanyAddresses';
 import EditWarehouse from '../features/warehouses/components/EditWarehouse';
 import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
+import AddStaff from '../features/users/containers/AddStaff';
+import EditStaff from '../features/users/containers/EditStaff';
 
 export const router = createBrowserRouter([
   {
@@ -114,6 +116,22 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <CompanyAddresses />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.editStaff,
+            element: (
+              <ProtectedRoute>
+                <EditStaff />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.addStaff,
+            element: (
+              <ProtectedRoute>
+                <AddStaff />
               </ProtectedRoute>
             ),
           },

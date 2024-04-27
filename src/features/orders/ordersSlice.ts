@@ -8,6 +8,7 @@ interface OrdersState {
   deliveryLoading: boolean;
   cancelLoading: boolean;
   openModal: boolean;
+  idToModal: string;
 }
 
 const initialState: OrdersState = {
@@ -16,6 +17,7 @@ const initialState: OrdersState = {
   deliveryLoading: false,
   cancelLoading: false,
   openModal: false,
+  idToModal: '',
 };
 
 export const ordersSlice = createSlice({
@@ -23,7 +25,9 @@ export const ordersSlice = createSlice({
   initialState,
   reducers: {
     toggleModal: (state, { payload: action }) => {
-      state.openModal = action;
+      const { toggle, id } = action;
+      state.openModal = toggle;
+      state.idToModal = id?._id;
     },
   },
 });
@@ -38,3 +42,4 @@ export const selectOrdersDeliveryLoading = (state: RootState) =>
 export const selectOrdersCancelLoading = (state: RootState) =>
   state.orders.cancelLoading;
 export const selectOrderModal = (state: RootState) => state.orders.openModal;
+export const idToModalState = (state: RootState) => state.orders.idToModal;

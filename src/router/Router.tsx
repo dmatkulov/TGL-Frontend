@@ -20,6 +20,7 @@ import WarehousesList from '../features/users/containers/WarehousesList/Warehous
 import CompanyAddresses from '../features/companyAddress/CompanyAddresses';
 import EditWarehouse from '../features/warehouses/components/EditWarehouse';
 import NewWarehouse from '../features/warehouses/components/NewWarehouse';
+import Calculator from '../components/UI/Calculator/Calculator';
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.login,
         element: <Login />,
+      },
+      {
+        path: appRoutes.calculate,
+        element: <Calculator />,
       },
       {
         path: appRoutes.profile,

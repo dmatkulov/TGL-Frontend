@@ -1,4 +1,4 @@
-import {Button, CardMedia, Grid, TextField, Typography} from '@mui/material';
+import {Alert, Button, CardMedia, Grid, TextField, Typography} from '@mui/material';
 import React, {useState} from 'react';
 import box from '..//..//../assets/box.png';
 
@@ -11,22 +11,39 @@ const Calculator = () => {
   const [weight, setWeight] = useState('');
   const [isCalculated, setIsCalculated] = useState(false);
   const [result, setResult] = useState<number>(0);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+    setIsCalculated(false);
 
-    setDimensions((prevState) => {
-      return { ...prevState, [name]: value };
-    });
+    const parsedValue = parseFloat(value);
+    if (!isNaN(parsedValue) && parsedValue >= 0) {
+      setDimensions((prevState) => ({
+        ...prevState,
+        [name]: value
+      }));
+    }
   };
 
   const handleWeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setWeight(String(event.target.value));
+    const value = event.target.value;
+    setIsCalculated(false);
+
+    const parsedValue = parseFloat(value);
+    if (!isNaN(parsedValue) && parsedValue >= 0) {
+      setWeight(value);
+    }
   };
 
   const calculateResult = () => {
+    if (dimensions.length === '' || dimensions.width === '' || dimensions.height === '' || weight === '') {
+      setErrorMessage('Пожалуйста, заполните все поля!');
+      return;
+    }
     setResult((parseInt(dimensions.length) * parseInt(dimensions.width) * parseInt(dimensions.height))/6000);
     setIsCalculated(true);
+    setErrorMessage('');
   };
 
   let answer;
@@ -47,6 +64,7 @@ const Calculator = () => {
 
   return (
     <>
+      {errorMessage && <Alert>{errorMessage}</Alert>}
       <Typography>При отправке легких, но крупногабаритных (объемных) грузов стоимость доставки
         рассчитывается по "объемному весу" в соответствии с формулой:<br/>
         <b>Длина(см) х Ширина(см) х Высота(см)/6000 = объемный вес(кг)</b>

@@ -46,8 +46,6 @@ const EditStaff: React.FC = () => {
       role: staff.role,
     };
 
-    console.log(mutation);
-
     form = (
       <AddStaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
     );

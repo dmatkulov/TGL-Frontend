@@ -7,9 +7,14 @@ import { RootState } from '../../app/store';
 import { unsetUser } from './usersSlice';
 import { ProfileMutation } from '../../types/types.Profile';
 import {
+  IStaff,
+  IStaffResponse,
+  IStaffResponseData,
   LoginMutation,
   RegisterMutation,
   RegisterResponse,
+  UpdateUserArg,
+  UsersRequestParams,
 } from '../../types/types.User';
 
 export const register = createAsyncThunk<
@@ -50,6 +55,83 @@ export const update = createAsyncThunk<
     throw e;
   }
 });
+
+export const createStaff = createAsyncThunk<null, IStaff>(
+  'users/staff',
+  async (staffMutation) => {
+    await axiosApi.post(serverRoute.staff, staffMutation);
+    return null;
+  },
+);
+
+export const getStaffData = createAsyncThunk<
+  IStaffResponseData,
+  UsersRequestParams | undefined,
+  { state: RootState }
+>('users/getStaffData', async (params, { rejectWithValue }) => {
+  try {
+    const queryParams: Record<string, string | undefined> = {};
+    if (params) {
+      if (params.region) queryParams.region = params.region;
+      if (params.settlement) queryParams.settlement = params.settlement;
+      if (params.role) queryParams.role = params.role;
+    }
+
+    const response = await axiosApi.get<IStaffResponseData>('/users', {
+      params: queryParams,
+    });
+
+    const roles = response.data.users.map((user) => user.role);
+    const hasAllRoles =
+      roles.includes('admin') &&
+      roles.includes('manager') &&
+      roles.includes('client') &&
+      roles.includes('super');
+
+    if (hasAllRoles) {
+      const sortedData = response.data.users.sort((a, b) => {
+        const rolesOrder: Record<string, number> = {
+          admin: 0,
+          manager: 1,
+          client: 2,
+          super: 3,
+        };
+        return rolesOrder[a.role] - rolesOrder[b.role];
+      });
+      return { message: response.data.message, users: sortedData };
+    } else {
+      return response.data;
+    }
+  } catch (e) {
+    if (isAxiosError(e) && e.response && e.response.status === 422) {
+      return rejectWithValue(e.response.data);
+    }
+
+    throw e;
+  }
+});
+
+export const getStaff = createAsyncThunk<IStaffResponse, string>(
+  'users/getStaff',
+  async (id) => {
+    const staffResponse = await axiosApi.get<IStaffResponse>('/users/' + id);
+    return staffResponse.data;
+  },
+);
+
+export const updateStaff = createAsyncThunk<void, UpdateUserArg>(
+  'users/updateStaff',
+  async ({ userId, userMutation }) => {
+    try {
+      await axiosApi.patch(
+        `${serverRoute.users}/update/${userId}`,
+        userMutation,
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);
 
 export const login = createAsyncThunk<
   RegisterResponse,

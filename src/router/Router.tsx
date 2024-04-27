@@ -14,11 +14,12 @@ import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 import AdminPage from '../features/users/AdminPage';
 import Statistics from '../features/users/containers/Statistics';
 import Staff from '../features/users/containers/Staff';
-import WarehouseForm from '../features/warehouses/components/WarehouseForm';
 import ShipmentsForm from '../features/shipments/containers/ShipmentsForm';
 import Shipments from '../features/shipments/containers/Shipments';
 import WarehousesList from '../features/users/containers/WarehousesList/WarehousesList';
-import Calculator from '../components/UI/Calculator/Calculator';
+import CompanyAddresses from '../features/companyAddress/CompanyAddresses';
+import EditWarehouse from '../features/warehouses/components/EditWarehouse';
+import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 
 export const router = createBrowserRouter([
   {
@@ -36,10 +37,6 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.login,
         element: <Login />,
-      },
-      {
-        path: appRoutes.calculate,
-        element: <Calculator />,
       },
       {
         path: appRoutes.profile,
@@ -85,7 +82,7 @@ export const router = createBrowserRouter([
           },
           {
             path: appRoutes.shipments,
-            element: <Shipments/>
+            element: <Shipments />,
           },
           {
             path: appRoutes.adminWarehouses,
@@ -95,7 +92,23 @@ export const router = createBrowserRouter([
             path: appRoutes.adminWarehousesAdd,
             element: (
               <ProtectedRoute>
-                <WarehouseForm />
+                <NewWarehouse />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.adminWarehousesEdit,
+            element: (
+              <ProtectedRoute>
+                <EditWarehouse />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.adminCompanyAddress,
+            element: (
+              <ProtectedRoute>
+                <CompanyAddresses />
               </ProtectedRoute>
             ),
           },

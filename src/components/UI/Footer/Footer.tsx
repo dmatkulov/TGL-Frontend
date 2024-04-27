@@ -12,8 +12,20 @@ import inst from '..//..//../assets/instagram.svg';
 import wtsp from '..//..//../assets/whatsapp.svg';
 import SocialMedia from './SocialMedia';
 import PlaceIcon from '@mui/icons-material/Place';
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { fetchCompanyAddresses } from '../../../features/companyAddress/companyAddressThunks';
+import { companyAddressState } from '../../../features/companyAddress/companyAddressesSlice';
 
 const Footer = () => {
+  const dispatch = useAppDispatch();
+  const addresses = useAppSelector(companyAddressState);
+  const isEmpty = addresses.length === 0;
+
+  useEffect(() => {
+    dispatch(fetchCompanyAddresses());
+  }, [dispatch]);
+
   return (
     <Container sx={{ pt: 3 }} maxWidth="xl">
       <Grid
@@ -36,12 +48,20 @@ const Footer = () => {
           <Stack direction="row" spacing={1} color="white">
             <PlaceIcon color="inherit" />
             <Box>
-              <Typography gutterBottom variant="body1">
-                <strong>Наш Адрес:</strong> 7-й микрорайон, 50а/1 стр
-              </Typography>
-              <Typography gutterBottom variant="body1">
-                Октябрьский район, Бишкек, 720028
-              </Typography>
+              {isEmpty ? (
+                <Typography>Адрес обновляется</Typography>
+              ) : (
+                <>
+                  <Typography gutterBottom variant="body1">
+                    <strong>Наш Адрес:</strong>
+                    {addresses[0].address}
+                  </Typography>
+                  <Typography gutterBottom variant="body1">
+                    {addresses[0].district}, {addresses[0].city},{' '}
+                    {addresses[0].postCode}
+                  </Typography>
+                </>
+              )}
             </Box>
           </Stack>
         </Grid>

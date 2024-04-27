@@ -6,6 +6,8 @@ export const serverRoute = {
   pups: '/pups',
   prices: '/price',
   shipments: '/shipments',
+  companyAddresses: '/company-addresses',
+  companyAddressesAdd: '/company-addresses/add',
 };
 
 export const appRoutes = {
@@ -24,7 +26,9 @@ export const appRoutes = {
   staff: '/admin-profile/staff',
   shipmentForm: '/admin-profile/shipmentForm',
   shipments: '/admin-profile/shipments',
-  adminWarehousesAdd: '/admin-profile/warehouses-form',
+  adminWarehousesAdd: '/admin-profile/warehouses-new',
   adminWarehouses: '/admin-profile/warehouses',
+  adminWarehousesEdit: '/admin-profile/warehouse/:id',
+  adminCompanyAddress: '/admin-profile/company-addresses',
   calculate: '/calculate',
 };

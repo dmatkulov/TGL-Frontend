@@ -36,5 +36,5 @@ const regionsSlice = createSlice({
 });
 
 export const regionsReducer = regionsSlice.reducer;
-export const  regionsState = (state: RootState) => state.regions.regions;
+export const regionsState = (state: RootState) => state.regions.regions;
 export const isRegionsLoading = (state: RootState) => state.regions.isLoading;

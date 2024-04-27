@@ -14,3 +14,7 @@ export interface ValidationError {
 export interface GlobalError {
   error: string;
 }
+
+export interface GlobalErrorMessage {
+  message: string;
+}

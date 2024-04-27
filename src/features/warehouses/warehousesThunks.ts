@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
-import { Warehouse, WarehouseResponse } from '../../types/types.Warehouses';
+import {UpdateWarehouseArg, Warehouse, WarehouseMutation, WarehouseResponse} from '../../types/types.Warehouses';
 
 export const fetchWarehouseData = createAsyncThunk<
   WarehouseResponse | undefined,
@@ -13,9 +13,26 @@ export const fetchWarehouseData = createAsyncThunk<
   return;
 });
 
-export const createWarehouse = createAsyncThunk<void, Warehouse>(
+
+export const fetchOneWarehouse = createAsyncThunk<Warehouse, string>(
+  'warehouse/fetchOne',
+  async(id) => {
+    const warehouseResponse = await axiosApi.get<Warehouse>(`/warehouse/${id}`);
+    return warehouseResponse.data;
+  }
+);
+
+export const createWarehouse = createAsyncThunk<void, WarehouseMutation>(
   'warehouse/createWarehouse',
   async (data) => {
     await axiosApi.post('/warehouse/add', data);
   },
 );
+
+export const updateWarehouse = createAsyncThunk<void, UpdateWarehouseArg>(
+  'warehouse/update',
+  async({warehouseId,warehouseMutation}) => {
+    return axiosApi.patch(  `/warehouse/${warehouseId}`, warehouseMutation);
+  }
+);
+

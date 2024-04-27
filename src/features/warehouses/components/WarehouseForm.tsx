@@ -1,26 +1,29 @@
 import React, { useState } from 'react';
 import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { Warehouse } from '../../../types/types.Warehouses';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { WarehouseMutation} from '../../../types/types.Warehouses';
+import { useAppSelector } from '../../../app/hooks';
 import { isWarehousesCreateLoading } from '../warehousesSlice';
-import { createWarehouse } from '../warehousesThunks';
 import PhoneInput from 'react-phone-input-2';
 import {selectRegisterError} from '../../users/usersSlice';
-import {useNavigate} from 'react-router-dom';
-import {appRoutes} from '../../../utils/constants';
 
-const WarehouseForm: React.FC = () => {
-  const dispatch = useAppDispatch();
+interface Props {
+  onSubmit: (mutation: WarehouseMutation) => void;
+  isEdit?: boolean;
+  initialWarehouse?: WarehouseMutation;
+}
+
+const initialState = {
+  name: '',
+  address: '',
+  phoneNumber: '',
+};
+
+const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWarehouse = initialState}) => {
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
   const error = useAppSelector(selectRegisterError);
-  const navigate = useNavigate();
 
-  const [state, setState] = useState<Warehouse>({
-    name: '',
-    address: '',
-    phoneNumber: '',
-  });
+  const [state, setState] = useState<WarehouseMutation>(initialWarehouse);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -44,14 +47,7 @@ const WarehouseForm: React.FC = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    try {
-      await dispatch(createWarehouse(state));
-      setState({ name: '', address: '', phoneNumber: '' });
-      navigate(appRoutes.adminWarehouses);
-    } catch (e) {
-      console.error(e);
-    }
+    onSubmit(state);
   };
 
   return (
@@ -64,7 +60,7 @@ const WarehouseForm: React.FC = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          Добавить склад
+          {isEdit ? 'Обновить склад' : 'Добавить склад'}
         </Typography>
         <Box
           component="form"
@@ -108,7 +104,7 @@ const WarehouseForm: React.FC = () => {
               <Grid item xs={12}>
                 <PhoneInput
                   country="cn"
-                  masks={{ cn: '(..) ...-....-....' }}
+                  masks={{ cn: '(..) ...-....-..' }}
                   onlyCountries={['cn']}
                   containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
@@ -130,7 +126,7 @@ const WarehouseForm: React.FC = () => {
                 disabled={isCreateLoading}
                 sx={{ marginTop: 1, marginLeft: 2, width: 690 }}
               >
-                Сохранить
+                {isEdit ? 'Обновить' : 'Добавить'}
               </LoadingButton>
             </Grid>
           </Grid>

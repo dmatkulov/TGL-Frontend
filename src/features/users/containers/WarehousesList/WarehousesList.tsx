@@ -55,6 +55,7 @@ const WarehousesList = () => {
         {state.map((item, index) => (
           <WarehousesListItem
             key={index}
+            _id={item._id}
             name={item.name}
             address={item.address}
             phoneNumber={item.phoneNumber}

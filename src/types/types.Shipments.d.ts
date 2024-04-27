@@ -73,3 +73,8 @@ export interface ShipmentsResponse {
   message: string;
   shipments: ShipmentData[];
 }
+
+export interface oneShipmentResponse {
+  message: string;
+  shipment: ShipmentData;
+}

@@ -1,9 +1,12 @@
 import { Order } from '../../types/types.Order';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { searchByTrack } from '../shipments/shipmentsThunk';
+import { ShipmentData } from '../../types/types.Shipments';
 
 interface OrdersState {
   items: Order[];
+  oneItem: ShipmentData | null;
   fetchLoading: boolean;
   deliveryLoading: boolean;
   cancelLoading: boolean;
@@ -13,6 +16,7 @@ interface OrdersState {
 
 const initialState: OrdersState = {
   items: [],
+  oneItem: null,
   fetchLoading: false,
   deliveryLoading: false,
   cancelLoading: false,
@@ -30,11 +34,25 @@ export const ordersSlice = createSlice({
       state.idToModal = id?._id;
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(searchByTrack.pending, (state) => {
+        state.fetchLoading = true;
+      })
+      .addCase(searchByTrack.fulfilled, (state, { payload }) => {
+        state.fetchLoading = false;
+        state.oneItem = payload.shipment;
+      })
+      .addCase(searchByTrack.rejected, (state) => {
+        state.fetchLoading = false;
+      });
+  },
 });
 
 export const ordersReducer = ordersSlice.reducer;
 export const { toggleModal } = ordersSlice.actions;
 export const selectOrders = (state: RootState) => state.orders.items;
+export const selectOneOrder = (state: RootState) => state.orders.oneItem;
 export const selectOrdersLoading = (state: RootState) =>
   state.orders.fetchLoading;
 export const selectOrdersDeliveryLoading = (state: RootState) =>

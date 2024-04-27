@@ -2,10 +2,12 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   ShipmentMutation,
   ShipmentsResponse,
+  oneShipmentResponse,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import { DeliveryData } from '../../types/types.Order';
+
 export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   'shipments/fetchAll',
   async () => {
@@ -56,6 +58,21 @@ export const orderDelivery = createAsyncThunk<void, DeliveryData>(
       );
     } catch (e) {
       console.log('Caught on try - ORDER DELIVERY - ', e);
+    }
+  },
+);
+
+export const searchByTrack = createAsyncThunk<oneShipmentResponse, string>(
+  'shipments/searchOne',
+  async (trackerNumber) => {
+    try {
+      const response = await axiosApi.get<oneShipmentResponse>(
+        serverRoute.shipments + '?orderByTrackingNumber=' + trackerNumber,
+      );
+      return response.data ?? [];
+    } catch (e) {
+      console.log('Caught on try - SEARCH ONE ORDER - ', e);
+      throw e;
     }
   },
 );

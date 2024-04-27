@@ -89,13 +89,7 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
     event.preventDefault();
     try {
       onSubmit(formData);
-      if (formData.role === 'admin') {
-        await dispatch(getStaffData({ role: 'admin' }));
-      } else if (formData.role === 'manager') {
-        await dispatch(getStaffData({ role: 'manager' }));
-      } else if (formData.role === 'client') {
-        await dispatch(getStaffData({ role: 'client' }));
-      }
+      dispatch(getStaffData());
       navigate(appRoutes.staff);
       setFormData(initialState);
     } catch (e) {

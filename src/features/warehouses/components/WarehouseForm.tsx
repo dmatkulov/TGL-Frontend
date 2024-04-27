@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { isWarehousesCreateLoading } from '../warehousesSlice';
 import { createWarehouse } from '../warehousesThunks';
 import PhoneInput from 'react-phone-input-2';
-import {selectRegisterError} from '../../users/usersSlice';
-import {useNavigate} from 'react-router-dom';
-import {appRoutes} from '../../../utils/constants';
+import { selectRegisterError } from '../../users/usersSlice';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '../../../utils/constants';
 
 const WarehouseForm: React.FC = () => {
   const dispatch = useAppDispatch();

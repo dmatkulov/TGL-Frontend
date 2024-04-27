@@ -3,7 +3,14 @@ import { Dayjs } from 'dayjs';
 export interface Order {
   _id: string;
   trackerNumber: number;
-  PUP: string;
+  pupId: {
+    _id: string;
+    name: string;
+    region: string;
+    settlement: string;
+    address: string;
+    phoneNumber: number;
+  }
   status: string;
   price: {
     usd: string;

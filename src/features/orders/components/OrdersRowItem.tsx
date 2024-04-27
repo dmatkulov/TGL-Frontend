@@ -31,7 +31,7 @@ const OrdersRowItem: React.FC<Props> = ({ order, marketId }) => {
         <TableCell component="th" scope="row">
           {order.trackerNumber}
         </TableCell>
-        <TableCell align="left">{order.PUP}</TableCell>
+        <TableCell align="left">{order.pupId.address}</TableCell>
         <TableCell align="left">{order.price.som} сом</TableCell>
         <TableCell align="left">{order.status}</TableCell>
         <TableCell align="left">

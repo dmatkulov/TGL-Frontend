@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import {Button, Grid, Typography, useMediaQuery} from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
@@ -57,7 +57,7 @@ const Profile = () => {
             >
               {user?.firstName} {user?.lastName}
             </Typography>
-            {isAdmin ? (
+            { isAdmin ? (
               <></>
             ) : (
               <Typography variant="subtitle1">
@@ -76,7 +76,7 @@ const Profile = () => {
             </Button>
           </Grid>
         </Grid>
-        {isAdmin ? (
+        { isAdmin ? (
           <></>
         ) : (
           <Grid item>

@@ -19,6 +19,8 @@ import { selectUser } from '../../users/usersSlice';
 import { selectShipments } from '../../shipments/shipmentsSlice';
 
 const OrdersTable = () => {
+  const isSmallScreen = useMediaQuery('(max-width:705px)');
+
   const loading = useAppSelector(selectOrdersLoading);
   const dispatch = useAppDispatch();
   const shipments = useAppSelector(selectShipments);

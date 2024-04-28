@@ -50,7 +50,7 @@ const Footer = () => {
         whatsapp
         title="Написать в WhatsApp"
         alt="WhatsApp"
-        href="https://wa.me/996222601960?text=Здравствуйте,"
+        href="https://wa.me/996222601960?text=Здравствуйте"
         imagePath={wtsp}
       />
     </>

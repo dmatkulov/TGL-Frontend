@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import {Grid, useMediaQuery} from '@mui/material';
 import UserNavigation from './components/UserNavigation';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Profile from './containers/Profile';
@@ -8,6 +8,8 @@ import { appRoutes } from '../../utils/constants';
 import { useEffect } from 'react';
 
 const UserPage = () => {
+  const isSmallScreen = useMediaQuery('(max-width:760px)');
+
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ const UserPage = () => {
   }, [navigate, user]);
   return (
     <>
-      <Grid container>
+      <Grid container direction={ isSmallScreen ? 'column' : 'row' }>
         <Grid
           item
           xs={12}

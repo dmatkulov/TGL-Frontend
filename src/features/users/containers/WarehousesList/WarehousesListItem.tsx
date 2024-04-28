@@ -6,7 +6,7 @@ import { selectUser } from '../../usersSlice';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '../../../../utils/constants';
 
-const WarehousesListItem: FC<Warehouse> = ({ address, name, phoneNumber }) => {
+const WarehousesListItem: FC<Warehouse> = ({_id, address, name, phoneNumber }) => {
   const user = useAppSelector(selectUser);
   const isSuper = user?.role === 'super';
   return (
@@ -24,11 +24,11 @@ const WarehousesListItem: FC<Warehouse> = ({ address, name, phoneNumber }) => {
       </Box>
       <Button
         component={NavLink}
-        to={appRoutes.adminWarehousesAdd}
+        to={appRoutes.adminWarehousesEdit.replace(':id', _id)}
         variant="contained"
         disabled={!isSuper}
       >
-        Edit
+        Изменить
       </Button>
     </Box>
   );

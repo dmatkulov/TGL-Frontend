@@ -1,13 +1,10 @@
 import {
-  Box,
-  Button,
+  Box, Button,
   Card,
   CardContent,
-  Grid,
-  TextField,
-  Typography, useMediaQuery,
+  Grid, TextField, Typography,
+  useMediaQuery,
 } from '@mui/material';
-import { Box, Button, TextField, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import React, { useState } from 'react';
 import { searchByTrack } from '../../shipments/shipmentsThunk';

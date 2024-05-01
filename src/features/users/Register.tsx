@@ -94,9 +94,12 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     dispatch(setRegisterError(null));
-    dispatch(fetchPups());
     dispatch(fetchRegions());
   }, [dispatch]);
+
+  const fetchPupsByRegion = async (region: string) => {
+    await dispatch(fetchPups(region));
+  };
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -299,7 +302,11 @@ const Register: React.FC = () => {
                   Выберите область
                 </MenuItem>
                 {regions.map((region) => (
-                  <MenuItem key={region._id} value={region._id}>
+                  <MenuItem
+                    key={region._id}
+                    value={region._id}
+                    onClick={() => fetchPupsByRegion(region._id)}
+                  >
                     {region.name}
                   </MenuItem>
                 ))}
@@ -359,15 +366,23 @@ const Register: React.FC = () => {
                 error={Boolean(getFieldError('pupID'))}
                 helperText={getFieldError('pupID')}
               >
-                <MenuItem value="" disabled>
-                  Выберите ближайший ПВЗ
-                </MenuItem>
-                {pups.map((pup) => (
-                  <MenuItem key={pup._id} value={pup._id}>
-                    <b>{pup.name}</b>
-                    {pup.region.name} обл., {pup.address}, {pup.settlement}
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
                   </MenuItem>
-                ))}
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
               </TextField>
             </Grid>
             <Grid

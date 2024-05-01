@@ -78,7 +78,6 @@ const Register: React.FC = () => {
     event.preventDefault();
 
     try {
-      console.log({ register: state });
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);
@@ -109,7 +108,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="lastName"
                 label="Фамилия"
                 type="text"
@@ -123,7 +122,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="firstName"
                 label="Имя"
                 type="text"
@@ -150,7 +149,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="password"
                 label="Пароль"
                 type="password"
@@ -168,22 +167,38 @@ const Register: React.FC = () => {
                 onlyCountries={['kg']}
                 containerStyle={{ width: '100%' }}
                 value={state.phoneNumber}
+                countryCodeEditable={false}
                 onChange={handlePhoneChange}
-                defaultErrorMessage={getFieldError('phoneNumber')}
                 specialLabel="Номер телефона*"
                 disableDropdown
-                inputStyle={{ width: '100%' }}
+                inputStyle={{
+                  width: '100%',
+                  borderColor: getFieldError('phoneNumber') && '#d32f2f',
+                  color: getFieldError('phoneNumber') && '#d32f2f',
+                }}
                 inputProps={{
                   name: 'phoneNumber',
                   required: true,
                 }}
               />
+              {getFieldError('phoneNumber') && (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {getFieldError('phoneNumber')}
+                </Typography>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 label="Email"
                 name="email"
                 type="text"
@@ -199,7 +214,7 @@ const Register: React.FC = () => {
               <TextField
                 fullWidth
                 select
-                required
+                // required
                 name="region"
                 label="Регион"
                 type="text"
@@ -222,7 +237,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="settlement"
                 label="Населенный пункт"
                 type="text"
@@ -236,7 +251,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="address"
                 label="Адрес"
                 type="text"
@@ -251,7 +266,7 @@ const Register: React.FC = () => {
               <TextField
                 fullWidth
                 select
-                required
+                // required
                 name="pupID"
                 label="ПВЗ"
                 type="text"

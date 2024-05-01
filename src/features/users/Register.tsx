@@ -59,6 +59,10 @@ const Register: React.FC = () => {
   const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
     undefined,
   );
+  const [emailIsValid, setEmailIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [emailLabel, setEmailLabel] = useState<string>('');
   const [disabled, setIsDisabled] = useState(true);
 
   const getFieldError = (fieldName: string) => {
@@ -105,9 +109,15 @@ const Register: React.FC = () => {
     event.preventDefault();
 
     try {
-      if (state.password.length < 8) {
+      if (state.password.length >= 1 && state.password.length < 8) {
         setPassLabel('Пароль слишком короткий');
         setPassIsValid(false);
+        return;
+      }
+
+      if (state.email.length > 1 && !state.email.includes('@')) {
+        setEmailLabel('Адрес электронной почты должен содержать символ @');
+        setEmailIsValid(true);
         return;
       }
       await dispatch(register(state)).unwrap();
@@ -275,12 +285,21 @@ const Register: React.FC = () => {
                 // required
                 label="Email"
                 name="email"
-                type="text"
                 value={state.email}
+                placeholder="mail@mail.com"
                 autoComplete="new-email"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('email'))}
-                helperText={getFieldError('email')}
+                error={Boolean(
+                  getFieldError('email') || emailIsValid === false,
+                )}
+                helperText={
+                  getFieldError('email') ? getFieldError('email') : emailLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? '#d32f2f' : undefined,
+                  },
+                }}
               />
             </Grid>
 

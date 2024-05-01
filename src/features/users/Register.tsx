@@ -76,12 +76,21 @@ const Register: React.FC = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => {
+      const updatedState = { ...prevState, [name]: value };
+
+      const keys = Object.keys(updatedState) as (keyof RegisterMutation)[];
+      const allFieldsFilled = keys.every(
+        (key) => updatedState[key].trim() !== '',
+      );
+
+      setIsDisabled(!allFieldsFilled);
+
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
-        setIsDisabled(true);
       }
-      return { ...prevState, [name]: value };
+
+      return updatedState;
     });
   };
 
@@ -120,6 +129,7 @@ const Register: React.FC = () => {
         setEmailIsValid(true);
         return;
       }
+
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);

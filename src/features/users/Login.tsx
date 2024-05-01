@@ -4,6 +4,7 @@ import {
   Box,
   Container,
   Grid,
+  IconButton,
   Link,
   TextField,
   Typography,
@@ -20,6 +21,9 @@ import {
 } from './usersSlice';
 import { LoginMutation } from '../../types/types.User';
 import { appRoutes } from '../../utils/constants';
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +35,15 @@ const Login: React.FC = () => {
     email: '',
     password: '',
   });
+
+  const [showPass, setShowPass] = useState(false);
+
+  const handleClickShowPassword = () => setShowPass((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -91,11 +104,24 @@ const Login: React.FC = () => {
               <TextField
                 name="password"
                 label="Пароль"
-                type="password"
+                type={showPass ? 'text' : 'password'}
                 fullWidth
                 autoComplete="current-password"
                 value={state.password}
                 onChange={inputChangeHandler}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPass ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
           </Grid>

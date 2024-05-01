@@ -79,9 +79,11 @@ const Register: React.FC = () => {
       const updatedState = { ...prevState, [name]: value };
 
       const keys = Object.keys(updatedState) as (keyof RegisterMutation)[];
-      const allFieldsFilled = keys.every(
-        (key) => updatedState[key].trim() !== '',
-      );
+      const allFieldsFilled = keys.every((key) => {
+        const allowed =
+          key === 'middleName' || key === 'settlement' || key === 'address';
+        return allowed || updatedState[key].trim() !== '';
+      });
 
       setIsDisabled(!allFieldsFilled);
 

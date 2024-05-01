@@ -5,12 +5,15 @@ import {
   Box,
   Container,
   Grid,
+  IconButton,
   Link,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import {
@@ -25,6 +28,7 @@ import { fetchPups } from '../pups/pupsThunks';
 import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
 import { RegisterMutation } from '../../types/types.User';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -48,6 +52,14 @@ const Register: React.FC = () => {
   const regions = useAppSelector(regionsState);
 
   const [state, setState] = useState<RegisterMutation>(initialState);
+  const [showPass, setShowPass] = useState(false);
+  const [passLabel, setPassLabel] = useState<string>(
+    'Длина пароля должна быть не менее 8 символов',
+  );
+  const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [disabled, setIsDisabled] = useState(true);
 
   const getFieldError = (fieldName: string) => {
     try {
@@ -60,8 +72,20 @@ const Register: React.FC = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => {
+      if (name === 'password' && value.length >= 8) {
+        setPassIsValid(true);
+        setPassLabel('Надежный пароль');
+        setIsDisabled(true);
+      }
       return { ...prevState, [name]: value };
     });
+  };
+
+  const handleClickShowPassword = () => setShowPass((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
   };
 
   const handlePhoneChange = (value: string) => {
@@ -78,6 +102,11 @@ const Register: React.FC = () => {
     event.preventDefault();
 
     try {
+      if (state.password.length < 8) {
+        setPassLabel('Пароль слишком короткий');
+        setPassIsValid(false);
+        return;
+      }
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);
@@ -117,6 +146,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('lastName'))}
                 helperText={getFieldError('lastName')}
+                sx={{
+                  input: {
+                    color:
+                      state.lastName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -131,6 +166,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('firstName'))}
                 helperText={getFieldError('firstName')}
+                sx={{
+                  input: {
+                    color:
+                      state.firstName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -144,6 +185,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('middleName'))}
                 helperText={getFieldError('middleName')}
+                sx={{
+                  input: {
+                    color:
+                      state.middleName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -152,12 +199,36 @@ const Register: React.FC = () => {
                 // required
                 name="password"
                 label="Пароль"
-                type="password"
+                type={showPass ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPass ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 value={state.password}
                 autoComplete="new-password"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
+                error={Boolean(
+                  getFieldError('password') || passIsValid === false,
+                )}
+                helperText={
+                  getFieldError('password')
+                    ? getFieldError('password')
+                    : passLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: passIsValid ? 'primary.main' : undefined,
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -246,6 +317,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('settlement'))}
                 helperText={getFieldError('settlement')}
+                sx={{
+                  input: {
+                    color:
+                      state.settlement.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -260,6 +337,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('address'))}
                 helperText={getFieldError('address')}
+                sx={{
+                  input: {
+                    color:
+                      state.address.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -305,7 +388,7 @@ const Register: React.FC = () => {
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: 1 }}
                   disableElevation
-                  disabled={loading}
+                  disabled={disabled || loading}
                   loading={loading}
                 >
                   Зарегистрироваться

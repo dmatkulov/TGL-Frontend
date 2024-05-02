@@ -7,7 +7,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography, useMediaQuery,
+  Typography,
+  // useMediaQuery,
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
 import OrderModal from './OrderModal';
@@ -19,7 +20,7 @@ import { selectUser } from '../../users/usersSlice';
 import { selectShipments } from '../../shipments/shipmentsSlice';
 
 const OrdersTable = () => {
-  const isSmallScreen = useMediaQuery('(max-width:705px)');
+  // const isSmallScreen = useMediaQuery('(max-width:705px)');
 
   const loading = useAppSelector(selectOrdersLoading);
   const dispatch = useAppDispatch();

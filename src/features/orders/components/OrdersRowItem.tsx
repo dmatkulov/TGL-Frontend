@@ -1,7 +1,6 @@
-import { Button, TableCell, TableRow } from '@mui/material';
+import { Button, IconButton, TableCell, TableRow } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectOrdersCancelLoading, toggleModal } from '../ordersSlice';
 import { FC } from 'react';
@@ -34,20 +33,20 @@ const OrdersRowItem: FC<Shipment> = ({
         <TableCell align="left">
           <Button
             variant="contained"
-            startIcon={<LocalShippingIcon />}
             onClick={showModal}
           >
-            {delivery.status ? 'Отменить доставку' : 'Заказать доставку'}
+            {delivery.status ? 'Отменить доставку' : 'Доставка'}
           </Button>
         </TableCell>
-        <TableCell align="left">
+        <TableCell align="center">
           <LoadingButton
-            startIcon={<CancelIcon />}
+            sx={{minWidth: '29px', padding: '3px', borderRadius: "50%"}}
             loading={cancelLoading}
             disabled={cancelLoading}
-            color="error"
-          >
-            Отменить заказ
+            color="error">
+            <IconButton sx={{color: 'inherit'}}>
+              <CancelIcon />
+            </IconButton>
           </LoadingButton>
         </TableCell>
       </TableRow>

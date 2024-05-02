@@ -53,11 +53,8 @@ export const ordersReducer = ordersSlice.reducer;
 export const { toggleModal } = ordersSlice.actions;
 export const selectOrders = (state: RootState) => state.orders.items;
 export const selectOneOrder = (state: RootState) => state.orders.oneItem;
-export const selectOrdersLoading = (state: RootState) =>
-  state.orders.fetchLoading;
-export const selectOrdersDeliveryLoading = (state: RootState) =>
-  state.orders.deliveryLoading;
-export const selectOrdersCancelLoading = (state: RootState) =>
-  state.orders.cancelLoading;
+export const selectOrdersLoading = (state: RootState) => state.orders.fetchLoading;
+export const selectOrdersDeliveryLoading = (state: RootState) => state.orders.deliveryLoading;
+export const selectOrdersCancelLoading = (state: RootState) => state.orders.cancelLoading;
 export const selectOrderModal = (state: RootState) => state.orders.openModal;
 export const idToModalState = (state: RootState) => state.orders.idToModal;

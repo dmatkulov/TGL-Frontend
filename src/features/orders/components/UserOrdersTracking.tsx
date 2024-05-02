@@ -1,17 +1,18 @@
 import {
-  Box, Button,
+  Box, Button, CircularProgress,
   TextField, Typography,
   useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import React, { useState } from 'react';
 import { searchByTrack } from '../../shipments/shipmentsThunk';
-import { selectOneOrder } from '../ordersSlice';
+import { selectOneOrder, selectOrdersLoading } from '../ordersSlice';
 import ShipmentsCard from '../../shipments/components/ShipmentsCard';
 
 const UserOrdersTracking = () => {
   const dispatch = useAppDispatch();
   const order = useAppSelector(selectOneOrder);
+  const loadingOneOrder = useAppSelector(selectOrdersLoading);
   const isSmallScreen = useMediaQuery('(max-width:1000px)');
   const isExtraSmallScreen = useMediaQuery('(max-width:480px)');
   const [state, setState] = useState<string>('');
@@ -38,8 +39,12 @@ const UserOrdersTracking = () => {
           value={state}
           onChange={handleChange}
         />
-        <Button type="submit" sx={{ ml: 2, mt: 2 }} variant="contained">
-          Поиск
+        <Button
+          type="submit"
+          sx={{ ml: 2, mt: 2 }}
+          variant="contained"
+          disabled={loadingOneOrder}>
+          {loadingOneOrder ? <CircularProgress size={25} /> : 'Поиск'}
         </Button>
       </Box>
       {order && <ShipmentsCard shipment={order} />}

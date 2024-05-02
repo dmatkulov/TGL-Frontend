@@ -1,5 +1,4 @@
-import { Box, Button, IconButton, Modal, Typography } from '@mui/material';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { Box, Button, Modal, Typography } from '@mui/material';
 import WarningPicture from '../../../assets/warning.png';
 
 const mainBoxStyle = {

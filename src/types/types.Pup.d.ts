@@ -20,3 +20,8 @@ export interface PupResponse {
   message: string;
   pups: Pup[];
 }
+
+export interface UpdatePupArg {
+  pupId: string;
+  pupMutation: PupMutation;
+}

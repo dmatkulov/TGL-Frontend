@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups, selectPupsLoading } from '../pupsSlice';
 import { createPup, fetchPups } from '../pupsThunks';
-import { Button, CircularProgress, Grid, Stack } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Stack,
+} from '@mui/material';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
 import { PupMutation } from '../../../types/types.Pup';
@@ -10,7 +18,7 @@ import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
 import { fetchRegions } from '../../regions/regionsThunks';
-import AddPup from './AddPup';
+import PupForm from './PupForm';
 
 const PupList = () => {
   const dispatch = useAppDispatch();
@@ -52,11 +60,16 @@ const PupList = () => {
         {pups.map((pup) => (
           <PupItem key={pup._id} pupItem={pup} />
         ))}
-        <AddPup
-          open={open}
-          onSubmit={submitFormHandler}
-          handleClose={handleClose}
-        />
+        <Dialog open={open} onClose={handleClose} maxWidth="lg">
+          <DialogTitle>Редактирование</DialogTitle>
+          <DialogContent
+            sx={{
+              mt: '20px',
+            }}
+          >
+            <PupForm onSubmit={submitFormHandler} isCreate />
+          </DialogContent>
+        </Dialog>
       </Stack>
     </>
   );

@@ -1,4 +1,4 @@
-import {Button, Grid, Typography, useMediaQuery} from '@mui/material';
+import {Button, Grid, Typography} from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';

@@ -6,8 +6,6 @@ import { useAppSelector } from '../../../app/hooks';
 import { isWarehousesCreateLoading } from '../warehousesSlice';
 import PhoneInput from 'react-phone-input-2';
 import { selectRegisterError } from '../../users/usersSlice';
-import { useNavigate } from 'react-router-dom';
-import { appRoutes } from '../../../utils/constants';
 
 interface Props {
   onSubmit: (mutation: WarehouseMutation) => void;

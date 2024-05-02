@@ -3,6 +3,7 @@ export const apiURL = 'http://localhost:8000';
 export const serverRoute = {
   users: '/users',
   sessions: '/users/sessions',
+  lastSession: '/users/sessions/lastSession',
   pups: '/pups',
   prices: '/price',
   shipments: '/shipments',

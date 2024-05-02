@@ -1,5 +1,13 @@
 import { Pup } from '../../../types/types.Pup';
-import { Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Typography,
+} from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -10,9 +18,19 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
     <Grid m={1}>
       <Card>
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {pupItem.name}
-          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
+          >
+            <Typography variant="h5" component="div">
+              {pupItem.name}
+            </Typography>
+            <Button size="small" variant="contained" color="secondary">
+              Редактировать
+            </Button>
+          </Box>
           <Divider />
           <Typography variant="body2" color="text.secondary">
             <b>Адрес:</b> {pupItem.region.name} {pupItem.settlement}{' '}

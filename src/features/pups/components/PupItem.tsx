@@ -19,6 +19,7 @@ import PupForm from './PupForm';
 interface Props {
   pupItem: Pup;
 }
+
 const PupItem: React.FC<Props> = ({ pupItem }) => {
   const dispatch = useAppDispatch();
 
@@ -34,8 +35,8 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
     await dispatch(
       editPup({ pupId: pupItem._id, pupMutation: state }),
     ).unwrap();
+    await dispatch(fetchPups());
     setOpen(false);
-    dispatch(fetchPups());
   };
 
   const pupMutation: PupMutation = {

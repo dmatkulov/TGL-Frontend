@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, MenuItem, TextField } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import { LoadingButton } from '@mui/lab';
 import { PupMutation } from '../../../types/types.Pup';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { selectPupCreating, selectPupEditing } from '../pupsSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 const initialState: PupMutation = {
   region: '',
@@ -13,22 +14,30 @@ const initialState: PupMutation = {
   address: '',
   phoneNumber: '',
 };
+
 interface Props {
   onSubmit: (pupMutation: PupMutation) => void;
   initialPupState?: PupMutation;
   isEdit?: boolean;
   isCreate?: boolean;
 }
+
 const PupForm: React.FC<Props> = ({
   onSubmit,
   initialPupState = initialState,
   isEdit = false,
   isCreate = false,
 }) => {
+  const dispatch = useAppDispatch();
   const regions = useAppSelector(regionsState);
   const creating = useAppSelector(selectPupCreating);
   const editing = useAppSelector(selectPupEditing);
   const [state, setState] = useState<PupMutation>(initialPupState);
+  const [disabled, setIsDisabled] = useState(true);
+
+  useEffect(() => {
+    dispatch(fetchRegions());
+  }, [dispatch]);
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -39,11 +48,28 @@ const PupForm: React.FC<Props> = ({
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setState((prevState) => {
-      return { ...prevState, [name]: value };
+      const updatedState = { ...prevState, [name]: value };
+      updateDisabledState();
+      return updatedState;
     });
   };
+
+  const updateDisabledState = () => {
+    const keys = Object.keys(state) as (keyof PupMutation)[];
+    const allFieldsFilled = keys.every((key) => {
+      return state[key].trim() !== '';
+    });
+
+    setIsDisabled(!allFieldsFilled);
+  };
   const handlePhoneChange = (value: string) => {
-    setState((prevState) => ({ ...prevState, phoneNumber: value }));
+    setState((prevState) => {
+      const updateState = { ...prevState, phoneNumber: value };
+      if (state.phoneNumber.length === 11) {
+        updateDisabledState();
+      }
+      return updateState;
+    });
   };
 
   return (
@@ -135,7 +161,7 @@ const PupForm: React.FC<Props> = ({
               type="submit"
               color="primary"
               variant="contained"
-              disabled={state.address.trim() === '' && creating}
+              disabled={disabled || creating}
               loading={creating}
             >
               Добавить

@@ -14,10 +14,7 @@ import {
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
 import { PupMutation } from '../../../types/types.Pup';
-import { appRoutes } from '../../../utils/constants';
-import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
-import { fetchRegions } from '../../regions/regionsThunks';
 import PupForm from './PupForm';
 
 const PupList = () => {
@@ -25,12 +22,10 @@ const PupList = () => {
   const loading = useAppSelector(selectPupsLoading);
   const pups = useAppSelector(selectPups);
   const user = useAppSelector(selectUser);
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPups());
-    dispatch(fetchRegions());
   }, [dispatch]);
 
   const handleClickOpen = () => {
@@ -43,9 +38,9 @@ const PupList = () => {
 
   const submitFormHandler = async (state: PupMutation) => {
     await dispatch(createPup(state)).unwrap();
-    navigate(appRoutes.address);
+    await dispatch(fetchPups());
+    handleClose();
   };
-
   return (
     <>
       {loading && <CircularProgress />}

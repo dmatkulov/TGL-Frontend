@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import { regEx } from '../../utils/constants';
 
 import { login } from './usersThunks';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -37,6 +38,8 @@ const Login: React.FC = () => {
   });
 
   const [showPass, setShowPass] = useState(false);
+  const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
+  const [emailLabel, setEmailLabel] = useState<string>('');
 
   const handleClickShowPassword = () => setShowPass((show) => !show);
   const handleMouseDownPassword = (
@@ -60,6 +63,17 @@ const Login: React.FC = () => {
     event.preventDefault();
 
     try {
+      if (regEx.test(state.email)) {
+        setEmailIsValid(true);
+      } else if (!regEx.test(state.email) && state.email !== '') {
+        setEmailLabel('Неверный формат электронной почты');
+        setEmailIsValid(false);
+        return;
+      } else {
+        setEmailLabel('');
+        return;
+      }
+
       await dispatch(login(state)).unwrap();
       navigate(appRoutes.profile);
     } catch (e) {
@@ -91,13 +105,22 @@ const Login: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Почта"
-                name="email"
-                type="text"
                 fullWidth
-                autoComplete="current-email"
+                required
+                label="Email"
+                name="email"
+                type="email"
                 value={state.email}
+                placeholder="email@email.com"
+                autoComplete="current-email"
                 onChange={inputChangeHandler}
+                error={!emailIsValid}
+                helperText={emailLabel}
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? 'inherit' : '#d32f2f',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12}>

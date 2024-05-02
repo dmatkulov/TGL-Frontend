@@ -29,6 +29,7 @@ import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
 import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
+import { regEx } from '../../utils/constants';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -59,9 +60,7 @@ const Register: React.FC = () => {
   const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
     undefined,
   );
-  const [emailIsValid, setEmailIsValid] = useState<boolean | undefined>(
-    undefined,
-  );
+  const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
   const [disabled, setIsDisabled] = useState(true);
 
@@ -126,9 +125,14 @@ const Register: React.FC = () => {
         return;
       }
 
-      if (state.email.length > 1 && !state.email.includes('@')) {
-        setEmailLabel('Адрес электронной почты должен содержать символ @');
+      if (regEx.test(state.email)) {
         setEmailIsValid(true);
+      } else if (!regEx.test(state.email) && state.email !== '') {
+        setEmailLabel('Неверный формат электронной почты');
+        setEmailIsValid(false);
+        return;
+      } else {
+        setEmailLabel('');
         return;
       }
 
@@ -162,7 +166,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
+                required
                 name="lastName"
                 label="Фамилия"
                 type="text"
@@ -182,7 +186,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
+                required
                 name="firstName"
                 label="Имя"
                 type="text"
@@ -221,7 +225,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
+                required
                 name="password"
                 label="Пароль"
                 type={showPass ? 'text' : 'password'}
@@ -251,7 +255,7 @@ const Register: React.FC = () => {
                 }
                 sx={{
                   '.MuiFormHelperText-root': {
-                    color: passIsValid ? 'primary.main' : undefined,
+                    color: passIsValid ? 'primary.main' : 'inherit',
                   },
                 }}
               />
@@ -294,22 +298,21 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
+                required
                 label="Email"
                 name="email"
+                type="email"
                 value={state.email}
-                placeholder="mail@mail.com"
+                placeholder="email@email.com"
                 autoComplete="new-email"
                 onChange={inputChangeHandler}
-                error={Boolean(
-                  getFieldError('email') || emailIsValid === false,
-                )}
+                error={Boolean(getFieldError('email') || !emailIsValid)}
                 helperText={
                   getFieldError('email') ? getFieldError('email') : emailLabel
                 }
                 sx={{
                   '.MuiFormHelperText-root': {
-                    color: emailIsValid ? '#d32f2f' : undefined,
+                    color: emailIsValid ? 'inherit' : '#d32f2f',
                   },
                 }}
               />
@@ -319,7 +322,7 @@ const Register: React.FC = () => {
               <TextField
                 fullWidth
                 select
-                // required
+                required
                 name="region"
                 label="Регион"
                 type="text"
@@ -346,7 +349,6 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
                 name="settlement"
                 label="Населенный пункт"
                 type="text"
@@ -366,7 +368,6 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                // required
                 name="address"
                 label="Адрес"
                 type="text"
@@ -387,7 +388,6 @@ const Register: React.FC = () => {
               <TextField
                 fullWidth
                 select
-                // required
                 name="pupID"
                 label="ПВЗ"
                 type="text"

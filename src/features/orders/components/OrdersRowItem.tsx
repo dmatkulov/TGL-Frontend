@@ -1,10 +1,25 @@
-import { Button, IconButton, TableCell, TableRow } from '@mui/material';
+import {
+  // Box,
+  Button, IconButton,
+  // Modal,
+  TableCell,
+  TableRow,
+  // Typography
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectOrdersCancelLoading, toggleModal } from '../ordersSlice';
-import { FC } from 'react';
+import {
+  useAppDispatch,
+  // useAppSelector
+} from '../../../app/hooks';
+import {
+  // selectOrdersCancelLoading,
+  toggleModal,
+} from '../ordersSlice';
+import { FC, useState } from 'react';
 import { Shipment } from '../../../types/types.Shipments';
+import WarningModal from './WarningModal';
+
 
 const OrdersRowItem: FC<Shipment> = ({
   _id,
@@ -15,7 +30,21 @@ const OrdersRowItem: FC<Shipment> = ({
   delivery,
 }) => {
   const dispatch = useAppDispatch();
-  const cancelLoading = useAppSelector(selectOrdersCancelLoading);
+  const [state, setState] = useState(false);
+  const [color, setColor] = useState(false);
+
+  const openWarningModalWindow = () => {
+    setState(true);
+  };
+
+  const closeWarningModalWindow = () => {
+    setState(false);
+  };
+
+  const changeColorField = () => {
+    setColor(true);
+    setState(false);
+  };
 
   const showModal = () => {
     dispatch(toggleModal({ toggle: true, id: { _id } }));
@@ -23,6 +52,10 @@ const OrdersRowItem: FC<Shipment> = ({
 
   return (
     <>
+      <WarningModal
+        changeColor={changeColorField}
+        closeModal={closeWarningModalWindow}
+        stateModal={state} />
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell component="th" scope="row">
           {trackerNumber}
@@ -34,17 +67,16 @@ const OrdersRowItem: FC<Shipment> = ({
           <Button
             variant="contained"
             onClick={showModal}
-          >
-            {delivery.status ? 'Отменить доставку' : 'Доставка'}
+            disabled={color}>
+            {delivery.status ? 'Отменить доставку' : (color ? 'Отмена' : 'Доставка')}
           </Button>
         </TableCell>
         <TableCell align="center">
           <LoadingButton
-            sx={{minWidth: '29px', padding: '3px', borderRadius: "50%"}}
-            loading={cancelLoading}
-            disabled={cancelLoading}
+            sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
+            onClick={openWarningModalWindow}
             color="error">
-            <IconButton sx={{color: 'inherit'}}>
+            <IconButton sx={{ color: 'inherit' }}>
               <CancelIcon />
             </IconButton>
           </LoadingButton>

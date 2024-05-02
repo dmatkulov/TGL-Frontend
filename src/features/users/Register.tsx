@@ -5,12 +5,15 @@ import {
   Box,
   Container,
   Grid,
+  IconButton,
   Link,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import {
@@ -25,6 +28,7 @@ import { fetchPups } from '../pups/pupsThunks';
 import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
 import { RegisterMutation } from '../../types/types.User';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -48,6 +52,18 @@ const Register: React.FC = () => {
   const regions = useAppSelector(regionsState);
 
   const [state, setState] = useState<RegisterMutation>(initialState);
+  const [showPass, setShowPass] = useState(false);
+  const [passLabel, setPassLabel] = useState<string>(
+    'Длина пароля должна быть не менее 8 символов',
+  );
+  const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [emailIsValid, setEmailIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [emailLabel, setEmailLabel] = useState<string>('');
+  const [disabled, setIsDisabled] = useState(true);
 
   const getFieldError = (fieldName: string) => {
     try {
@@ -60,8 +76,31 @@ const Register: React.FC = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => {
-      return { ...prevState, [name]: value };
+      const updatedState = { ...prevState, [name]: value };
+
+      const keys = Object.keys(updatedState) as (keyof RegisterMutation)[];
+      const allFieldsFilled = keys.every((key) => {
+        const allowed =
+          key === 'middleName' || key === 'settlement' || key === 'address';
+        return allowed || updatedState[key].trim() !== '';
+      });
+
+      setIsDisabled(!allFieldsFilled);
+
+      if (name === 'password' && value.length >= 8) {
+        setPassIsValid(true);
+        setPassLabel('Надежный пароль');
+      }
+
+      return updatedState;
     });
+  };
+
+  const handleClickShowPassword = () => setShowPass((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
   };
 
   const handlePhoneChange = (value: string) => {
@@ -70,15 +109,29 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     dispatch(setRegisterError(null));
-    dispatch(fetchPups());
     dispatch(fetchRegions());
   }, [dispatch]);
+
+  const fetchPupsByRegion = async (region: string) => {
+    await dispatch(fetchPups(region));
+  };
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
-      console.log({ register: state });
+      if (state.password.length >= 1 && state.password.length < 8) {
+        setPassLabel('Пароль слишком короткий');
+        setPassIsValid(false);
+        return;
+      }
+
+      if (state.email.length > 1 && !state.email.includes('@')) {
+        setEmailLabel('Адрес электронной почты должен содержать символ @');
+        setEmailIsValid(true);
+        return;
+      }
+
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);
@@ -109,7 +162,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="lastName"
                 label="Фамилия"
                 type="text"
@@ -118,12 +171,18 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('lastName'))}
                 helperText={getFieldError('lastName')}
+                sx={{
+                  input: {
+                    color:
+                      state.lastName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="firstName"
                 label="Имя"
                 type="text"
@@ -132,6 +191,12 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('firstName'))}
                 helperText={getFieldError('firstName')}
+                sx={{
+                  input: {
+                    color:
+                      state.firstName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -145,20 +210,50 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('middleName'))}
                 helperText={getFieldError('middleName')}
+                sx={{
+                  input: {
+                    color:
+                      state.middleName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="password"
                 label="Пароль"
-                type="password"
+                type={showPass ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPass ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 value={state.password}
                 autoComplete="new-password"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('password'))}
-                helperText={getFieldError('password')}
+                error={Boolean(
+                  getFieldError('password') || passIsValid === false,
+                )}
+                helperText={
+                  getFieldError('password')
+                    ? getFieldError('password')
+                    : passLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: passIsValid ? 'primary.main' : undefined,
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -168,14 +263,54 @@ const Register: React.FC = () => {
                 onlyCountries={['kg']}
                 containerStyle={{ width: '100%' }}
                 value={state.phoneNumber}
+                countryCodeEditable={false}
                 onChange={handlePhoneChange}
-                defaultErrorMessage={getFieldError('phoneNumber')}
                 specialLabel="Номер телефона*"
                 disableDropdown
-                inputStyle={{ width: '100%' }}
+                inputStyle={{
+                  width: '100%',
+                  borderColor: getFieldError('phoneNumber') && '#d32f2f',
+                  color: getFieldError('phoneNumber') && '#d32f2f',
+                }}
                 inputProps={{
                   name: 'phoneNumber',
                   required: true,
+                }}
+              />
+              {getFieldError('phoneNumber') && (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {getFieldError('phoneNumber')}
+                </Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                // required
+                label="Email"
+                name="email"
+                value={state.email}
+                placeholder="mail@mail.com"
+                autoComplete="new-email"
+                onChange={inputChangeHandler}
+                error={Boolean(
+                  getFieldError('email') || emailIsValid === false,
+                )}
+                helperText={
+                  getFieldError('email') ? getFieldError('email') : emailLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? '#d32f2f' : undefined,
+                  },
                 }}
               />
             </Grid>
@@ -183,23 +318,8 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
-                label="Email"
-                name="email"
-                type="text"
-                value={state.email}
-                autoComplete="new-email"
-                onChange={inputChangeHandler}
-                error={Boolean(getFieldError('email'))}
-                helperText={getFieldError('email')}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
                 select
-                required
+                // required
                 name="region"
                 label="Регион"
                 type="text"
@@ -213,7 +333,11 @@ const Register: React.FC = () => {
                   Выберите область
                 </MenuItem>
                 {regions.map((region) => (
-                  <MenuItem key={region._id} value={region._id}>
+                  <MenuItem
+                    key={region._id}
+                    value={region._id}
+                    onClick={() => fetchPupsByRegion(region._id)}
+                  >
                     {region.name}
                   </MenuItem>
                 ))}
@@ -222,7 +346,7 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="settlement"
                 label="Населенный пункт"
                 type="text"
@@ -231,12 +355,18 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('settlement'))}
                 helperText={getFieldError('settlement')}
+                sx={{
+                  input: {
+                    color:
+                      state.settlement.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                required
+                // required
                 name="address"
                 label="Адрес"
                 type="text"
@@ -245,13 +375,19 @@ const Register: React.FC = () => {
                 onChange={inputChangeHandler}
                 error={Boolean(getFieldError('address'))}
                 helperText={getFieldError('address')}
+                sx={{
+                  input: {
+                    color:
+                      state.address.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 select
-                required
+                // required
                 name="pupID"
                 label="ПВЗ"
                 type="text"
@@ -261,15 +397,23 @@ const Register: React.FC = () => {
                 error={Boolean(getFieldError('pupID'))}
                 helperText={getFieldError('pupID')}
               >
-                <MenuItem value="" disabled>
-                  Выберите ближайший ПВЗ
-                </MenuItem>
-                {pups.map((pup) => (
-                  <MenuItem key={pup._id} value={pup._id}>
-                    <b>{pup.name}</b>
-                    {pup.region.name} обл., {pup.address}, {pup.settlement}
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
                   </MenuItem>
-                ))}
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
               </TextField>
             </Grid>
             <Grid
@@ -290,7 +434,7 @@ const Register: React.FC = () => {
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: 1 }}
                   disableElevation
-                  disabled={loading}
+                  disabled={disabled || loading}
                   loading={loading}
                 >
                   Зарегистрироваться

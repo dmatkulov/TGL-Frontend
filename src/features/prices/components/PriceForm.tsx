@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { PriceMutation } from '../../../types/types.Price';
-import { Alert, Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Grid, TextField } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
-import { useAppSelector } from '../../../app/hooks';
-import { selectPriceFieldError } from '../pricesSlice';
 
 interface Props {
   onSubmit: (mutation: PriceMutation) => void;
@@ -23,7 +21,6 @@ const PriceForm: React.FC<Props> = ({
   loading,
 }) => {
   const [state, setState] = useState<PriceMutation>(initialPrice);
-  const error = useAppSelector(selectPriceFieldError);
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,6 +28,17 @@ const PriceForm: React.FC<Props> = ({
     setState((prevState) => {
       return { ...prevState, [name]: value };
     });
+  };
+
+  const isFormValid = () => {
+    const { exchangeRate, deliveryPrice } = state;
+
+    return (
+      exchangeRate &&
+      deliveryPrice &&
+      exchangeRate !== '0' &&
+      deliveryPrice !== '0'
+    );
   };
 
   const submitFormHandler = (e: React.FormEvent) => {
@@ -54,11 +62,6 @@ const PriceForm: React.FC<Props> = ({
       alignItems="center"
     >
       <Grid container direction="column" spacing={2} alignItems="center">
-        {error && (
-          <Grid item>
-            <Alert severity="error">{error}</Alert>
-          </Grid>
-        )}
         <Grid item xs>
           <TextField
             id="title"
@@ -96,7 +99,7 @@ const PriceForm: React.FC<Props> = ({
             type="submit"
             color="primary"
             variant="contained"
-            disabled={loading}
+            disabled={!isFormValid() || loading}
             fullWidth
           >
             {isEdit ? 'Обновить' : 'Создать'}

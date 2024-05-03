@@ -105,7 +105,7 @@ const Price = () => {
             mt: '20px',
           }}
         >
-          {price && <EditPrice onClose={handleClose} />}
+          {price && <EditPrice onClose={handleClose} price={price} />}
           {!price && <NewPrice onClose={handleClose} />}
         </DialogContent>
       </Dialog>

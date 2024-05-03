@@ -10,13 +10,14 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 const Profile = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
     email: user?.email || '',
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     middleName: user?.middleName || '',
-    region: user?.region._id || '',
+    region: user?.region?._id || '',
     settlement: user?.settlement || '',
     address: user?.address || '',
   });
@@ -43,7 +44,6 @@ const Profile = () => {
       return { ...prevState, [name]: value };
     });
   };
-
   return (
     <>
       <Grid container spacing={2} flexWrap="nowrap">
@@ -60,9 +60,18 @@ const Profile = () => {
             { isAdmin ? (
               <></>
             ) : (
-              <Typography variant="subtitle1">
-                Ваш персональный код: {user?.marketId}
-              </Typography>
+              <>
+                <Typography variant="subtitle1">
+                  Ваш персональный код: {user?.marketId}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Ваш адрес: {user?.region.name} область, {user?.settlement} {user?.address}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Ваш {user?.pupID.name} находится по адресу: {user?.pupID.address}
+                </Typography>
+              </>
+
             )}
           </Grid>
           <Grid item>

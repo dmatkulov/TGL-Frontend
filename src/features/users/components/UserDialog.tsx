@@ -145,6 +145,11 @@ const UserDialog: React.FC<Props> = ({
                 </Button>
               </Grid>
             </Grid>
+            <Grid item xs mt={2}>
+              <Button fullWidth onClick={handleClose} color="secondary" variant="contained">
+                Закрыть
+              </Button>
+            </Grid>
           </form>
         </DialogContent>
       </Dialog>

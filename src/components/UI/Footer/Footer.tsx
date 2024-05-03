@@ -4,7 +4,8 @@ import {
   Container,
   Grid,
   Stack,
-  Typography, useMediaQuery,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import img from '..//..//../assets/car.png';
 import tt from '..//..//../assets/tt.svg';
@@ -19,7 +20,7 @@ import { companyAddressState } from '../../../features/companyAddress/companyAdd
 
 const Footer = () => {
   const isSmallScreen = useMediaQuery('(max-width:660px)');
-        
+
   const dispatch = useAppDispatch();
   const addresses = useAppSelector(companyAddressState);
   const isEmpty = addresses.length === 0;
@@ -28,7 +29,7 @@ const Footer = () => {
     dispatch(fetchCompanyAddresses());
   }, [dispatch]);
 
-  let social = (
+  const social = (
     <>
       <SocialMedia
         tiktok
@@ -96,13 +97,21 @@ const Footer = () => {
           </Stack>
         </Grid>
 
-        { isSmallScreen ?
-          <Grid container gap={2} display="flex" flexDirection="row" wrap="wrap">
-            { social }
-          </Grid> :
+        {isSmallScreen ? (
+          <Grid
+            container
+            gap={2}
+            display="flex"
+            flexDirection="row"
+            wrap="wrap"
+          >
+            {social}
+          </Grid>
+        ) : (
           <Grid item xs={3} gap={2} display="flex" flexDirection="column">
-            { social }
-          </Grid>}
+            {social}
+          </Grid>
+        )}
       </Grid>
     </Container>
   );

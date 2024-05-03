@@ -1,16 +1,30 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectPrice, selectPriceLoading } from './pricesSlice';
 import { fetchPrice } from './pricesThunks';
-import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Typography,
+} from '@mui/material';
 import { selectUser } from '../users/usersSlice';
 import PageTitle from '../users/components/PageTitle';
+import EditPrice from './EditPrice';
+import NewPrice from './NewPrice';
 
 const Price = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const price = useAppSelector(selectPrice);
   const isFetching = useAppSelector(selectPriceLoading);
+
+  const [open, setOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const doFetchOne = useCallback(async () => {
     try {
@@ -23,6 +37,14 @@ const Price = () => {
   useEffect(() => {
     void doFetchOne();
   }, [doFetchOne]);
+
+  const toggleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = async () => {
+    await doFetchOne();
+    setOpen(false);
+  };
 
   let form = <CircularProgress />;
 
@@ -39,7 +61,15 @@ const Price = () => {
         </Box>
         {user?.role === 'super' && (
           <Grid item>
-            <Button variant="contained">Редактировать</Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setEdit(true);
+                toggleOpen();
+              }}
+            >
+              Редактировать
+            </Button>
           </Grid>
         )}
       </>
@@ -54,7 +84,9 @@ const Price = () => {
         </Box>
         {user?.role === 'super' && (
           <Grid item>
-            <Button variant="contained">Установить</Button>
+            <Button variant="contained" onClick={toggleOpen}>
+              Установить
+            </Button>
           </Grid>
         )}
       </>
@@ -65,6 +97,18 @@ const Price = () => {
     <Grid container direction="column">
       <PageTitle title="Курс доллара и цена за доставку" />
       {form}
+
+      <Dialog open={open} onClose={handleClose} maxWidth="md">
+        <DialogTitle>{edit ? 'Редактирование' : 'Создать'}</DialogTitle>
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          {price && <EditPrice onClose={handleClose} />}
+          {!price && <NewPrice onClose={handleClose} />}
+        </DialogContent>
+      </Dialog>
     </Grid>
   );
 };

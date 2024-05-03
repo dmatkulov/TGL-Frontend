@@ -43,6 +43,10 @@ export interface LoginMutation {
   password: string;
 }
 
+export interface LoginLastSessionMutation {
+  token: string;
+}
+
 export interface RegisterResponse {
   message: string;
   user: User;

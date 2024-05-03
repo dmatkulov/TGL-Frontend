@@ -31,7 +31,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   const handleLogOut = async () => {
     await dispatch(logOut()).unwrap();
-    navigate(appRoutes.home);
+    navigate(appRoutes.login);
   };
 
   return (

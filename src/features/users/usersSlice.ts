@@ -5,6 +5,7 @@ import {
   getStaff,
   getStaffData,
   login,
+  loginByLastSession,
   logOut,
   register,
 } from './usersThunks';
@@ -13,6 +14,7 @@ import { Staff, User } from '../../types/types.User';
 
 interface UserState {
   user: User | null;
+  lastUser: User | null;
   staffData: Staff[];
   staff: Staff | null;
   registerLoading: boolean;
@@ -26,6 +28,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: null,
+  lastUser: null,
   staffData: [],
   staff: null,
   registerLoading: false,
@@ -60,6 +63,7 @@ export const usersSlice = createSlice({
       .addCase(register.fulfilled, (state, { payload: data }) => {
         state.registerLoading = false;
         state.user = data.user;
+        state.lastUser = data.user;
       })
       .addCase(register.rejected, (state, { payload: error }) => {
         state.registerLoading = false;
@@ -113,8 +117,24 @@ export const usersSlice = createSlice({
       .addCase(login.fulfilled, (state, { payload: data }) => {
         state.loginLoading = false;
         state.user = data.user;
+        state.lastUser = data.user;
       })
       .addCase(login.rejected, (state, { payload: error }) => {
+        state.loginLoading = false;
+        state.loginError = error || null;
+      });
+
+    builder
+      .addCase(loginByLastSession.pending, (state) => {
+        state.loginLoading = true;
+        state.loginError = null;
+      })
+      .addCase(loginByLastSession.fulfilled, (state, { payload: data }) => {
+        state.loginLoading = false;
+        state.user = data.user;
+        state.lastUser = data.user;
+      })
+      .addCase(loginByLastSession.rejected, (state, { payload: error }) => {
         state.loginLoading = false;
         state.loginError = error || null;
       });
@@ -134,6 +154,7 @@ export const usersSlice = createSlice({
 
 export const usersReducer = usersSlice.reducer;
 export const selectUser = (state: RootState) => state.users.user;
+export const selectLastUser = (state: RootState) => state.users.lastUser;
 export const selectStaff = (state: RootState) => state.users.staff;
 export const selectStaffData = (state: RootState) => state.users.staffData;
 export const selectRegisterLoading = (state: RootState) =>

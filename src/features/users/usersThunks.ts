@@ -10,6 +10,7 @@ import {
   IStaff,
   IStaffResponse,
   IStaffResponseData,
+  LoginLastSessionMutation,
   LoginMutation,
   RegisterMutation,
   RegisterResponse,
@@ -153,10 +154,33 @@ export const login = createAsyncThunk<
   }
 });
 
+export const loginByLastSession = createAsyncThunk<
+  RegisterResponse,
+  LoginLastSessionMutation,
+  { rejectValue: GlobalError }
+>(
+  'users/loginByLastSession',
+  async (LoginLastSessionMutation, { rejectWithValue }) => {
+    try {
+      const response = await axiosApi.post<RegisterResponse>(
+        serverRoute.lastSession,
+        LoginLastSessionMutation,
+      );
+      return response.data;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 422) {
+        return rejectWithValue(e.response.data);
+      }
+
+      throw e;
+    }
+  },
+);
+
 export const logOut = createAsyncThunk<void, undefined, { state: RootState }>(
   'users/logout',
   async (_, { dispatch }) => {
-    await axiosApi.delete(serverRoute.sessions);
+    // await axiosApi.delete(serverRoute.sessions);
     dispatch(unsetUser());
   },
 );

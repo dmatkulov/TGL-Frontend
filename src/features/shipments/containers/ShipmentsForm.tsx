@@ -1,8 +1,9 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
-import { useAppDispatch } from '../../../app/hooks';
+import { Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
 import { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
+import { selectShipmentsLoading } from '../shipmentsSlice';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
@@ -19,6 +20,7 @@ const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
 
   const [state, setState] = useState<ShipmentMutation>(initialState);
+  const loading = useAppSelector(selectShipmentsLoading);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -116,8 +118,10 @@ const ShipmentsForm = () => {
             />
           </Grid>
         </Grid>
-        <Button type="submit" sx={{ mt: 3 }}>
-          Add shipment
+        <Button
+          type="submit"
+          sx={{ mt: 3 }}>
+          {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>
       </Box>
     </>

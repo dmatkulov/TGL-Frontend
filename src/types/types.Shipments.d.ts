@@ -75,8 +75,8 @@ export interface ShipmentThatDone {
 }
 
 export interface ShipmentMutation {
-  userMarketId: string;
-  trackerNumber: string;
+  userMarketId: number;
+  trackerNumber: number;
   weight: number;
   dimensions: {
     height: number;

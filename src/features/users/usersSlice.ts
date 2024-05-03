@@ -6,7 +6,7 @@ import {
   getStaffData,
   login,
   logOut,
-  register,
+  register, update,
 } from './usersThunks';
 import { RootState } from '../../app/store';
 import { Staff, User } from '../../types/types.User';
@@ -90,6 +90,22 @@ export const usersSlice = createSlice({
       .addCase(getStaffData.rejected, (state) => {
         state.getStaffDataLoading = false;
       });
+
+    builder
+      .addCase(update.pending, (state) => {
+        state.registerLoading = true;
+        state.registerError = null;
+      });
+    builder
+      .addCase(update.fulfilled, (state, {payload: updatedUser}) => {
+        state.registerLoading = false;
+        state.user = updatedUser.user;
+      });
+    builder
+      .addCase(update.rejected, (state, {payload: error}) => {
+        state.registerLoading = false;
+        state.registerError = error || null;
+      })
 
     builder
       .addCase(getStaff.pending, (state) => {

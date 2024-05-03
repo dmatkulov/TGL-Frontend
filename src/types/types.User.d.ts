@@ -5,7 +5,7 @@ import { Pup } from './types.Pup';
 export interface User {
   _id: string;
   email: string;
-  pupID: string;
+  pupID: Pup;
   marketId: string;
   firstName: string;
   lastName: string;

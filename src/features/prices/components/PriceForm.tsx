@@ -24,6 +24,9 @@ const PriceForm: React.FC<Props> = ({
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    if (parseFloat(value) <= 0) {
+      return;
+    }
     setState((prevState) => {
       return { ...prevState, [name]: value };
     });
@@ -32,12 +35,7 @@ const PriceForm: React.FC<Props> = ({
   const isFormValid = () => {
     const { exchangeRate, deliveryPrice } = state;
 
-    return (
-      exchangeRate &&
-      deliveryPrice &&
-      exchangeRate !== '0' &&
-      deliveryPrice !== '0'
-    );
+    return exchangeRate && deliveryPrice;
   };
 
   const submitFormHandler = (e: React.FormEvent) => {

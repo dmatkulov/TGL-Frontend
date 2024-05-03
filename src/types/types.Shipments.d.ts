@@ -57,6 +57,22 @@ export interface Shipment {
   };
   trackerNumber: number;
 }
+export interface ShipmentThatDone {
+  _id?: string;
+  pupId: {
+    _id: string;
+    name: string;
+    address: string;
+    settlement: string;
+    region: string;
+    phoneNumber: string;
+  };
+  price: {
+    usd: number;
+    som: number;
+  };
+  trackerNumber: number;
+}
 
 export interface ShipmentMutation {
   userMarketId: string;
@@ -72,6 +88,10 @@ export interface ShipmentMutation {
 export interface ShipmentsResponse {
   message: string;
   shipments: ShipmentData[];
+}
+export interface ShipmentsHistoryResponse {
+  message: string;
+  shipments: ShipmentThatDone[];
 }
 
 export interface oneShipmentResponse {

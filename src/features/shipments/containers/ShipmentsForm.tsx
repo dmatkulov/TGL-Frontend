@@ -18,16 +18,23 @@ const initialState: ShipmentMutation = {
 
 const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
-
   const [state, setState] = useState<ShipmentMutation>(initialState);
   const loading = useAppSelector(selectShipmentsLoading);
 
+  const valueFields = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length']
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+
+    if (valueFields.includes(name)) {
+      const numValue = parseInt(value);
+      if (numValue >= 0) {
+        setState(prevState => ({
+          ...prevState,
+          [name]: numValue
+        }));
+      }
+    }
   };
 
   const handleDimensionsChange = (
@@ -77,20 +84,8 @@ const ShipmentsForm = () => {
             <TextField
               fullWidth
               required
-              name="weight"
-              label="Килограмм"
-              type="number"
-              onChange={handleChange}
-              value={state.weight}
-            />
-          </Grid>
-          <Grid item xs={3}>
-            <TextField
-              fullWidth
-              required
               name="height"
               label="Высота"
-              type="number"
               onChange={handleDimensionsChange}
               value={state.dimensions.height}
             />
@@ -101,7 +96,6 @@ const ShipmentsForm = () => {
               required
               name="length"
               label="Длина"
-              type="number"
               onChange={handleDimensionsChange}
               value={state.dimensions.length}
             />
@@ -112,9 +106,18 @@ const ShipmentsForm = () => {
               required
               name="width"
               label="Ширина"
-              type="number"
               onChange={handleDimensionsChange}
               value={state.dimensions.width}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              fullWidth
+              required
+              name="weight"
+              label="Килограмм"
+              onChange={handleChange}
+              value={state.weight}
             />
           </Grid>
         </Grid>

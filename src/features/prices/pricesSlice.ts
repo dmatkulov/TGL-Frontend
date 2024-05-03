@@ -2,14 +2,12 @@ import { Price } from '../../types/types.Price';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { createPrice, fetchPrice, updatePrice } from './pricesThunks';
+import { toast } from 'react-toastify';
 
 interface PriceState {
   item: Price | null;
   fetchLoading: boolean;
   createLoading: boolean;
-  priceSuccessMsg: string | null;
-  priceErrorMsg: string | null;
-  priceFieldError: string | null;
   editLoading: boolean;
 }
 
@@ -17,25 +15,13 @@ const initialState: PriceState = {
   item: null,
   fetchLoading: false,
   createLoading: false,
-  priceSuccessMsg: null,
-  priceErrorMsg: null,
-  priceFieldError: null,
   editLoading: false,
 };
 
 export const pricesSlice = createSlice({
   name: 'price',
   initialState,
-  reducers: {
-    setPriceFieldError: (state, { payload }) => {
-      state.priceFieldError = payload;
-    },
-    unsetPriceMessage: (state) => {
-      state.priceSuccessMsg = null;
-      state.priceErrorMsg = null;
-      state.priceFieldError = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPrice.pending, (state) => {
@@ -53,13 +39,13 @@ export const pricesSlice = createSlice({
       .addCase(createPrice.pending, (state) => {
         state.createLoading = true;
       })
-      .addCase(createPrice.fulfilled, (state, { payload: errorResponse }) => {
+      .addCase(createPrice.fulfilled, (state, { payload: priceResponse }) => {
         state.createLoading = false;
-        state.priceSuccessMsg = errorResponse?.message || null;
+        toast.success(priceResponse?.message);
       })
       .addCase(createPrice.rejected, (state, { payload: errorResponse }) => {
         state.createLoading = false;
-        state.priceErrorMsg = errorResponse?.message || null;
+        toast.error(errorResponse?.message);
       });
 
     builder
@@ -68,27 +54,20 @@ export const pricesSlice = createSlice({
       })
       .addCase(updatePrice.fulfilled, (state, { payload: priceResponse }) => {
         state.editLoading = false;
-        state.priceSuccessMsg = priceResponse?.message || null;
+        toast.success(priceResponse?.message);
       })
       .addCase(updatePrice.rejected, (state, { payload: errorResponse }) => {
         state.editLoading = false;
-        state.priceErrorMsg = errorResponse?.message || null;
+        toast.error(errorResponse?.message);
       });
   },
 });
 
 export const pricesReducer = pricesSlice.reducer;
-export const { setPriceFieldError, unsetPriceMessage } = pricesSlice.actions;
 export const selectPrice = (state: RootState) => state.prices.item;
 export const selectPriceLoading = (state: RootState) =>
   state.prices.fetchLoading;
 export const selectPriceCreateLoading = (state: RootState) =>
   state.prices.createLoading;
-export const selectPriceResponse = (state: RootState) =>
-  state.prices.priceSuccessMsg;
-export const selectPriceError = (state: RootState) =>
-  state.prices.priceErrorMsg;
-export const selectPriceFieldError = (state: RootState) =>
-  state.prices.priceFieldError;
 export const selectPriceEditLoading = (state: RootState) =>
   state.prices.editLoading;

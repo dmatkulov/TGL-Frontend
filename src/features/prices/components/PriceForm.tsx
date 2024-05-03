@@ -21,7 +21,6 @@ const PriceForm: React.FC<Props> = ({
   loading,
 }) => {
   const [state, setState] = useState<PriceMutation>(initialPrice);
-
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 

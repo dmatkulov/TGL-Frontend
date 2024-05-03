@@ -6,8 +6,8 @@ import { ShipmentMutation } from '../../../types/types.Shipments';
 import { selectShipmentsLoading } from '../shipmentsSlice';
 
 const initialState: ShipmentMutation = {
-  userMarketId: '',
-  trackerNumber: '',
+  userMarketId: 0,
+  trackerNumber: 0,
   weight: 0,
   dimensions: {
     height: 0,
@@ -73,18 +73,18 @@ const ShipmentsForm = () => {
               value={state.trackerNumber}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
               name="weight"
-              label="Масса"
+              label="Килограмм"
               type="number"
               onChange={handleChange}
               value={state.weight}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
@@ -95,7 +95,7 @@ const ShipmentsForm = () => {
               value={state.dimensions.height}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
@@ -106,7 +106,7 @@ const ShipmentsForm = () => {
               value={state.dimensions.length}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
@@ -120,7 +120,9 @@ const ShipmentsForm = () => {
         </Grid>
         <Button
           type="submit"
-          sx={{ mt: 3 }}>
+          variant="contained"
+          sx={{ mt: 3 }}
+          disabled={loading}>
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>
       </Box>

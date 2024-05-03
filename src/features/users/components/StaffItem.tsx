@@ -1,10 +1,8 @@
 import React from 'react';
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
+  TableCell, TableRow,
+
 } from '@mui/material';
 import { Staff } from '../../../types/types.User';
 import { useNavigate } from 'react-router-dom';
@@ -19,32 +17,26 @@ const StaffItem: React.FC<Props> = ({ user }) => {
   const navigate = useNavigate();
   const userRole = useAppSelector(selectUser);
   return (
-    <Card sx={{ minWidth: 275, margin: 3 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {user.role}
-        </Typography>
-        <Typography variant="h5" component="div">
-          {user.firstName} {user.lastName}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          {user.address}
-        </Typography>
-        <Typography variant="body2">{user.phoneNumber}</Typography>
-      </CardContent>
-      <CardActions>
-        {userRole?.role === 'super' ? (
+    <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell component="th" scope="row">{user.role}</TableCell>
+      <TableCell align="left">{user.firstName}</TableCell>
+      <TableCell align="left">{user.lastName}</TableCell>
+      <TableCell align="left">{user.address}</TableCell>
+      <TableCell align="left">{user.phoneNumber}</TableCell>
+      {userRole?.role === 'super' ? (
+        <TableCell align="left">
           <Button
+            variant="contained"
             onClick={() => navigate('/admin-profile/edit-staff/' + user._id)}
             size="small"
           >
-            Edit
+            Изменить
           </Button>
+        </TableCell>
         ) : (
           <></>
         )}
-      </CardActions>
-    </Card>
+    </TableRow>
   );
 };
 

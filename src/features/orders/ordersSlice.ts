@@ -1,11 +1,13 @@
-import { Order } from '../../types/types.Order';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { searchByTrack } from '../shipments/shipmentsThunk';
-import { ShipmentData } from '../../types/types.Shipments';
+import {
+  fetchShipmentsHistoryByUser,
+  searchByTrack,
+} from '../shipments/shipmentsThunk';
+import { ShipmentData, ShipmentThatDone } from '../../types/types.Shipments';
 
 interface OrdersState {
-  items: Order[];
+  items: ShipmentThatDone[];
   oneItem: ShipmentData | null;
   fetchLoading: boolean;
   deliveryLoading: boolean;
@@ -46,6 +48,17 @@ export const ordersSlice = createSlice({
       .addCase(searchByTrack.rejected, (state) => {
         state.fetchLoading = false;
       });
+    builder
+      .addCase(fetchShipmentsHistoryByUser.pending, (state) => {
+        state.fetchLoading = true;
+      })
+      .addCase(fetchShipmentsHistoryByUser.fulfilled, (state, { payload }) => {
+        state.fetchLoading = false;
+        state.items = payload.shipments;
+      })
+      .addCase(fetchShipmentsHistoryByUser.rejected, (state) => {
+        state.fetchLoading = false;
+      });
   },
 });
 
@@ -53,8 +66,11 @@ export const ordersReducer = ordersSlice.reducer;
 export const { toggleModal } = ordersSlice.actions;
 export const selectOrders = (state: RootState) => state.orders.items;
 export const selectOneOrder = (state: RootState) => state.orders.oneItem;
-export const selectOrdersLoading = (state: RootState) => state.orders.fetchLoading;
-export const selectOrdersDeliveryLoading = (state: RootState) => state.orders.deliveryLoading;
-export const selectOrdersCancelLoading = (state: RootState) => state.orders.cancelLoading;
+export const selectOrdersLoading = (state: RootState) =>
+  state.orders.fetchLoading;
+export const selectOrdersDeliveryLoading = (state: RootState) =>
+  state.orders.deliveryLoading;
+export const selectOrdersCancelLoading = (state: RootState) =>
+  state.orders.cancelLoading;
 export const selectOrderModal = (state: RootState) => state.orders.openModal;
 export const idToModalState = (state: RootState) => state.orders.idToModal;

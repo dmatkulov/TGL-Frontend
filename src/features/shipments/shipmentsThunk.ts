@@ -76,3 +76,17 @@ export const searchByTrack = createAsyncThunk<oneShipmentResponse, string>(
     }
   },
 );
+
+export const fetchShipmentsHistoryByUser = createAsyncThunk<
+  ShipmentsResponse,
+  string
+>('shipments/fetchHistoryByUser', async (arg) => {
+  try {
+    const response = await axiosApi.get(
+      serverRoute.shipments + '?marketId=' + arg + '&status=ЗАВЕРШЕН',
+    );
+    return response.data ?? [];
+  } catch (e) {
+    console.log('Caught on try - FETCH SHIPMENTS HISTORY BY USER - ', e);
+  }
+});

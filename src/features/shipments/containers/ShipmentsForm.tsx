@@ -112,7 +112,7 @@ const ShipmentsForm = () => {
               label="Ширина"
               type="number"
               onChange={handleDimensionsChange}
-              value={state.dimensions.width}
+              value={state.dimensions.width !== 0 ? state.dimensions.width : ''}
             />
           </Grid>
         </Grid>

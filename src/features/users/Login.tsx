@@ -74,9 +74,6 @@ const Login: React.FC = () => {
         setEmailLabel('Неверный формат электронной почты');
         setEmailIsValid(false);
         return;
-      } else {
-        setEmailLabel('');
-        return;
       }
 
       await dispatch(login(state)).unwrap();

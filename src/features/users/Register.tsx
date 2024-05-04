@@ -131,9 +131,6 @@ const Register: React.FC = () => {
         setEmailLabel('Неверный формат электронной почты');
         setEmailIsValid(false);
         return;
-      } else {
-        setEmailLabel('');
-        return;
       }
 
       await dispatch(register(state)).unwrap();

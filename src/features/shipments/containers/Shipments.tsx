@@ -21,8 +21,10 @@ const Shipments = () => {
     dispatch(fetchShipments());
   }, [dispatch]);
 
+
   return (
     <>
+
       {loading ?
         <Box sx={styleBoxSpinner}>
           <CircularProgress size={100} />

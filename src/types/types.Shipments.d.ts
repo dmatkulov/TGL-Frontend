@@ -32,6 +32,7 @@ export interface ShipmentData {
   };
   trackerNumber: number;
   isPaid: boolean;
+  datetime:string
 }
 
 export interface Shipment {

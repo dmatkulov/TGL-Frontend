@@ -1,40 +1,26 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import React, { useCallback, useEffect } from 'react';
-import { fetchPrice, updatePrice } from './pricesThunks';
-import {
-  selectPrice,
-  selectPriceEditLoading,
-  selectPriceLoading,
-  selectPriceResponse,
-} from './pricesSlice';
+import React from 'react';
+import { updatePrice } from './pricesThunks';
+import { selectPriceEditLoading, selectPriceLoading } from './pricesSlice';
 import { CircularProgress } from '@mui/material';
 import PriceForm from './components/PriceForm';
-import { PriceMutation } from '../../types/types.Price';
-import ToastMessage from '../../components/UI/ToastContainer/ToastMessage';
+import { Price, PriceMutation } from '../../types/types.Price';
 
-const EditPrice: React.FC = () => {
+interface Props {
+  onClose: () => void;
+  price: Price | null;
+}
+
+const EditPrice: React.FC<Props> = ({ onClose, price }) => {
   const dispatch = useAppDispatch();
-  const price = useAppSelector(selectPrice);
   const isFetching = useAppSelector(selectPriceLoading);
   const isEditing = useAppSelector(selectPriceEditLoading);
-  const priceResponse = useAppSelector(selectPriceResponse);
-
-  const doFetchOne = useCallback(async () => {
-    try {
-      await dispatch(fetchPrice()).unwrap();
-    } catch (e) {
-      console.log(e);
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    void doFetchOne();
-  }, [doFetchOne]);
 
   const onFormSubmit = async (priceMutation: PriceMutation) => {
     if (price) {
       await dispatch(updatePrice({ id: price._id, priceMutation })).unwrap();
     }
+    onClose();
   };
 
   let form = <CircularProgress />;
@@ -50,12 +36,7 @@ const EditPrice: React.FC = () => {
     );
   }
 
-  return (
-    <>
-      {priceResponse && <ToastMessage success message={priceResponse} />}
-      {form}
-    </>
-  );
+  return <>{form}</>;
 };
 
 export default EditPrice;

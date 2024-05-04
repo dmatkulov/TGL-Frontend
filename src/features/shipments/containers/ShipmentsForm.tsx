@@ -21,33 +21,21 @@ const ShipmentsForm = () => {
   const [state, setState] = useState<ShipmentMutation>(initialState);
   const loading = useAppSelector(selectShipmentsLoading);
 
-  const valueFields = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length']
+  const valueFields = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length'];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
     if (valueFields.includes(name)) {
       const numValue = parseInt(value);
-      if (numValue >= 0) {
-        setState(prevState => ({
-          ...prevState,
-          [name]: numValue
-        }));
-      }
+      setState(prevState => ({
+        ...prevState,
+        [name]: isNaN(numValue) ? '' : numValue,
+        dimensions: {
+          ...prevState.dimensions,
+          [name]: isNaN(numValue) ? '' : numValue,
+        },
+      }));
     }
-  };
-
-  const handleDimensionsChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const { name, value } = event.target;
-    setState((prevState) => ({
-      ...prevState,
-      dimensions: {
-        ...prevState.dimensions,
-        [name]: parseInt(value),
-      },
-    }));
   };
 
   const onFormHandle = async (e: React.FormEvent) => {
@@ -86,7 +74,7 @@ const ShipmentsForm = () => {
               required
               name="height"
               label="Высота"
-              onChange={handleDimensionsChange}
+              onChange={handleChange}
               value={state.dimensions.height}
             />
           </Grid>
@@ -96,7 +84,7 @@ const ShipmentsForm = () => {
               required
               name="length"
               label="Длина"
-              onChange={handleDimensionsChange}
+              onChange={handleChange}
               value={state.dimensions.length}
             />
           </Grid>
@@ -106,7 +94,7 @@ const ShipmentsForm = () => {
               required
               name="width"
               label="Ширина"
-              onChange={handleDimensionsChange}
+              onChange={handleChange}
               value={state.dimensions.width}
             />
           </Grid>

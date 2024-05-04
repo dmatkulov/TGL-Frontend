@@ -1,12 +1,13 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
-import { useAppDispatch } from '../../../app/hooks';
+import { Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
 import { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
+import { selectShipmentsLoading } from '../shipmentsSlice';
 
 const initialState: ShipmentMutation = {
-  userMarketId: '',
-  trackerNumber: '',
+  userMarketId: 0,
+  trackerNumber: 0,
   weight: 0,
   dimensions: {
     height: 0,
@@ -17,15 +18,23 @@ const initialState: ShipmentMutation = {
 
 const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
-
   const [state, setState] = useState<ShipmentMutation>(initialState);
+  const loading = useAppSelector(selectShipmentsLoading);
+
+  const valueFields = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length']
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+
+    if (valueFields.includes(name)) {
+      const numValue = parseInt(value);
+      if (numValue >= 0) {
+        setState(prevState => ({
+          ...prevState,
+          [name]: numValue
+        }));
+      }
+    }
   };
 
   const handleDimensionsChange = (
@@ -71,53 +80,53 @@ const ShipmentsForm = () => {
               value={state.trackerNumber}
             />
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              required
-              name="weight"
-              label="Масса"
-              type="number"
-              onChange={handleChange}
-              value={state.weight}
-            />
-          </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
               name="height"
               label="Высота"
-              type="number"
               onChange={handleDimensionsChange}
               value={state.dimensions.height}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
               name="length"
               label="Длина"
-              type="number"
               onChange={handleDimensionsChange}
               value={state.dimensions.length}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}>
             <TextField
               fullWidth
               required
               name="width"
               label="Ширина"
-              type="number"
               onChange={handleDimensionsChange}
-              value={state.dimensions.width !== 0 ? state.dimensions.width : ''}
+              value={state.dimensions.width}
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <TextField
+              fullWidth
+              required
+              name="weight"
+              label="Килограмм"
+              onChange={handleChange}
+              value={state.weight}
             />
           </Grid>
         </Grid>
-        <Button type="submit" sx={{ mt: 3 }}>
-          Add shipment
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ mt: 3 }}
+          disabled={loading}>
+          {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>
       </Box>
     </>

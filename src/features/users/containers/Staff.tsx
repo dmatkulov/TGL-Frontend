@@ -1,6 +1,16 @@
 import PageTitle from '../components/PageTitle';
 import { appRoutes } from '../../../utils/constants';
-import { Button, CircularProgress, Grid } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Paper, Tab,
+  Table, TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow, Tabs
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -19,45 +29,60 @@ const Staff: React.FC = () => {
   const loading = useAppSelector(selectGetStaffDataLoading);
   const user = useAppSelector(selectUser);
 
-  const [getAdminLoading, setAdminLoading] = useState<boolean>(false);
-  const [getManagerLoading, setManagerLoading] = useState<boolean>(false);
-  const [getClientLoading, setClientLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    dispatch(getStaffData());
-  }, [dispatch]);
+  const [tabIndex, setTabIndex] = useState<number>(0);
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
+    setTabIndex(newValue);
+    fetchStaffData(newValue);
+  };
+  const fetchStaffData = (roleIndex: number) => {
+    let role = '';
+    switch (roleIndex) {
+      case 0:
+        role = 'admin';
+        break;
+      case 1:
+        role = 'manager';
+        break;
+      case 2:
+        role = 'client';
+        break;
+      default:
+        role = 'admin';
+        break;
+    }
+    dispatch(getStaffData({ role }));
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    if (!loading) {
-      setAdminLoading(false);
-      setManagerLoading(false);
-      setClientLoading(false);
-    }
-  }, [loading]);
 
-  const handleAdminButtonClick = () => {
-    dispatch(getStaffData({ role: 'admin' }));
-    setAdminLoading(true);
-  };
-
-  const handleManagerButtonClick = () => {
-    dispatch(getStaffData({ role: 'manager' }));
-    setManagerLoading(true);
-  };
-
-  const handleClientButtonClick = () => {
-    dispatch(getStaffData({ role: 'client' }));
-    setClientLoading(true);
-  };
-
-  let items: React.ReactNode = <CircularProgress />;
+  let tableContent: React.ReactNode = <CircularProgress />;
 
   if (!loading) {
-    items = users.map((item) => <StaffItem key={item._id} user={item} />);
+    tableContent = (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow sx={{ textTransform: 'uppercase' }}>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}} >Роль</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Имя</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Фамилия</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Адрес</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Номер телефона</TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold'}}></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((item) => (
+              <StaffItem key={item._id} user={item} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
   }
 
   return (
@@ -74,46 +99,18 @@ const Staff: React.FC = () => {
         )}
       </Grid>
       <Grid container sx={{ marginTop: 3 }}>
-        <Button
-          sx={{ marginRight: 2 }}
-          variant="contained"
-          onClick={handleAdminButtonClick}
-          disabled={getAdminLoading}
-          startIcon={
-            getAdminLoading ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : null
-          }
+        <Tabs
+          value={tabIndex}
+          onChange={handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
         >
-          Админы
-        </Button>
-        <Button
-          sx={{ marginRight: 2 }}
-          variant="contained"
-          onClick={handleManagerButtonClick}
-          disabled={getManagerLoading}
-          startIcon={
-            getManagerLoading ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : null
-          }
-        >
-          Менеджеры
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleClientButtonClick}
-          disabled={getClientLoading}
-          startIcon={
-            getClientLoading ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : null
-          }
-        >
-          Клиенты
-        </Button>
+          <Tab label="Админы" />
+          <Tab label="Менеджеры" />
+          <Tab label="Клиенты" />
+        </Tabs>
       </Grid>
-      <Grid>{items}</Grid>
+      <Grid mt={2}>{tableContent}</Grid>
     </>
   );
 };

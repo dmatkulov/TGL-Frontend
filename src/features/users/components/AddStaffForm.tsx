@@ -11,14 +11,13 @@ import {
   Box,
   Container,
   Grid,
-  Link,
   MenuItem,
   TextField,
   Typography,
 } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import { LoadingButton } from '@mui/lab';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
@@ -336,17 +335,8 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
                   disabled={loading}
                   loading={loading}
                 >
-                  {isEdit ? 'Обновить' : 'Зарегестрировать'}
+                  {isEdit ? 'Обновить' : 'Зарегистрировать'}
                 </LoadingButton>
-              </Grid>
-              <Grid item textAlign="center">
-                <Link
-                  component={RouterLink}
-                  to={appRoutes.login}
-                  variant="body2"
-                >
-                  Уже зарегистрированы? Войти
-                </Link>
               </Grid>
             </Grid>
           </Grid>

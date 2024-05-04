@@ -62,7 +62,6 @@ const Register: React.FC = () => {
   );
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
-  const [disabled, setIsDisabled] = useState(true);
 
   const getFieldError = (fieldName: string) => {
     try {
@@ -75,24 +74,25 @@ const Register: React.FC = () => {
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => {
-      const updatedState = { ...prevState, [name]: value };
-
-      const keys = Object.keys(updatedState) as (keyof RegisterMutation)[];
-      const allFieldsFilled = keys.every((key) => {
-        const allowed =
-          key === 'middleName' || key === 'settlement' || key === 'address';
-        return allowed || updatedState[key].trim() !== '';
-      });
-
-      setIsDisabled(!allFieldsFilled);
-
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
 
-      return updatedState;
+      return { ...prevState, [name]: value };
     });
+  };
+
+  const isFormValid = () => {
+    return (
+      state.email &&
+      state.password &&
+      state.pupID &&
+      state.firstName &&
+      state.lastName &&
+      state.phoneNumber &&
+      state.region
+    );
   };
 
   const handleClickShowPassword = () => setShowPass((show) => !show);
@@ -130,9 +130,6 @@ const Register: React.FC = () => {
       } else if (!regEx.test(state.email) && state.email !== '') {
         setEmailLabel('Неверный формат электронной почты');
         setEmailIsValid(false);
-        return;
-      } else {
-        setEmailLabel('');
         return;
       }
 
@@ -434,7 +431,7 @@ const Register: React.FC = () => {
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: 1 }}
                   disableElevation
-                  disabled={disabled || loading}
+                  disabled={!isFormValid() || loading}
                   loading={loading}
                 >
                   Зарегистрироваться

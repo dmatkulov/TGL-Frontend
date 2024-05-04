@@ -74,9 +74,6 @@ const Login: React.FC = () => {
         setEmailLabel('Неверный формат электронной почты');
         setEmailIsValid(false);
         return;
-      } else {
-        setEmailLabel('');
-        return;
       }
 
       await dispatch(login(state)).unwrap();
@@ -143,7 +140,7 @@ const Login: React.FC = () => {
           </Grid>
         ) : null}
 
-        <Grid item xs={lastUser? 7 : 12}>
+        <Grid item xs={lastUser ? 7 : 12}>
           <Box
             sx={{
               marginTop: 8,
@@ -157,9 +154,11 @@ const Login: React.FC = () => {
             </Typography>
 
             {error && (
-              <Alert severity="error" sx={{ mt: 3, width: '100%' }}>
-                {error.error}
-              </Alert>
+              <Grid item xs={12}>
+                <Alert severity="error" sx={{ mt: 3, width: '100%' }}>
+                  {error.message}
+                </Alert>
+              </Grid>
             )}
 
             <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>

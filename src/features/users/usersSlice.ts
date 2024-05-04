@@ -1,4 +1,4 @@
-import { GlobalError, ValidationError } from '../../types/types';
+import { GlobalErrorMessage, ValidationError } from '../../types/types';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createStaff,
@@ -20,7 +20,7 @@ interface UserState {
   registerLoading: boolean;
   registerError: ValidationError | null;
   loginLoading: boolean;
-  loginError: GlobalError | null;
+  loginError: GlobalErrorMessage | null;
   logOutLoading: boolean;
   getStaffLoading: boolean;
   getStaffDataLoading: boolean;

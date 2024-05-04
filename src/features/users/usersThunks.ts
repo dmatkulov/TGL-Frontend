@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GlobalError, ValidationError } from '../../types/types';
+import { GlobalErrorMessage, ValidationError } from '../../types/types';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import { isAxiosError } from 'axios';
@@ -137,7 +137,7 @@ export const updateStaff = createAsyncThunk<void, UpdateUserArg>(
 export const login = createAsyncThunk<
   RegisterResponse,
   LoginMutation,
-  { rejectValue: GlobalError }
+  { rejectValue: GlobalErrorMessage }
 >('users/login', async (loginMutation, { rejectWithValue }) => {
   try {
     const response = await axiosApi.post<RegisterResponse>(
@@ -157,7 +157,7 @@ export const login = createAsyncThunk<
 export const loginByLastSession = createAsyncThunk<
   RegisterResponse,
   LoginLastSessionMutation,
-  { rejectValue: GlobalError }
+  { rejectValue: GlobalErrorMessage }
 >(
   'users/loginByLastSession',
   async (LoginLastSessionMutation, { rejectWithValue }) => {

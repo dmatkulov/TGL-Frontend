@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { ShipmentData } from '../../types/types.Shipments';
+import {createSlice} from '@reduxjs/toolkit';
+import {ShipmentData} from '../../types/types.Shipments';
 import {
   createShipment,
-  fetchShipments,
+  fetchShipments, fetchShipmentsByRegionAndPup,
   fetchShipmentsByUser,
 } from './shipmentsThunk';
-import { RootState } from '../../app/store';
+import {RootState} from '../../app/store';
 
 interface shipmentsState {
   shipments: ShipmentData[];
@@ -28,7 +28,7 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipments.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipments.fulfilled, (state, { payload }) => {
+      .addCase(fetchShipments.fulfilled, (state, {payload}) => {
         state.shipmentsLoading = false;
         state.shipments = payload.shipments;
       })
@@ -51,7 +51,7 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipmentsByUser.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByUser.fulfilled, (state, { payload }) => {
+      .addCase(fetchShipmentsByUser.fulfilled, (state, {payload}) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
@@ -59,6 +59,21 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
+
+
+    builder
+      .addCase(fetchShipmentsByRegionAndPup.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(fetchShipmentsByRegionAndPup.fulfilled, (state, {payload}) => {
+        state.shipments = payload.shipments;
+        state.shipmentsLoading = false;
+      })
+      .addCase(fetchShipmentsByRegionAndPup.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+
   },
 });
 

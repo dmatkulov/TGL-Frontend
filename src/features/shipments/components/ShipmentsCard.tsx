@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography, Grid } from '@mui/material';
 import { ShipmentData } from '../../../types/types.Shipments';
+import dayjs from 'dayjs';
 
 interface Props {
   shipment: ShipmentData;
@@ -47,6 +48,9 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
         </Typography>
         <Typography variant="body1">
           Оплачено: {shipment.isPaid ? 'Да' : 'Нет'}
+        </Typography>
+        <Typography variant="body1">
+          Время: { dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
         </Typography>
       </CardContent>
     </Card>

@@ -1,12 +1,12 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   ShipmentMutation,
   ShipmentsResponse,
   oneShipmentResponse,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
-import { serverRoute } from '../../utils/constants';
-import { DeliveryData } from '../../types/types.Order';
+import {serverRoute} from '../../utils/constants';
+import {DeliveryData} from '../../types/types.Order';
 
 export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   'shipments/fetchAll',
@@ -44,6 +44,22 @@ export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
       return response.data ?? [];
     } catch (e) {
       console.log('Caught on try - FETCH SHIPMENTS BY USER - ', e);
+    }
+  },
+);
+
+export const fetchShipmentsByRegionAndPup = createAsyncThunk<ShipmentsResponse, { pupId: string, datetime: string }>(
+  'shipments/fetchShipmentsByRegionAndPup',
+  async (arg) => {
+    try {
+      const response = await axiosApi.get<ShipmentsResponse>(
+        serverRoute.shipments + `?pupId=${arg.pupId}&datetime=${arg.datetime}`
+    )
+      ;
+      return response.data ?? [];
+    } catch (e) {
+      console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
+      throw e;
     }
   },
 );

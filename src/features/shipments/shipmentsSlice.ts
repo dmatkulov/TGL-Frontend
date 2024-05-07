@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {ShipmentData} from '../../types/types.Shipments';
+import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
   createShipment,
   fetchShipments, fetchShipmentsByRegionAndPup,
@@ -11,12 +11,18 @@ interface shipmentsState {
   shipments: ShipmentData[];
   shipmentsLoading: boolean;
   shipmentsError: boolean;
+  addShipment: ShipmentsResponse | null;
+  addShipmentLoading: boolean;
+  addShipmentError: boolean;
 }
 
 const initialState: shipmentsState = {
   shipments: [],
   shipmentsLoading: false,
   shipmentsError: false,
+  addShipment: null,
+  addShipmentLoading: false,
+  addShipmentError:  false,
 };
 
 export const shipmentsSlice = createSlice({
@@ -36,17 +42,21 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
+
     builder
       .addCase(createShipment.pending, (state) => {
-        state.shipmentsLoading = true;
+        state.addShipmentLoading = true;
+        state.addShipmentError = false;
       })
-      .addCase(createShipment.fulfilled, (state) => {
-        state.shipmentsLoading = false;
+      .addCase(createShipment.fulfilled, (state, {payload: data}) => {
+        state.addShipmentLoading = false;
+        state.addShipment = data
       })
       .addCase(createShipment.rejected, (state) => {
-        state.shipmentsLoading = false;
-        state.shipmentsError = true;
+        state.addShipmentLoading = false;
+        state.addShipmentError = true;
       });
+
     builder
       .addCase(fetchShipmentsByUser.pending, (state) => {
         state.shipmentsLoading = true;
@@ -83,3 +93,6 @@ export const selectShipmentsLoading = (state: RootState) =>
   state.shipments.shipmentsLoading;
 export const selectShipmentsError = (state: RootState) =>
   state.shipments.shipmentsError;
+
+export const addShipmentGetLoad = (state: RootState) => state.shipments.addShipmentLoading;
+export const addShipmentGetError = (state: RootState) => state.shipments.addShipmentError;

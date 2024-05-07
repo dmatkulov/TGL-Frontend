@@ -90,10 +90,6 @@ export interface ShipmentsResponse {
   message: string;
   shipments: ShipmentData[];
 }
-export interface ShipmentsHistoryResponse {
-  message: string;
-  shipments: ShipmentThatDone[];
-}
 
 export interface oneShipmentResponse {
   message: string;

@@ -102,45 +102,47 @@ const Login: React.FC = () => {
   return (
     <Container component="main" maxWidth="lg">
       <Grid container alignItems="center">
-        {lastUser ? (
-          <Grid item xs={4}>
-            <Box
-              component="form"
-              onSubmit={submitLastLogin}
-              sx={{
-                marginTop: 8,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                border: '3px solid #5F9EA0',
-                borderRadius: '20px',
-                padding: '5px',
-              }}
-            >
-              <Typography component="h1" variant="h5">
-                Войти как {lastUser?.lastName} {lastUser?.firstName}
-              </Typography>
-              <Typography component="h1" variant="h6" color={'#808080'}>
-                {lastUser?.email}
-              </Typography>
-              <Typography component="h1" variant="h6" color={'#808080'}>
-                {lastUser?.phoneNumber}
-              </Typography>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, py: 1 }}
-                disableElevation
-                disabled={loading}
-                loading={loading}
+        <div style={{ display: 'none' }}>
+          {lastUser ? (
+            <Grid item xs={4}>
+              <Box
+                component="form"
+                onSubmit={submitLastLogin}
+                sx={{
+                  marginTop: 8,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  border: '3px solid #5F9EA0',
+                  borderRadius: '20px',
+                  padding: '5px',
+                }}
               >
-                Войти
-              </LoadingButton>
-            </Box>
-          </Grid>
-        ) : null}
+                <Typography component="h1" variant="h5">
+                  Войти как {lastUser?.lastName} {lastUser?.firstName}
+                </Typography>
+                <Typography component="h1" variant="h6" color={'#808080'}>
+                  {lastUser?.email}
+                </Typography>
+                <Typography component="h1" variant="h6" color={'#808080'}>
+                  {lastUser?.phoneNumber}
+                </Typography>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2, py: 1 }}
+                  disableElevation
+                  disabled={loading}
+                  loading={loading}
+                >
+                  Войти
+                </LoadingButton>
+              </Box>
+            </Grid>
+          ) : null}
+        </div>
 
-        <Grid item xs={lastUser ? 7 : 12}>
+        <Grid item xs={12}>
           <Box
             sx={{
               marginTop: 8,

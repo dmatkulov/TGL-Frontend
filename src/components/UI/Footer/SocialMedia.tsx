@@ -1,5 +1,5 @@
 import React from 'react';
-import { CardMedia, Link, Typography } from '@mui/material';
+import { CardMedia, Link } from '@mui/material';
 
 interface Props {
   href: string;
@@ -8,7 +8,6 @@ interface Props {
   instagram?: boolean;
   imagePath: string;
   alt: string;
-  title: string;
 }
 const SocialMedia: React.FC<Props> = ({
   href,
@@ -17,7 +16,6 @@ const SocialMedia: React.FC<Props> = ({
   instagram = false,
   imagePath,
   alt,
-  title,
 }) => {
   const itemBgColor: Record<string, string> = {
     staticColor: '',
@@ -42,24 +40,23 @@ const SocialMedia: React.FC<Props> = ({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 2,
+          justifyContent: 'center',
+          width: '40px',
+          height: '40px',
           textDecoration: 'none',
-          py: 1,
-          px: 1,
           bgcolor: itemBgColor.staticColor,
-          borderRadius: 2,
+          borderRadius: '50%',
           '&:hover': {
             bgcolor: itemBgColor.hoverColor,
           },
         }}
       >
         <CardMedia
-          sx={{ width: 24, height: 24 }}
+          sx={{ width: 22, height: 22 }}
           component="img"
           alt={alt}
           image={imagePath}
         />
-        <Typography color="white">{title}</Typography>
       </Link>
     </>
   );

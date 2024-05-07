@@ -53,7 +53,7 @@ const Price = () => {
       <>
         <Box mb={4}>
           <Typography>
-            Цена за доставку: <strong>{price.deliveryPrice} СОМ</strong>
+            Цена за доставку: <strong>{price.deliveryPrice} USD</strong>
           </Typography>
           <Typography>
             Курс доллара: <strong>{price.exchangeRate} USD</strong>

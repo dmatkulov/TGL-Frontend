@@ -6,13 +6,13 @@ import { ShipmentMutation } from '../../../types/types.Shipments';
 import { selectShipmentsLoading } from '../shipmentsSlice';
 
 const initialState: ShipmentMutation = {
-  userMarketId: 0,
-  trackerNumber: 0,
-  weight: 0,
+  userMarketId: '',
+  trackerNumber: '',
+  weight: '',
   dimensions: {
-    height: 0,
-    width: 0,
-    length: 0,
+    height: '',
+    width: '',
+    length: '',
   },
 };
 
@@ -26,13 +26,12 @@ const ShipmentsForm = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (valueFields.includes(name)) {
-      const numValue = parseInt(value);
       setState(prevState => ({
         ...prevState,
-        [name]: isNaN(numValue) ? '' : numValue,
+        [name]: value,
         dimensions: {
           ...prevState.dimensions,
-          [name]: isNaN(numValue) ? '' : numValue,
+          [name]: value,
         },
       }));
     }

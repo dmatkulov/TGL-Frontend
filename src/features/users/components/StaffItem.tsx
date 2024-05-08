@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button, TableCell, TableRow } from '@mui/material';
 import { Staff } from '../../../types/types.User';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import EditStaff from '../containers/EditStaff';
+import { getStaff } from '../usersThunks';
 
 interface Props {
   user: Staff;
@@ -11,9 +12,12 @@ interface Props {
 
 const StaffItem: React.FC<Props> = ({ user }) => {
   const userRole = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
+
+  const handleClickOpen = async () => {
+    await dispatch(getStaff(user._id));
     setOpen(true);
   };
 
@@ -41,7 +45,7 @@ const StaffItem: React.FC<Props> = ({ user }) => {
           <></>
         )}
       </TableRow>
-      <EditStaff onClose={handleClose} open={open} id={user._id} />
+      <EditStaff onClose={handleClose} open={open} />
     </>
   );
 };

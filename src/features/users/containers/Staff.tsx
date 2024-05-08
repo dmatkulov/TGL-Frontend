@@ -46,6 +46,8 @@ const Staff: React.FC = () => {
     fetchStaffData(newValue);
   };
 
+  // const tabs = ['admin', 'manager', 'client'];
+
   const fetchStaffData = (roleIndex: number) => {
     let role = '';
     switch (roleIndex) {

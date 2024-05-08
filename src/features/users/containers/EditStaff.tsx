@@ -1,45 +1,38 @@
-import React, { useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
-import { getStaff, updateStaff } from '../usersThunks';
+import { updateStaff } from '../usersThunks';
 import { CircularProgress, Dialog, DialogContent } from '@mui/material';
 import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
 import { appRoutes } from '../../../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  id: string;
 }
 
-const EditStaff: React.FC<Props> = ({ open, onClose, id }) => {
+const EditStaff: React.FC<Props> = ({ open, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const staff = useSelector(selectStaff);
   const isFetching = useSelector(selectGetStaffLoading);
 
-  const doFetchOne = useCallback(async () => {
-    try {
-      await dispatch(getStaff(id)).unwrap();
-    } catch (e) {
-      navigate(appRoutes.notFound);
-    }
-  }, [dispatch, id, navigate]);
-
-  useEffect(() => {
-    void doFetchOne();
-  }, [doFetchOne]);
+  if (!staff) {
+    navigate(appRoutes.notFound);
+  }
 
   const onFormSubmit = async (userMutation: IStaff) => {
-    dispatch(
-      updateStaff({
-        userId: id,
-        userMutation,
-      }),
-    );
+    if (staff) {
+      dispatch(
+        updateStaff({
+          userId: staff._id,
+          userMutation,
+        }),
+      );
+    }
   };
 
   let form = <CircularProgress />;

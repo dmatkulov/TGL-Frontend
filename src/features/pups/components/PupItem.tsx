@@ -6,7 +6,6 @@ import {
   CardContent,
   Dialog,
   DialogContent,
-  DialogTitle,
   Divider,
   Grid,
   Typography,
@@ -49,50 +48,49 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
   };
 
   return (
-    <Grid m={1}>
-      <Card>
-        <CardContent>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}>
-            <Typography variant="h5" component="div">
-              {pupItem.name}
+      <Grid m={1}>
+        <Card>
+          <CardContent>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={2}>
+              <Typography variant="h5" component="div">
+                {pupItem.name}
+              </Typography>
+              {(user && user?.role === 'super') &&
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={toggleOpen}>
+                  Редактировать
+                </Button>}
+            </Box>
+            <Divider />
+            <Typography variant="body2" color="text.secondary">
+              <b>Адрес:</b> {pupItem.region.name} {pupItem.settlement}{' '}
+              {pupItem.address}
             </Typography>
-            {(user && user?.role === 'super') &&
-              <Button
-              size="small"
-              variant="contained"
-              color="secondary"
-              onClick={toggleOpen}>
-              Редактировать
-            </Button>}
-          </Box>
-          <Divider />
-          <Typography variant="body2" color="text.secondary">
-            <b>Адрес:</b> {pupItem.region.name} {pupItem.settlement}{' '}
-            {pupItem.address}
-          </Typography>
-          <Divider />
-          <Typography variant="body2" color="text.secondary">
-            <b>Тел:</b> +{pupItem.phoneNumber}
-          </Typography>
-        </CardContent>
-      </Card>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogTitle>Редактирование</DialogTitle>
-        <DialogContent
-          sx={{
-            mt: '20px',
-          }}>
-          <PupForm
-            onSubmit={submitFormHandler}
-            initialPupState={pupMutation}
-            isEdit/>
-        </DialogContent>
-      </Dialog>
-    </Grid>
+            <Divider />
+            <Typography variant="body2" color="text.secondary">
+              <b>Тел:</b> +{pupItem.phoneNumber}
+            </Typography>
+          </CardContent>
+        </Card>
+        <Dialog open={open} onClose={handleClose} maxWidth="lg">
+          <DialogContent
+            sx={{
+              mt: '20px',
+            }}>
+            <PupForm
+              onSubmit={submitFormHandler}
+              initialPupState={pupMutation}
+              isEdit/>
+          </DialogContent>
+        </Dialog>
+      </Grid>
   );
 };
 

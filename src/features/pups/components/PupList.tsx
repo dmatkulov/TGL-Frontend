@@ -66,10 +66,7 @@ const PupList = () => {
             <PupItem key={pup._id} pupItem={pup} />
           ))}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <DialogContent
-            sx={{
-              mt: '20px',
-            }}>
+          <DialogContent sx={{mt: '20px'}}>
             <PupForm onSubmit={submitFormHandler} isCreate />
           </DialogContent>
         </Dialog>

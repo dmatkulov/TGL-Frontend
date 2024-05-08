@@ -75,8 +75,8 @@ const PupForm: React.FC<Props> = ({
   return (
     <form autoComplete="off" onSubmit={submitFormHandler}>
       <Grid container direction="column" spacing={2}>
-        <Grid item container xs gap={'10px'}>
-          <Grid item xs={12}>
+        <Grid item container xs gap={'13px'}>
+          <Grid item xs={12} sx={{marginTop: 1}}>
             <TextField
               fullWidth
               select
@@ -86,8 +86,7 @@ const PupForm: React.FC<Props> = ({
               type="text"
               value={state.region}
               autoComplete="new-region"
-              onChange={inputChangeHandler}
-            >
+              onChange={inputChangeHandler}>
               <MenuItem value="" disabled>
                 Выберите регион
               </MenuItem>

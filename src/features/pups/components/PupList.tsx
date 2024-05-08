@@ -52,7 +52,7 @@ const PupList = () => {
     <>
       <Stack>
         {user?.role === 'super' && (
-          <Grid item>
+          <Grid item sx={{marginBottom: 3}}>
             <Button variant="contained" onClick={handleClickOpen}>
               Добавить склад
             </Button>

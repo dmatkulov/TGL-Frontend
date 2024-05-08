@@ -76,7 +76,7 @@ const PupForm: React.FC<Props> = ({
     <form autoComplete="off" onSubmit={submitFormHandler}>
       <Grid container direction="column" spacing={2}>
         <Grid item container xs gap={'13px'}>
-          <Grid item xs={12} sx={{marginTop: 1}}>
+          <Grid item xs={12} sx={{ marginTop: 1 }}>
             <TextField
               fullWidth
               select

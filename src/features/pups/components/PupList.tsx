@@ -7,7 +7,6 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
-  DialogTitle,
   Grid,
   Stack,
 } from '@mui/material';
@@ -56,12 +55,10 @@ const PupList = () => {
           <PupItem key={pup._id} pupItem={pup} />
         ))}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <DialogTitle>Редактирование</DialogTitle>
           <DialogContent
             sx={{
               mt: '20px',
-            }}
-          >
+            }}>
             <PupForm onSubmit={submitFormHandler} isCreate />
           </DialogContent>
         </Dialog>

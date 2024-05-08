@@ -6,11 +6,12 @@ import {
 } from '../usersSlice';
 import { fetchPups } from '../../pups/pupsThunks';
 import { fetchRegions } from '../../regions/regionsThunks';
-import { Roles } from '../../../utils/constants';
+import { regEx, Roles } from '../../../utils/constants';
 import {
   Box,
   Container,
   Grid,
+  IconButton,
   MenuItem,
   TextField,
   Typography,
@@ -21,6 +22,9 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
 import { IStaff } from '../../../types/types.User';
+import InputAdornment from '@mui/material/InputAdornment';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
@@ -56,6 +60,15 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   const roles = Roles;
 
   const [formData, setFormData] = useState<IStaff>(existingStaff);
+  const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
+  const [emailLabel, setEmailLabel] = useState<string>('');
+  const [showPass, setShowPass] = useState(false);
+  const [passLabel, setPassLabel] = useState<string>(
+    'Длина пароля должна быть не менее 8 символов',
+  );
+  const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
 
   const getError = (fieldName: string) => {
     try {
@@ -65,15 +78,40 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
     }
   };
 
+  const isFormValid = () => {
+    return (
+      formData.email &&
+      formData.pupID &&
+      formData.firstName &&
+      formData.lastName &&
+      formData.phoneNumber &&
+      formData.region &&
+      formData.settlement &&
+      formData.address
+    );
+  };
+
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormData((prevState) => {
+      if (name === 'password' && value.length >= 8) {
+        setPassIsValid(true);
+        setPassLabel('Надежный пароль');
+      }
+
       return { ...prevState, [name]: value };
     });
   };
 
   const handlePhoneChange = (value: string) => {
     setFormData((prevState) => ({ ...prevState, phoneNumber: value }));
+  };
+
+  const handleClickShowPassword = () => setShowPass((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
   };
 
   useEffect(() => {
@@ -85,10 +123,21 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
+      if (formData.password.length >= 1 && formData.password.length < 8) {
+        setPassLabel('Пароль слишком короткий');
+        setPassIsValid(false);
+        return;
+      }
+
+      if (regEx.test(formData.email)) {
+        setEmailIsValid(true);
+      } else if (!regEx.test(formData.email) && formData.email !== '') {
+        setEmailLabel('Неверный формат электронной почты');
+        setEmailIsValid(false);
+        return;
+      }
       onSubmit(formData);
       setFormData(initialState);
-      // navigate(appRoutes.staff);
-      // onClose();
     } catch (e) {
       console.error(e);
     }
@@ -164,12 +213,32 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                   required
                   name="password"
                   label="Пароль"
-                  type="password"
+                  type={showPass ? 'text' : 'password'}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPass ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                   value={formData.password}
                   autoComplete="new-password"
                   onChange={inputChangeHandler}
-                  error={Boolean(getError('password'))}
-                  helperText={getError('password')}
+                  error={Boolean(getError('password') || passIsValid === false)}
+                  helperText={
+                    getError('password') ? getError('password') : passLabel
+                  }
+                  sx={{
+                    '.MuiFormHelperText-root': {
+                      color: passIsValid ? 'primary.main' : 'inherit',
+                    },
+                  }}
                 />
               </Grid>
             )}
@@ -184,12 +253,28 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 defaultErrorMessage={getError('phoneNumber')}
                 specialLabel="Номер телефона*"
                 disableDropdown
-                inputStyle={{ width: '100%' }}
+                inputStyle={{
+                  width: '100%',
+                  borderColor: getError('phoneNumber') && '#d32f2f',
+                  color: getError('phoneNumber') && '#d32f2f',
+                }}
                 inputProps={{
                   name: 'phoneNumber',
                   required: true,
                 }}
               />
+              {getError('phoneNumber') && (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {getError('phoneNumber')}
+                </Typography>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -202,8 +287,13 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 value={formData.email}
                 autoComplete="new-email"
                 onChange={inputChangeHandler}
-                error={Boolean(getError('email'))}
-                helperText={getError('email')}
+                error={Boolean(getError('email') || !emailIsValid)}
+                helperText={getError('email') ? getError('email') : emailLabel}
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? 'inherit' : '#d32f2f',
+                  },
+                }}
               />
             </Grid>
 
@@ -330,7 +420,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: 1 }}
                   disableElevation
-                  disabled={loading}
+                  disabled={!isFormValid() || loading}
                   loading={loading}
                 >
                   {isEdit ? 'Обновить' : 'Зарегистрировать'}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, TableCell, TableRow } from '@mui/material';
-import { Staff } from '../../../types/types.User';
+import { IStaff, Staff } from '../../../types/types.User';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 import EditStaff from '../containers/EditStaff';
@@ -8,9 +8,10 @@ import { getStaff } from '../usersThunks';
 
 interface Props {
   user: Staff;
+  onSubmit: (id: string, data: IStaff) => void;
 }
 
-const StaffItem: React.FC<Props> = ({ user }) => {
+const StaffItem: React.FC<Props> = ({ user, onSubmit }) => {
   const userRole = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
 
@@ -45,7 +46,7 @@ const StaffItem: React.FC<Props> = ({ user }) => {
           <></>
         )}
       </TableRow>
-      <EditStaff onClose={handleClose} open={open} />
+      <EditStaff onClose={handleClose} open={open} onSubmit={onSubmit} />
     </>
   );
 };

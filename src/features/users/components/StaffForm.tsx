@@ -21,13 +21,11 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
 import { IStaff } from '../../../types/types.User';
-import { getStaffData } from '../usersThunks';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
   isEdit?: boolean;
   existingStaff?: IStaff;
-  onClose: () => void;
 }
 
 const initialState: IStaff = {
@@ -48,8 +46,8 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   onSubmit,
   isEdit = false,
   existingStaff = initialState,
-  onClose,
 }) => {
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const loading = useAppSelector(selectRegisterLoading);
@@ -88,9 +86,9 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
     event.preventDefault();
     try {
       onSubmit(formData);
-      dispatch(getStaffData());
-      onClose();
       setFormData(initialState);
+      // navigate(appRoutes.staff);
+      // onClose();
     } catch (e) {
       console.error(e);
     }

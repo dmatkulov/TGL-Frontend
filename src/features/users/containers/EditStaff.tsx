@@ -1,8 +1,6 @@
 import React from 'react';
-import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
-import { updateStaff } from '../usersThunks';
 import { CircularProgress, Dialog, DialogContent } from '@mui/material';
 import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
@@ -12,11 +10,11 @@ import { useNavigate } from 'react-router-dom';
 interface Props {
   open: boolean;
   onClose: () => void;
+  onSubmit: (id: string, data: IStaff) => void;
 }
 
-const EditStaff: React.FC<Props> = ({ open, onClose }) => {
+const EditStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const staff = useSelector(selectStaff);
   const isFetching = useSelector(selectGetStaffLoading);
 
@@ -26,12 +24,8 @@ const EditStaff: React.FC<Props> = ({ open, onClose }) => {
 
   const onFormSubmit = async (userMutation: IStaff) => {
     if (staff) {
-      dispatch(
-        updateStaff({
-          userId: staff._id,
-          userMutation,
-        }),
-      );
+      onSubmit(staff._id, userMutation);
+      onClose();
     }
   };
 
@@ -46,12 +40,7 @@ const EditStaff: React.FC<Props> = ({ open, onClose }) => {
     };
 
     form = (
-      <StaffForm
-        isEdit
-        onSubmit={onFormSubmit}
-        existingStaff={mutation}
-        onClose={onClose}
-      />
+      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
     );
   }
   return (

@@ -13,16 +13,17 @@ import {
   TableRow,
   Tabs,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
   selectGetStaffDataLoading,
   selectStaffData,
   selectUser,
 } from '../usersSlice';
-import { getStaffData } from '../usersThunks';
+import { createStaff, getStaffData, updateStaff } from '../usersThunks';
 import StaffItem from '../components/StaffItem';
 import AddStaff from './AddStaff';
+import { IStaff } from '../../../types/types.User';
 
 const Staff: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -43,33 +44,65 @@ const Staff: React.FC = () => {
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     event.preventDefault();
     setTabIndex(newValue);
-    fetchStaffData(newValue);
+    void fetchStaffData(newValue);
   };
 
-  // const tabs = ['admin', 'manager', 'client'];
+  const tabs = ['admin', 'manager', 'client'];
 
-  const fetchStaffData = (roleIndex: number) => {
-    let role = '';
-    switch (roleIndex) {
-      case 0:
-        role = 'admin';
-        break;
-      case 1:
-        role = 'manager';
-        break;
-      case 2:
-        role = 'client';
-        break;
-      default:
-        role = 'admin';
-        break;
-    }
-    dispatch(getStaffData({ role }));
-  };
+  const fetchStaffData = useCallback(
+    async (roleIndex: number) => {
+      let role: string;
+      switch (roleIndex) {
+        case 0:
+          role = 'admin';
+          break;
+        case 1:
+          role = 'manager';
+          break;
+        case 2:
+          role = 'client';
+          break;
+        default:
+          role = 'admin';
+          break;
+      }
+      await dispatch(getStaffData({ role }));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
+    setTabIndex(0);
+    void fetchStaffData(0);
     window.scrollTo(0, 0);
-  }, []);
+  }, [fetchStaffData]);
+
+  const submitNewStaff = async (staffMutation: IStaff) => {
+    try {
+      await dispatch(createStaff(staffMutation)).unwrap();
+      setTabIndex(0);
+      void fetchStaffData(0);
+      handleClose();
+    } catch {
+      //
+    }
+  };
+
+  const submitEdited = async (id: string, userMutation: IStaff) => {
+    try {
+      await dispatch(
+        updateStaff({
+          userId: id,
+          userMutation,
+        }),
+      );
+      const index = tabs.findIndex((tab) => tab === userMutation.role);
+      setTabIndex(index);
+      void fetchStaffData(index);
+    } catch {
+      //
+    }
+  };
 
   let tableContent: React.ReactNode = <CircularProgress />;
 
@@ -99,7 +132,7 @@ const Staff: React.FC = () => {
           </TableHead>
           <TableBody>
             {users.map((item) => (
-              <StaffItem key={item._id} user={item} />
+              <StaffItem key={item._id} user={item} onSubmit={submitEdited} />
             ))}
           </TableBody>
         </Table>
@@ -135,7 +168,7 @@ const Staff: React.FC = () => {
         </Tabs>
       </Grid>
       <Grid mt={2}>{tableContent}</Grid>
-      <AddStaff open={open} onClose={handleClose} />
+      <AddStaff open={open} onClose={handleClose} onSubmit={submitNewStaff} />
     </>
   );
 };

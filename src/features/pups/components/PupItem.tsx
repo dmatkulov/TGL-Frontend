@@ -13,8 +13,9 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 import { editPup, fetchPups } from '../pupsThunks';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import PupForm from './PupForm';
+import { selectUser } from '../../users/usersSlice';
 
 interface Props {
   pupItem: Pup;
@@ -22,6 +23,7 @@ interface Props {
 
 const PupItem: React.FC<Props> = ({ pupItem }) => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
 
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
@@ -54,19 +56,18 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            mb={2}
-          >
+            mb={2}>
             <Typography variant="h5" component="div">
               {pupItem.name}
             </Typography>
-            <Button
+            {(user && user?.role === 'super') &&
+              <Button
               size="small"
               variant="contained"
               color="secondary"
-              onClick={toggleOpen}
-            >
+              onClick={toggleOpen}>
               Редактировать
-            </Button>
+            </Button>}
           </Box>
           <Divider />
           <Typography variant="body2" color="text.secondary">
@@ -79,19 +80,16 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
           </Typography>
         </CardContent>
       </Card>
-
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogTitle>Редактирование</DialogTitle>
         <DialogContent
           sx={{
             mt: '20px',
-          }}
-        >
+          }}>
           <PupForm
             onSubmit={submitFormHandler}
             initialPupState={pupMutation}
-            isEdit
-          />
+            isEdit/>
         </DialogContent>
       </Dialog>
     </Grid>

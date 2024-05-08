@@ -2,8 +2,6 @@ import PageTitle from '../components/PageTitle';
 import {
   Button,
   CircularProgress,
-  Dialog,
-  DialogContent,
   Grid,
   Paper,
   Tab,
@@ -35,12 +33,6 @@ const Staff: React.FC = () => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const [open, setOpen] = useState(false);
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    event.preventDefault();
-    setTabIndex(newValue);
-    fetchStaffData(newValue);
-  };
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -48,6 +40,12 @@ const Staff: React.FC = () => {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    event.preventDefault();
+    setTabIndex(newValue);
+    fetchStaffData(newValue);
+  };
+
   const fetchStaffData = (roleIndex: number) => {
     let role = '';
     switch (roleIndex) {
@@ -109,7 +107,12 @@ const Staff: React.FC = () => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" spacing={2}>
+      <Grid
+        container
+        justifyContent="space-between"
+        spacing={2}
+        alignItems="flex-start"
+      >
         <PageTitle title="Сотрудники" />
         {user?.role === 'super' && (
           <Button variant="contained" onClick={handleClickOpen}>
@@ -130,11 +133,7 @@ const Staff: React.FC = () => {
         </Tabs>
       </Grid>
       <Grid mt={2}>{tableContent}</Grid>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogContent sx={{}}>
-          <AddStaff />
-        </DialogContent>
-      </Dialog>
+      <AddStaff open={open} onClose={handleClose} />
     </>
   );
 };

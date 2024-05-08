@@ -1,11 +1,15 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Dialog, DialogContent } from '@mui/material';
 import { useAppDispatch } from '../../../app/hooks';
 import StaffForm from '../components/StaffForm';
 import { createStaff } from '../usersThunks';
 import { IStaff } from '../../../types/types.User';
 
-const AddStaff: React.FC = () => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+const AddStaff: React.FC<Props> = ({ open, onClose }) => {
   const dispatch = useAppDispatch();
   const onFormSubmit = async (staffMutation: IStaff) => {
     try {
@@ -15,9 +19,11 @@ const AddStaff: React.FC = () => {
     }
   };
   return (
-    <Grid component="main">
-      <StaffForm onSubmit={onFormSubmit} />
-    </Grid>
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogContent sx={{}}>
+        <StaffForm onSubmit={onFormSubmit} onClose={onClose} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

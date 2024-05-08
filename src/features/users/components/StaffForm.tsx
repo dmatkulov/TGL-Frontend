@@ -6,7 +6,7 @@ import {
 } from '../usersSlice';
 import { fetchPups } from '../../pups/pupsThunks';
 import { fetchRegions } from '../../regions/regionsThunks';
-import { appRoutes, Roles } from '../../../utils/constants';
+import { Roles } from '../../../utils/constants';
 import {
   Box,
   Container,
@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import { LoadingButton } from '@mui/lab';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups } from '../../pups/pupsSlice';
 import { regionsState } from '../../regions/regionsSlice';
@@ -28,6 +27,7 @@ interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
   isEdit?: boolean;
   existingStaff?: IStaff;
+  onClose: () => void;
 }
 
 const initialState: IStaff = {
@@ -48,8 +48,8 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   onSubmit,
   isEdit = false,
   existingStaff = initialState,
+  onClose,
 }) => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const loading = useAppSelector(selectRegisterLoading);
@@ -89,7 +89,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
     try {
       onSubmit(formData);
       dispatch(getStaffData());
-      navigate(appRoutes.staff);
+      onClose();
       setFormData(initialState);
     } catch (e) {
       console.error(e);

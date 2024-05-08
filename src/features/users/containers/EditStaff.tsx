@@ -1,16 +1,22 @@
 import React, { useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/hooks';
 import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
 import { getStaff, updateStaff } from '../usersThunks';
-import { CircularProgress, Grid } from '@mui/material';
+import { CircularProgress, Dialog, DialogContent } from '@mui/material';
 import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
+import { appRoutes } from '../../../utils/constants';
 
-const EditStaff: React.FC = () => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  id: string;
+}
+
+const EditStaff: React.FC<Props> = ({ open, onClose, id }) => {
   const navigate = useNavigate();
-  const { id } = useParams() as { id: string };
   const dispatch = useAppDispatch();
   const staff = useSelector(selectStaff);
   const isFetching = useSelector(selectGetStaffLoading);
@@ -19,7 +25,7 @@ const EditStaff: React.FC = () => {
     try {
       await dispatch(getStaff(id)).unwrap();
     } catch (e) {
-      navigate('/404');
+      navigate(appRoutes.notFound);
     }
   }, [dispatch, id, navigate]);
 
@@ -47,10 +53,19 @@ const EditStaff: React.FC = () => {
     };
 
     form = (
-      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
+      <StaffForm
+        isEdit
+        onSubmit={onFormSubmit}
+        existingStaff={mutation}
+        onClose={onClose}
+      />
     );
   }
-  return <Grid container>{form}</Grid>;
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogContent sx={{}}>{form}</DialogContent>
+    </Dialog>
+  );
 };
 
 export default EditStaff;

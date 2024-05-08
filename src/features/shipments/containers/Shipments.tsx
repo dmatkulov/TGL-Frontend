@@ -9,7 +9,6 @@ const styleBoxSpinner = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-
 };
 
 const Shipments = () => {

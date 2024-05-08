@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups, selectPupsLoading } from '../pupsSlice';
 import { createPup, fetchPups } from '../pupsThunks';
 import {
+  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -15,6 +16,13 @@ import PupItem from './PupItem';
 import { PupMutation } from '../../../types/types.Pup';
 import { selectUser } from '../../users/usersSlice';
 import PupForm from './PupForm';
+
+const styleBoxSpinner = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: '50px'
+};
 
 const PupList = () => {
   const dispatch = useAppDispatch();
@@ -42,7 +50,6 @@ const PupList = () => {
   };
   return (
     <>
-      {loading && <CircularProgress />}
       <Stack>
         {user?.role === 'super' && (
           <Grid item>
@@ -51,9 +58,13 @@ const PupList = () => {
             </Button>
           </Grid>
         )}
-        {pups.map((pup) => (
-          <PupItem key={pup._id} pupItem={pup} />
-        ))}
+        {loading ?
+          <Box sx={styleBoxSpinner}>
+            <CircularProgress size={100} />
+          </Box> :
+          pups.map((pup) => (
+            <PupItem key={pup._id} pupItem={pup} />
+          ))}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogContent
             sx={{

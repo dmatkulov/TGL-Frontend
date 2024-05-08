@@ -80,8 +80,9 @@ const Staff: React.FC = () => {
   const submitNewStaff = async (staffMutation: IStaff) => {
     try {
       await dispatch(createStaff(staffMutation)).unwrap();
-      setTabIndex(0);
-      void fetchStaffData(0);
+      const index = tabs.findIndex((tab) => tab === staffMutation.role);
+      setTabIndex(index);
+      void fetchStaffData(index);
       handleClose();
     } catch {
       //

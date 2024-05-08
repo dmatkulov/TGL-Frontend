@@ -116,10 +116,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-    if (isEdit) {
-      dispatch(fetchPups(formData.region));
-    }
-  }, [dispatch, formData.region, isEdit]);
+  }, [dispatch]);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
@@ -128,10 +125,12 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      if (formData.password.length >= 1 && formData.password.length < 8) {
-        setPassLabel('Пароль слишком короткий');
-        setPassIsValid(false);
-        return;
+      if (!isEdit) {
+        if (formData.password.length >= 1 && formData.password.length < 8) {
+          setPassLabel('Пароль слишком короткий');
+          setPassIsValid(false);
+          return;
+        }
       }
 
       if (regEx.test(formData.email)) {

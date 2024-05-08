@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
 import { getStaff, updateStaff } from '../usersThunks';
 import { CircularProgress, Grid } from '@mui/material';
-import AddStaffForm from '../components/AddStaffForm';
+import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
 
 const EditStaff: React.FC = () => {
@@ -47,7 +47,7 @@ const EditStaff: React.FC = () => {
     };
 
     form = (
-      <AddStaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
+      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
     );
   }
   return <Grid container>{form}</Grid>;

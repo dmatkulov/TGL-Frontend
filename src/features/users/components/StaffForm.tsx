@@ -44,7 +44,7 @@ const initialState: IStaff = {
   role: '',
 };
 
-const AddStaffForm: React.FC<AddStaffFormProps> = ({
+const StaffForm: React.FC<AddStaffFormProps> = ({
   onSubmit,
   isEdit = false,
   existingStaff = initialState,
@@ -97,23 +97,23 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
   };
 
   return (
-    <Container component="main">
+    <Container component="main" disableGutters>
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 2,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
         }}
       >
-        <Typography component="h1" variant="h5">
+        <Typography gutterBottom component="h1" variant="h5" mb={3}>
           {isEdit ? 'Обновление Сотрудника' : 'Регистрация Сотрудника'}
         </Typography>
         <Box
           component="form"
           autoComplete="off"
           onSubmit={submitFormHandler}
-          sx={{ mt: 3, width: '100%' }}
+          sx={{ mt: 0, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid item xs={12} sm={6}>
@@ -346,4 +346,4 @@ const AddStaffForm: React.FC<AddStaffFormProps> = ({
   );
 };
 
-export default AddStaffForm;
+export default StaffForm;

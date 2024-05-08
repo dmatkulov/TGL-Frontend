@@ -1,18 +1,21 @@
 import PageTitle from '../components/PageTitle';
-import { appRoutes } from '../../../utils/constants';
 import {
   Button,
   CircularProgress,
+  Dialog,
+  DialogContent,
   Grid,
-  Paper, Tab,
-  Table, TableBody,
+  Paper,
+  Tab,
+  Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow, Tabs
+  TableRow,
+  Tabs,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
   selectGetStaffDataLoading,
@@ -21,19 +24,29 @@ import {
 } from '../usersSlice';
 import { getStaffData } from '../usersThunks';
 import StaffItem from '../components/StaffItem';
+import AddStaff from './AddStaff';
 
 const Staff: React.FC = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const users = useAppSelector(selectStaffData);
   const loading = useAppSelector(selectGetStaffDataLoading);
   const user = useAppSelector(selectUser);
 
   const [tabIndex, setTabIndex] = useState<number>(0);
+
+  const [open, setOpen] = useState(false);
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     event.preventDefault();
     setTabIndex(newValue);
     fetchStaffData(newValue);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
   const fetchStaffData = (roleIndex: number) => {
     let role = '';
@@ -58,7 +71,6 @@ const Staff: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-
   let tableContent: React.ReactNode = <CircularProgress />;
 
   if (!loading) {
@@ -67,12 +79,22 @@ const Staff: React.FC = () => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow sx={{ textTransform: 'uppercase' }}>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}} >Роль</TableCell>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Имя</TableCell>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Фамилия</TableCell>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Адрес</TableCell>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}}>Номер телефона</TableCell>
-              <TableCell align="left" sx={{ fontWeight: 'bold'}}></TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Роль
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Имя
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Фамилия
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Адрес
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Номер телефона
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -90,10 +112,7 @@ const Staff: React.FC = () => {
       <Grid container justifyContent="space-between" spacing={2}>
         <PageTitle title="Сотрудники" />
         {user?.role === 'super' && (
-          <Button
-            variant="contained"
-            onClick={() => navigate(appRoutes.addStaff)}
-          >
+          <Button variant="contained" onClick={handleClickOpen}>
             Создать сотрудника
           </Button>
         )}
@@ -111,6 +130,11 @@ const Staff: React.FC = () => {
         </Tabs>
       </Grid>
       <Grid mt={2}>{tableContent}</Grid>
+      <Dialog open={open} onClose={handleClose} maxWidth="lg">
+        <DialogContent sx={{}}>
+          <AddStaff />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

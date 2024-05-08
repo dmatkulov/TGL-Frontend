@@ -51,7 +51,6 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   isEdit = false,
   existingStaff = initialState,
 }) => {
-  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const loading = useAppSelector(selectRegisterLoading);
@@ -117,8 +116,14 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-    dispatch(fetchPups());
-  }, [dispatch]);
+    if (isEdit) {
+      dispatch(fetchPups(formData.region));
+    }
+  }, [dispatch, formData.region, isEdit]);
+
+  const fetchPupsByRegion = async (region: string) => {
+    await dispatch(fetchPups(region));
+  };
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -342,7 +347,11 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 </MenuItem>
                 {regions.length > 0 &&
                   regions.map((region) => (
-                    <MenuItem key={region._id} value={region._id}>
+                    <MenuItem
+                      key={region._id}
+                      value={region._id}
+                      onClick={() => fetchPupsByRegion(region._id)}
+                    >
                       {region.name}
                     </MenuItem>
                   ))}
@@ -390,16 +399,23 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 error={Boolean(getError('pupID'))}
                 helperText={getError('pupID')}
               >
-                <MenuItem value="" disabled>
-                  Выберите ближайший ПВЗ
-                </MenuItem>
-                {pups.length > 0 &&
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                )}
+                {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b>{pup.name}</b>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
                       {pup.region.name} обл., {pup.address}, {pup.settlement}
                     </MenuItem>
-                  ))}
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
               </TextField>
             </Grid>
             <Grid

@@ -76,23 +76,19 @@ export interface ShipmentThatDone {
 }
 
 export interface ShipmentMutation {
-  userMarketId: number;
-  trackerNumber: number;
-  weight: number;
+  userMarketId: string;
+  trackerNumber: string;
+  weight: string;
   dimensions: {
-    height: number;
-    width: number;
-    length: number;
+    height: string;
+    width: string;
+    length: string;
   };
 }
 
 export interface ShipmentsResponse {
   message: string;
   shipments: ShipmentData[];
-}
-export interface ShipmentsHistoryResponse {
-  message: string;
-  shipments: ShipmentThatDone[];
 }
 
 export interface oneShipmentResponse {

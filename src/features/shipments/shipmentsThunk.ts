@@ -23,15 +23,10 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   },
 );
 
-export const createShipment = createAsyncThunk<
-  ShipmentMutation,
-  ShipmentMutation
->('shipments/createShipment', async (shipmentMutation: ShipmentMutation) => {
-  const response = await axiosApi.post<ShipmentMutation>(
-    serverRoute.shipments,
-    shipmentMutation,
-  );
-  return response.data;
+export const createShipment = createAsyncThunk<ShipmentsResponse, ShipmentMutation>
+('shipments/createShipment', async (shipment) => {
+    const response = await axiosApi.post(serverRoute.shipments, shipment);
+    return response.data;
 });
 
 export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(

@@ -37,8 +37,6 @@ export const appRoutes = {
   adminWarehousesEdit: '/admin-profile/warehouse/:id',
   adminCompanyAddress: '/admin-profile/company-addresses',
   calculate: '/calculate',
-  addStaff: '/admin-profile/add-staff',
-  editStaff: '/admin-profile/edit-staff/:id',
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
   priceEdit: '/admin-profile/price/edit',

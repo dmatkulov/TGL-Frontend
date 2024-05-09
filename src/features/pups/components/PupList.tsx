@@ -3,11 +3,11 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups, selectPupsLoading } from '../pupsSlice';
 import { createPup, fetchPups } from '../pupsThunks';
 import {
+  Box,
   Button,
   CircularProgress,
   Dialog,
   DialogContent,
-  DialogTitle,
   Grid,
   Stack,
 } from '@mui/material';
@@ -16,6 +16,13 @@ import PupItem from './PupItem';
 import { PupMutation } from '../../../types/types.Pup';
 import { selectUser } from '../../users/usersSlice';
 import PupForm from './PupForm';
+
+const styleBoxSpinner = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: '50px'
+};
 
 const PupList = () => {
   const dispatch = useAppDispatch();
@@ -43,25 +50,23 @@ const PupList = () => {
   };
   return (
     <>
-      {loading && <CircularProgress />}
       <Stack>
         {user?.role === 'super' && (
-          <Grid item>
+          <Grid item sx={{marginBottom: 3}}>
             <Button variant="contained" onClick={handleClickOpen}>
               Добавить склад
             </Button>
           </Grid>
         )}
-        {pups.map((pup) => (
-          <PupItem key={pup._id} pupItem={pup} />
-        ))}
+        {loading ?
+          <Box sx={styleBoxSpinner}>
+            <CircularProgress size={100} />
+          </Box> :
+          pups.map((pup) => (
+            <PupItem key={pup._id} pupItem={pup} />
+          ))}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <DialogTitle>Редактирование</DialogTitle>
-          <DialogContent
-            sx={{
-              mt: '20px',
-            }}
-          >
+          <DialogContent sx={{mt: '20px'}}>
             <PupForm onSubmit={submitFormHandler} isCreate />
           </DialogContent>
         </Dialog>

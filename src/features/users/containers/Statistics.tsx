@@ -1,8 +1,8 @@
 import {Alert, Box, Button, CircularProgress, Grid, MenuItem, TextField, Typography} from '@mui/material';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {regionsState} from '../../regions/regionsSlice';
+import {isRegionsLoading, regionsState} from '../../regions/regionsSlice';
 import {fetchPups} from '../../pups/pupsThunks';
-import {selectPups} from '../../pups/pupsSlice';
+import {selectPups, selectPupsLoading} from '../../pups/pupsSlice';
 import React, {useEffect, useState} from 'react';
 import {fetchShipments, fetchShipmentsByRegionAndPup} from '../../shipments/shipmentsThunk';
 import {selectShipments, selectShipmentsLoading} from '../../shipments/shipmentsSlice';
@@ -24,6 +24,7 @@ const styleBoxSpinner = {
 
 const Statistics = () => {
   const regions = useAppSelector(regionsState);
+  const loadingPups = useAppSelector(selectPupsLoading);
   const pups = useAppSelector(selectPups);
   const shipments = useAppSelector(selectShipments);
   const loading = useAppSelector(selectShipmentsLoading);
@@ -66,24 +67,9 @@ const Statistics = () => {
     }
   };
 
-  const statisticMonth = (month: string) => {
-    setState(prevState => ({
-        ...prevState,
-        datetime: month,
-      }
-    ));
-  };
-
-  const statisticYear = (year: string) => {
-    setState(prevState => ({
-        ...prevState,
-        datetime: year,
-      }
-    ));
-  };
-
   const statisticAll = async () => {
     await dispatch(fetchShipments());
+    setState(initialState);
   };
 
 
@@ -127,6 +113,8 @@ const Statistics = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               sx={{width: 200}}
+              disabled={loadingPups}
+              required
               select
               name="pupId"
               label="ПВЗ"
@@ -156,38 +144,37 @@ const Statistics = () => {
           </Grid>
 
           <Grid item xs={12} sm={6}>
-            <Button
-              sx={{
-                border: '2px solid grey',
-                width: 200,
-                marginTop: 1
-              }}
-              onClick={() => statisticMonth('month')}
+            <TextField
+              sx={{width: 200, marginTop: 1, marginBottom: 1}}
+              select
+              name="datetime"
+              label="Период"
+              type="text"
+              value={state.datetime}
+              autoComplete="new-datetime"
+              onChange={inputChangeHandler}
             >
-              Meсяц
-            </Button>
+              <MenuItem value="" disabled>
+                Выберите период
+              </MenuItem>
+
+              <MenuItem value="month">
+                За месяц
+              </MenuItem>
+
+              <MenuItem value="year">
+                За год
+              </MenuItem>
+            </TextField>
           </Grid>
-
-          <Grid item xs={12} sm={6}>
-
-            <Button
-              sx={{
-                border: '2px solid grey',
-                width: 200,
-                marginTop: 1,
-                marginBottom: 1
-              }}
-              onClick={() => statisticYear('year')}
-            >
-              Год
-            </Button>
-          </Grid>
-
           <Grid item xs={12} sm={6}>
             <Button
+              disabled={loading}
               sx={{
-                border: '2px solid grey',
+                '&.MuiButton-root:hover': {background: '#018749'},
+                color: 'white',
                 width: 200,
+                background: 'green',
                 marginBottom: 1
               }}
               type={'submit'}
@@ -195,9 +182,12 @@ const Statistics = () => {
             </Button>
           </Grid>
           <Button
+            disabled={loading}
             sx={{
-              border: '2px solid grey',
-              width: 200
+              '&.MuiButton-root:hover': {background: '#D2122E'},
+              color: 'white',
+              width: 200,
+              background: '#9e1b32',
             }}
             onClick={() => statisticAll()}
           >

@@ -15,6 +15,7 @@ export const serverRoute = {
 export const Roles = [
   { id: 1, name: 'admin' },
   { id: 2, name: 'manager' },
+  { id: 3, name: 'client' },
 ];
 export const appRoutes = {
   notFound: '*',

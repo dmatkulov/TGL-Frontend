@@ -1,39 +1,32 @@
-import React, { useCallback, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAppDispatch } from '../../../app/hooks';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectGetStaffLoading, selectStaff } from '../usersSlice';
-import { getStaff, updateStaff } from '../usersThunks';
-import { CircularProgress, Grid } from '@mui/material';
-import AddStaffForm from '../components/AddStaffForm';
+import { CircularProgress, Dialog, DialogContent } from '@mui/material';
+import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
+import { appRoutes } from '../../../utils/constants';
+import { useNavigate } from 'react-router-dom';
 
-const EditStaff: React.FC = () => {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (id: string, data: IStaff) => void;
+}
+
+const EditStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
   const navigate = useNavigate();
-  const { id } = useParams() as { id: string };
-  const dispatch = useAppDispatch();
   const staff = useSelector(selectStaff);
   const isFetching = useSelector(selectGetStaffLoading);
 
-  const doFetchOne = useCallback(async () => {
-    try {
-      await dispatch(getStaff(id)).unwrap();
-    } catch (e) {
-      navigate('/404');
-    }
-  }, [dispatch, id, navigate]);
-
-  useEffect(() => {
-    void doFetchOne();
-  }, [doFetchOne]);
+  if (!staff) {
+    navigate(appRoutes.notFound);
+  }
 
   const onFormSubmit = async (userMutation: IStaff) => {
-    dispatch(
-      updateStaff({
-        userId: id,
-        userMutation,
-      }),
-    );
+    if (staff) {
+      onSubmit(staff._id, userMutation);
+      onClose();
+    }
   };
 
   let form = <CircularProgress />;
@@ -47,10 +40,14 @@ const EditStaff: React.FC = () => {
     };
 
     form = (
-      <AddStaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
+      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
     );
   }
-  return <Grid container>{form}</Grid>;
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogContent sx={{}}>{form}</DialogContent>
+    </Dialog>
+  );
 };
 
 export default EditStaff;

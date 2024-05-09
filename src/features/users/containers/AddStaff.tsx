@@ -1,23 +1,28 @@
 import React from 'react';
-import { Grid } from '@mui/material';
-import { useAppDispatch } from '../../../app/hooks';
-import AddStaffForm from '../components/AddStaffForm';
-import { createStaff } from '../usersThunks';
+import { Dialog, DialogContent } from '@mui/material';
+import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
 
-const AddStaff: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const onFormSubmit = async (staffMutation: IStaff) => {
-    try {
-      await dispatch(createStaff(staffMutation)).unwrap();
-    } catch {
-      //
-    }
-  };
+interface Props {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (data: IStaff) => void;
+}
+const AddStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
+  // const dispatch = useAppDispatch();
+  // const onFormSubmit = async (staffMutation: IStaff) => {
+  //   try {
+  //     await dispatch(createStaff(staffMutation)).unwrap();
+  //   } catch {
+  //     //
+  //   }
+  // };
   return (
-    <Grid component="main">
-      <AddStaffForm onSubmit={onFormSubmit} />
-    </Grid>
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogContent sx={{}}>
+        <StaffForm onSubmit={onSubmit} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

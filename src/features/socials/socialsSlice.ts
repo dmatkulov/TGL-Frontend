@@ -3,7 +3,6 @@ import { SocialDataMutation, Socials } from '../../types/types.SocialsNetwork';
 import { createSocials, deleteSocialNetwork, fetchSocials} from './socialsThunk';
 import { RootState } from '../../app/store';
 
-
 interface SocialsState {
   socials: Socials[],
   loadingSocials: boolean,
@@ -69,17 +68,6 @@ export const socialsSlice = createSlice({
       .addCase(deleteSocialNetwork.rejected, (state) => {
         state.isDelete = false;
       });
-
-    // builder
-    //   .addCase(updateSocialNetwork.pending, (state) => {
-    //     state.isEditing = true;
-    //   })
-    //   .addCase(updateSocialNetwork.fulfilled, (state) => {
-    //     state.isEditing = false;
-    //   })
-    //   .addCase(updateSocialNetwork.rejected, (state) => {
-    //     state.isEditing = false;
-    //   });
   },
 });
 
@@ -89,4 +77,3 @@ export const getLoadingSocials = (state: RootState) => state.socials.loadingSoci
 export const getErrorSocials = (state: RootState) => state.socials.loadingSocials;
 export const isPostLoadingSocials = (state: RootState) => state.socials.isLoadingDataSocial;
 export const isDeleteSocialNetwork = (state: RootState) => state.socials.isDelete;
-export const isEditingSocialNetwork = (state: RootState) => state.socials.isEditing;

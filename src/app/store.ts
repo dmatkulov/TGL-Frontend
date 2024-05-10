@@ -16,6 +16,7 @@ import { pricesReducer } from '../features/prices/pricesSlice';
 import { regionsReducer } from '../features/regions/regionsSlice';
 import { shipmentsReducer } from '../features/shipments/shipmentsSlice';
 import { companyAddressReducer } from '../features/companyAddress/companyAddressesSlice';
+import { priceListsReducer } from '../features/priceLists/priceListsSlice';
 
 const usersPersistConfig = {
   key: 'techGear:users',
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   regions: regionsReducer,
   shipments: shipmentsReducer,
   companyAddress: companyAddressReducer,
+  priceLists: priceListsReducer,
 });
 
 export const store = configureStore({

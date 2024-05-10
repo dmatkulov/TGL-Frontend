@@ -22,6 +22,7 @@ import EditWarehouse from '../features/warehouses/components/EditWarehouse';
 import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
 import Price from '../features/prices/Price';
+import PriceLists from '../features/priceLists/PriceLists';
 
 export const router = createBrowserRouter([
   {
@@ -107,6 +108,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <EditWarehouse />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.priceLists,
+            element: (
+              <ProtectedRoute>
+                <PriceLists />
               </ProtectedRoute>
             ),
           },

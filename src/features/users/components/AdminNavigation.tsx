@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, useMediaQuery,
+  ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
@@ -68,6 +69,12 @@ const adminLinks: UserNav[] = [
     navLink: appRoutes.price,
     icon: <CurrencyExchangeIcon color="primary" />,
   },
+  {
+    id: 9,
+    name: 'Прайс',
+    navLink: appRoutes.priceLists,
+    icon: <CurrencyExchangeIcon color="primary" />,
+  },
 ];
 
 const AdminNavigation = () => {
@@ -84,7 +91,8 @@ const AdminNavigation = () => {
             sx={{
               display: isSmallScreen ? 'flex' : '',
               flexWrap: isSmallScreen ? 'wrap' : '',
-            }}>
+            }}
+          >
             {adminLinks.map((link) => (
               <ListItem key={link.id} disableGutters>
                 <ListItemButton

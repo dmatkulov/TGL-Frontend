@@ -25,9 +25,11 @@ import { IStaff } from '../../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface AddStaffFormProps {
   onSubmit: (data: IStaff) => void;
+  onClose: () => void;
   isEdit?: boolean;
   existingStaff?: IStaff;
 }
@@ -48,6 +50,7 @@ const initialState: IStaff = {
 
 const StaffForm: React.FC<AddStaffFormProps> = ({
   onSubmit,
+  onClose,
   isEdit = false,
   existingStaff = initialState,
 }) => {
@@ -157,6 +160,12 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
           alignItems: 'center',
         }}
       >
+        <IconButton
+          sx={{ position: 'absolute', top: 5, right: 5 }}
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </IconButton>
         <Typography gutterBottom component="h1" variant="h5" mb={3}>
           {isEdit ? 'Обновление Сотрудника' : 'Регистрация Сотрудника'}
         </Typography>

@@ -4,7 +4,9 @@ export interface CompanyAddress {
   district: string;
   postCode: string;
   city: string;
+  editHandler: (id) => void;
 }
+
 export interface CompanyAddressMutation {
   address: string;
   district: string;
@@ -20,4 +22,9 @@ export interface CompanyAddressEditRequest {
 export interface CompanyAddressResponse {
   message: string;
   addresses: CompanyAddress[];
+}
+
+export interface CompanyAddressOneResponse {
+  message: string;
+  address: CompanyAddress;
 }

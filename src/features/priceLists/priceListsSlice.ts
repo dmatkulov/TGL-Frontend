@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { PriceList } from '../../types/types.PriceLists';
+import { fetchAllPriceLists } from './priceListsThunks';
 
 interface PriceListsState {
   priceLists: PriceList[];
@@ -15,13 +16,28 @@ const initialState: PriceListsState = {
   isLoading: false,
   isUploading: false,
   isDeleting: false,
-  isEmpty: true,
+  isEmpty: false,
 };
 
 const priceListsSlice = createSlice({
   name: 'priceLists',
   initialState,
   reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAllPriceLists.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAllPriceLists.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        const check = payload.priceLists.length < 1;
+        check ? (state.isEmpty = true) : (state.isEmpty = false);
+        state.priceLists = payload.priceLists;
+      })
+      .addCase(fetchAllPriceLists.rejected, (state) => {
+        state.isLoading = false;
+      });
+  },
 });
 
 export const priceListsReducer = priceListsSlice.reducer;
@@ -33,3 +49,4 @@ export const isPriceListsDeleting = (state: RootState) =>
   state.priceLists.isDeleting;
 export const isPriceListsUploading = (state: RootState) =>
   state.priceLists.isUploading;
+export const isPriceListsEmpty = (state: RootState) => state.priceLists.isEmpty;

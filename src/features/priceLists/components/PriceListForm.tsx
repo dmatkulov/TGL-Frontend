@@ -12,16 +12,19 @@ import { isPriceListsUploading } from '../priceListsSlice';
 import PlusOneIcon from '@mui/icons-material/PlusOne';
 import RangeInputGroup from './RangeInputGroup';
 import { uploadPriceList } from '../priceListsThunks';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '../../../utils/constants';
 
 const PriceListsForm = () => {
   const isUploading = useAppSelector(isPriceListsUploading);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [state, setState] = useState<PriceListName>({
     name: '',
   });
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const dataToTransfer: Range[] = ranges.map((item) => ({
@@ -34,8 +37,8 @@ const PriceListsForm = () => {
       ranges: dataToTransfer,
     };
 
-    dispatch(uploadPriceList(combinedData));
-    console.log(combinedData);
+    await dispatch(uploadPriceList(combinedData));
+    navigate(appRoutes.priceLists);
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

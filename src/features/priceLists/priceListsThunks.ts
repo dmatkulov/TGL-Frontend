@@ -25,3 +25,15 @@ export const uploadPriceList = createAsyncThunk<
     console.log('Caught on try - UPLOAD PRICE LIST - ', e);
   }
 });
+
+export const deletePriceList = createAsyncThunk<void, string>(
+  'priceList/delete',
+  async (arg) => {
+    try {
+      const response = await axiosApi.delete(`/price-lists/${arg}`);
+      return response.data;
+    } catch (e) {
+      console.log('Caught on try - DELETE PRICE LIST - ', e);
+    }
+  },
+);

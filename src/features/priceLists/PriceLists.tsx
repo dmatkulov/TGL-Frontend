@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
+  isPriceListsDeleting,
   isPriceListsEmpty,
   isPriceListsLoading,
   priceListsState,
@@ -20,15 +21,17 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import { fetchAllPriceLists } from './priceListsThunks';
+import { deletePriceList, fetchAllPriceLists } from './priceListsThunks';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '../../utils/constants';
+import { LoadingButton } from '@mui/lab';
 
 const PriceLists = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector(priceListsState);
   const isLoading = useAppSelector(isPriceListsLoading);
   const isEmpty = useAppSelector(isPriceListsEmpty);
+  const isDeleting = useAppSelector(isPriceListsDeleting);
 
   const [value, setValue] = useState(0);
 
@@ -38,7 +41,6 @@ const PriceLists = () => {
 
   useEffect(() => {
     dispatch(fetchAllPriceLists());
-    console.log(state);
   }, [dispatch]);
 
   let content;
@@ -77,6 +79,13 @@ const PriceLists = () => {
     );
   }
 
+  const deleteHandler = async () => {
+    const id = state[value]._id;
+    await dispatch(deletePriceList(id));
+    setValue(0);
+    dispatch(fetchAllPriceLists());
+  };
+
   return (
     <>
       <Grid container direction="column" spacing={2}>
@@ -84,6 +93,9 @@ const PriceLists = () => {
           <Button component={NavLink} to={appRoutes.priceListsAdd}>
             Добавить прайс лист
           </Button>
+          <LoadingButton loading={isDeleting} onClick={deleteHandler}>
+            Удалить текущий
+          </LoadingButton>
         </Grid>
         <Grid item>
           <Tabs value={value} onChange={handleChange}>

@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { PriceList } from '../../types/types.PriceLists';
-import { fetchAllPriceLists, uploadPriceList } from './priceListsThunks';
+import {
+  deletePriceList,
+  fetchAllPriceLists,
+  uploadPriceList,
+} from './priceListsThunks';
 
 interface PriceListsState {
   priceLists: PriceList[];
@@ -46,6 +50,16 @@ const priceListsSlice = createSlice({
       })
       .addCase(uploadPriceList.rejected, (state) => {
         state.isUploading = false;
+      });
+    builder
+      .addCase(deletePriceList.pending, (state) => {
+        state.isDeleting = true;
+      })
+      .addCase(deletePriceList.fulfilled, (state) => {
+        state.isDeleting = false;
+      })
+      .addCase(deletePriceList.rejected, (state) => {
+        state.isDeleting = false;
       });
   },
 });

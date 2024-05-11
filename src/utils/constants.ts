@@ -42,6 +42,7 @@ export const appRoutes = {
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
   priceLists: '/admin-profile/price-lists',
+  priceListsAdd: '/admin-profile/price-lists/add',
   priceEdit: '/admin-profile/price/edit',
 };
 

@@ -6,6 +6,7 @@ import {
   priceListsState,
 } from './priceListsSlice';
 import {
+  Button,
   CircularProgress,
   Grid,
   Paper,
@@ -20,6 +21,8 @@ import {
   Typography,
 } from '@mui/material';
 import { fetchAllPriceLists } from './priceListsThunks';
+import { NavLink } from 'react-router-dom';
+import { appRoutes } from '../../utils/constants';
 
 const PriceLists = () => {
   const dispatch = useAppDispatch();
@@ -77,6 +80,11 @@ const PriceLists = () => {
   return (
     <>
       <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Button component={NavLink} to={appRoutes.priceListsAdd}>
+            Добавить прайс лист
+          </Button>
+        </Grid>
         <Grid item>
           <Tabs value={value} onChange={handleChange}>
             {state.map((item, index) => (

@@ -23,6 +23,7 @@ import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
 import Price from '../features/prices/Price';
 import PriceLists from '../features/priceLists/PriceLists';
+import PriceListsForm from '../features/priceLists/components/PriceListForm';
 
 export const router = createBrowserRouter([
   {
@@ -116,6 +117,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <PriceLists />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.priceListsAdd,
+            element: (
+              <ProtectedRoute>
+                <PriceListsForm />
               </ProtectedRoute>
             ),
           },

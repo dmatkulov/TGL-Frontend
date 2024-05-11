@@ -33,7 +33,7 @@ const EditStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
     };
 
     form = (
-      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
+      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} onClose={onClose}/>
     );
   }
   return (

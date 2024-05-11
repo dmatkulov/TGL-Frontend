@@ -15,6 +15,7 @@ export const serverRoute = {
 export const Roles = [
   { id: 1, name: 'admin' },
   { id: 2, name: 'manager' },
+  { id: 3, name: 'client' },
 ];
 export const appRoutes = {
   notFound: '*',
@@ -37,8 +38,6 @@ export const appRoutes = {
   adminWarehousesEdit: '/admin-profile/warehouse/:id',
   adminCompanyAddress: '/admin-profile/company-addresses',
   calculate: '/calculate',
-  addStaff: '/admin-profile/add-staff',
-  editStaff: '/admin-profile/edit-staff/:id',
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
   priceEdit: '/admin-profile/price/edit',

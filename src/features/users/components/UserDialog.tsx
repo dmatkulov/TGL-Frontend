@@ -5,13 +5,13 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
-  TextField, Typography,
+  TextField,
 } from '@mui/material';
-import React, {useEffect} from 'react';
-import {ProfileMutation} from '../../../types/types.Profile';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {regionsState} from '../../regions/regionsSlice';
-import {fetchRegions} from '../../regions/regionsThunks';
+import React, { useEffect } from 'react';
+import { ProfileMutation } from '../../../types/types.Profile';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { regionsState } from '../../regions/regionsSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 interface Props {
   state: ProfileMutation;
@@ -48,18 +48,19 @@ const UserDialog: React.FC<Props> = ({
             {/*onsubmit */}
             <Button
               sx={{
-                '&.MuiButton-root:hover': {background: '#D2122E'},
+                '&.MuiButton-root:hover': { background: '#D2122E' },
                 color: 'white',
                 background: '#9e1b32',
                 position: 'absolute',
                 top: 0,
-                right: 0
+                right: 0,
               }}
-              onClick={handleClose}>
+              onClick={handleClose}
+            >
               X
             </Button>
             <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'} sx={{mt: 1}}>
+              <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
                 <TextField
                   id="firstName"
                   label="Имя"

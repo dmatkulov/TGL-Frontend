@@ -29,7 +29,7 @@ const Socials = () => {
      <Box>
        <Button component={SocialsFormLink}
                variant="contained"
-               to={appRoutes.socialsForm}
+               to={appRoutes.socialsAdd}
                sx={historyButtonEffect}>
          Добавить социальную сеть
        </Button>
@@ -37,6 +37,7 @@ const Socials = () => {
          <SocialItem
            id={item._id}
            key={item._id}
+           name={item.name}
            link={item.link}
            image={item.image}
          />

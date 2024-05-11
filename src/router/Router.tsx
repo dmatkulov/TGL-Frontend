@@ -23,7 +23,8 @@ import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
 import Price from '../features/prices/Price';
 import Socials from '../features/socials/Socials';
-import SocialsForm from '../features/socials/SocialsForm';
+import NewSocial from '../features/socials/components/NewSocial';
+import EditSocial from '../features/socials/components/EditSocial';
 
 export const router = createBrowserRouter([
   {
@@ -137,10 +138,18 @@ export const router = createBrowserRouter([
             )
           },
           {
-            path: appRoutes.socialsForm,
+            path: appRoutes.socialsAdd,
             element:(
               <ProtectedRoute>
-                <SocialsForm />
+                <NewSocial />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.socialsEdit,
+            element:(
+              <ProtectedRoute>
+                <EditSocial />
               </ProtectedRoute>
             ),
           },

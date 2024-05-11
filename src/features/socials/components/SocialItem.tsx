@@ -4,13 +4,14 @@ import { apiURL, appRoutes } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { isDeleteSocialNetwork } from '../socialsSlice';
+import {isDeleteSocialNetwork, isEditing} from '../socialsSlice';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
 
-import { useNavigate } from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 
 interface Props {
   id: string;
+  name: string;
   link: string;
   image: string | null;
 }
@@ -27,8 +28,9 @@ const imgBtnBoxStyle = {
   justifyContent: 'space-between',
 };
 
-const SocialItem: React.FC<Props> = ({ id, link, image }) => {
+const SocialItem: React.FC<Props> = ({ id, name, link, image }) => {
   const isDelete = useAppSelector(isDeleteSocialNetwork);
+  const isEdit = useAppSelector(isEditing);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -54,6 +56,7 @@ const SocialItem: React.FC<Props> = ({ id, link, image }) => {
             image={coverImage}
             alt={link}
           />
+          <Typography variant="subtitle1">{name}</Typography>
           <Box>
             <LoadingButton
               disabled={isDelete}
@@ -64,6 +67,15 @@ const SocialItem: React.FC<Props> = ({ id, link, image }) => {
               <IconButton sx={{ color: 'inherit' }}>
                 <CancelIcon />
               </IconButton>
+            </LoadingButton>
+            <LoadingButton
+              component={NavLink}
+              to={appRoutes.socialsEdit.replace(':id', id)}
+              disabled={isEdit}
+              loading={isEdit}
+              variant="contained"
+            >
+              Изменить
             </LoadingButton>
           </Box>
         </Box>

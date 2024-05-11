@@ -1,4 +1,4 @@
-import {Box, Button, CircularProgress, Typography} from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { isWarehousesLoading, warehousesState } from './warehousesSlice';
 import { useEffect } from 'react';
@@ -11,7 +11,6 @@ const Warehouses = () => {
   const state = useAppSelector(warehousesState);
   const isLoading = useAppSelector(isWarehousesLoading);
   const user = useAppSelector(selectUser);
-
 
   useEffect(() => {
     dispatch(fetchWarehouseData());
@@ -26,6 +25,7 @@ const Warehouses = () => {
         ' ' +
         state[0].address +
         user?.marketId;
+
       try {
         await navigator.clipboard.writeText(text);
         toast.success('Скопировано', {

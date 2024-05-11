@@ -18,6 +18,7 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import FeedIcon from '@mui/icons-material/Feed';
 import HomeIcon from '@mui/icons-material/Home';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import RecommendIcon from '@mui/icons-material/Recommend';
 
 const adminLinks: UserNav[] = [
   {
@@ -67,6 +68,12 @@ const adminLinks: UserNav[] = [
     name: 'Цена',
     navLink: appRoutes.price,
     icon: <CurrencyExchangeIcon color="primary" />,
+  },
+  {
+    id: 9,
+    name: 'Социальные сети',
+    navLink: appRoutes.socials,
+    icon: <RecommendIcon color="primary" />,
   },
 ];
 

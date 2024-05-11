@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, MenuItem, TextField } from '@mui/material';
+import {Grid, MenuItem, TextField, Typography} from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import { LoadingButton } from '@mui/lab';
 import { PupMutation } from '../../../types/types.Pup';
@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { selectPupCreating, selectPupEditing } from '../pupsSlice';
 import { fetchRegions } from '../../regions/regionsThunks';
+import {selectRegisterError} from '../../users/usersSlice';
 
 const initialState: PupMutation = {
   region: '',
@@ -31,9 +32,12 @@ const PupForm: React.FC<Props> = ({
   const dispatch = useAppDispatch();
   const regions = useAppSelector(regionsState);
   const creating = useAppSelector(selectPupCreating);
+  const error = useAppSelector(selectRegisterError);
   const editing = useAppSelector(selectPupEditing);
   const [state, setState] = useState<PupMutation>(initialPupState);
   const [disabled, setIsDisabled] = useState(true);
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(fetchRegions());
@@ -41,6 +45,11 @@ const PupForm: React.FC<Props> = ({
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+    if (state.phoneNumber.length < 12) {
+      setPhoneNumberLabel('Пропишите номер полностью');
+      setPhoneNumberIsValid(false);
+      return;
+    }
     onSubmit(state);
     setState(initialState);
   };
@@ -53,7 +62,13 @@ const PupForm: React.FC<Props> = ({
       return updatedState;
     });
   };
-
+  const getFieldError = (fieldName: string) => {
+    try {
+      return error?.errors[fieldName].message;
+    } catch {
+      return undefined;
+    }
+  };
   const updateDisabledState = () => {
     const keys = Object.keys(state) as (keyof PupMutation)[];
     const allFieldsFilled = keys.every((key) => {
@@ -64,10 +79,20 @@ const PupForm: React.FC<Props> = ({
   };
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
+
       const updateState = { ...prevState, phoneNumber: value };
+      if (value.length < 11) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('Номер должен быть введен полностью');
+      } else if (value.length > 11) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('');
+      }
+
       if (state.phoneNumber.length === 11) {
         updateDisabledState();
       }
+
       return updateState;
     });
   };
@@ -137,7 +162,35 @@ const PupForm: React.FC<Props> = ({
                 name: 'phoneNumber',
                 required: true,
               }}
+              error={Boolean(
+                getFieldError('phoneNumber') || !phoneNumberIsValid,
+              )}
             />
+            {getFieldError('phoneNumber') ? (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {getFieldError('phoneNumber')}
+                </Typography>
+              ) :
+              (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {phoneNumberLabel}
+                </Typography>
+              )
+            }
           </Grid>
         </Grid>
         <Grid item xs>

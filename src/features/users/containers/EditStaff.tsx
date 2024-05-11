@@ -4,8 +4,6 @@ import { selectGetStaffLoading, selectStaff } from '../usersSlice';
 import { CircularProgress, Dialog, DialogContent } from '@mui/material';
 import StaffForm from '../components/StaffForm';
 import { IStaff } from '../../../types/types.User';
-import { appRoutes } from '../../../utils/constants';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   open: boolean;
@@ -14,13 +12,8 @@ interface Props {
 }
 
 const EditStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
-  const navigate = useNavigate();
   const staff = useSelector(selectStaff);
   const isFetching = useSelector(selectGetStaffLoading);
-
-  if (!staff) {
-    navigate(appRoutes.notFound);
-  }
 
   const onFormSubmit = async (userMutation: IStaff) => {
     if (staff) {
@@ -40,7 +33,7 @@ const EditStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
     };
 
     form = (
-      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} />
+      <StaffForm isEdit onSubmit={onFormSubmit} existingStaff={mutation} onClose={onClose}/>
     );
   }
   return (

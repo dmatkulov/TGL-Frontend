@@ -1,7 +1,14 @@
-import { Alert, Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
 import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
 
@@ -23,12 +30,24 @@ const ShipmentsForm = () => {
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
 
-  const valueFields: string [] = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length'];
+  const valueFields: string[] = [
+    'userMarketId',
+    'trackerNumber',
+    'weight',
+    'height',
+    'width',
+    'length',
+  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (parseFloat(value) <= 0) {
+      return;
+    }
+
     if (valueFields.includes(name)) {
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         [name]: value,
         dimensions: {
@@ -48,12 +67,12 @@ const ShipmentsForm = () => {
   return (
     <>
       {error && (
-        <Alert severity="error" sx={{mt: 3, mb: 1, width: '100%'}}>
+        <Alert severity="error" sx={{ mt: 3, mb: 1, width: '100%' }}>
           {'Введенные данные не верны. Попробуйте снова!'}
         </Alert>
       )}
       {loading && (
-        <Alert severity="success" sx={{mt: 3, mb: 1, width: '100%'}}>
+        <Alert severity="success" sx={{ mt: 3, mb: 1, width: '100%' }}>
           {'Данные успешно отправлены!'}
         </Alert>
       )}
@@ -63,6 +82,7 @@ const ShipmentsForm = () => {
             <TextField
               fullWidth
               required
+              type="number"
               name="userMarketId"
               label="Маркет"
               onChange={handleChange}
@@ -75,12 +95,12 @@ const ShipmentsForm = () => {
             <TextField
               fullWidth
               required
+              type="number"
               name="trackerNumber"
               label="Номер трека"
               onChange={handleChange}
               value={state.trackerNumber}
               autoComplete="new-trackerNumber"
-              autoFocus
             />
           </Grid>
           <Grid item xs={3}>
@@ -88,11 +108,11 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="height"
+              type="number"
               label="Высота"
               onChange={handleChange}
               value={state.dimensions.height}
               autoComplete="new-height"
-              autoFocus
             />
           </Grid>
           <Grid item xs={3}>
@@ -100,11 +120,11 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="length"
+              type="number"
               label="Длина"
               onChange={handleChange}
               value={state.dimensions.length}
               autoComplete="new-length"
-              autoFocus
             />
           </Grid>
           <Grid item xs={3}>
@@ -112,11 +132,11 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="width"
+              type="number"
               label="Ширина"
               onChange={handleChange}
               value={state.dimensions.width}
               autoComplete="new-width"
-              autoFocus
             />
           </Grid>
           <Grid item xs={3}>
@@ -124,11 +144,11 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="weight"
+              type="number"
               label="Килограмм"
               onChange={handleChange}
               value={state.weight}
               autoComplete="new-weight"
-              autoFocus
             />
           </Grid>
         </Grid>
@@ -136,7 +156,8 @@ const ShipmentsForm = () => {
           type="submit"
           variant="contained"
           sx={{ mt: 3 }}
-          disabled={loading}>
+          disabled={loading}
+        >
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>
       </Box>

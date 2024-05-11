@@ -23,7 +23,7 @@ import {
 import { createStaff, getStaffData, updateStaff } from '../usersThunks';
 import StaffItem from '../components/StaffItem';
 import AddStaff from './AddStaff';
-import { IStaff } from '../../../types/types.User';
+import {IStaff, UsersRequestParams} from '../../../types/types.User';
 
 const Staff: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -66,9 +66,16 @@ const Staff: React.FC = () => {
           role = 'admin';
           break;
       }
-      await dispatch(getStaffData({ role }));
+      if (role === 'client' && user?.role === 'manager' && user.region) {
+        const params: UsersRequestParams = {
+          region: user.region.name,
+        };
+        await dispatch(getStaffData( params ));
+      } else {
+        await dispatch(getStaffData({ role }));
+      }
     },
-    [dispatch],
+    [dispatch, user],
   );
 
   useEffect(() => {

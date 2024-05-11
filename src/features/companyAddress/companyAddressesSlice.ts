@@ -29,6 +29,7 @@ const companyAddressesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    
     builder.addCase(fetchCompanyAddresses.pending, (state) => {
       state.isLoading = true;
     });
@@ -41,6 +42,7 @@ const companyAddressesSlice = createSlice({
     builder.addCase(fetchCompanyAddresses.rejected, (state) => {
       state.isLoading = false;
     });
+    
     builder.addCase(fetchOneAddress.pending, (state) => {
       state.isLoading = true;
     });
@@ -51,6 +53,7 @@ const companyAddressesSlice = createSlice({
     builder.addCase(fetchOneAddress.rejected, (state) => {
       state.isLoading = false;
     });
+    
     builder.addCase(uploadCompanyAddress.pending, (state) => {
       state.isCreating = true;
     });
@@ -60,6 +63,7 @@ const companyAddressesSlice = createSlice({
     builder.addCase(uploadCompanyAddress.rejected, (state) => {
       state.isCreating = false;
     });
+
     builder.addCase(deleteCompanyAddress.pending, (state) => {
       state.isDeleting = true;
     });

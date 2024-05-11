@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import { CompanyAddress } from '../../../types/types.CompanyAddress';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
@@ -13,6 +13,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '../../../utils/constants';
+import { selectUser } from '../../users/usersSlice';
 
 const CompanyAddressesItem: FC<CompanyAddress> = ({
   _id,
@@ -25,6 +26,7 @@ const CompanyAddressesItem: FC<CompanyAddress> = ({
   const dispatch = useAppDispatch();
   const isDeleting = useAppSelector(isCompanyAddressesDeleting);
   const isCreating = useAppSelector(isCompanyAddressesCreating);
+  const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
   const deleteHandler = async () => {
@@ -49,24 +51,23 @@ const CompanyAddressesItem: FC<CompanyAddress> = ({
           <Typography variant="h6">Район: {district}</Typography>
         </Box>
         <Grid container gap={2}>
-          <LoadingButton
+          {(user && user?.role === 'super') &&
+            <LoadingButton
             loading={isCreating}
             onClick={editHandler}
             disabled={isCreating}
-            variant="contained"
-          >
+            variant="contained">
             Редактировать
-          </LoadingButton>
-
-          <LoadingButton
+          </LoadingButton>}
+          {(user && user?.role === 'super') &&
+            <LoadingButton
             loading={isDeleting}
             disabled={isDeleting}
             onClick={deleteHandler}
             variant="contained"
-            color="error"
-          >
+            color="error">
             Удалить
-          </LoadingButton>
+          </LoadingButton>}
         </Grid>
       </Box>
     </Grid>

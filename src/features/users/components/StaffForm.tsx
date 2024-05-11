@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   selectRegisterError,
   selectRegisterLoading,
   setRegisterError,
 } from '../usersSlice';
-import { fetchPups } from '../../pups/pupsThunks';
-import { fetchRegions } from '../../regions/regionsThunks';
-import { regEx, Roles } from '../../../utils/constants';
+import {fetchPups} from '../../pups/pupsThunks';
+import {fetchRegions} from '../../regions/regionsThunks';
+import {regEx, Roles} from '../../../utils/constants';
 import {
   Box,
   Container,
@@ -17,11 +17,11 @@ import {
   Typography,
 } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
-import { LoadingButton } from '@mui/lab';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectPups } from '../../pups/pupsSlice';
-import { regionsState } from '../../regions/regionsSlice';
-import { IStaff } from '../../../types/types.User';
+import {LoadingButton} from '@mui/lab';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {selectPups} from '../../pups/pupsSlice';
+import {regionsState} from '../../regions/regionsSlice';
+import {IStaff} from '../../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -71,7 +71,8 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
     undefined,
   );
-
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
   const getError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -94,19 +95,29 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
     setFormData((prevState) => {
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
 
-      return { ...prevState, [name]: value };
+      return {...prevState, [name]: value};
     });
   };
 
   const handlePhoneChange = (value: string) => {
-    setFormData((prevState) => ({ ...prevState, phoneNumber: value }));
+
+    setFormData((prevState) => {
+      if (value.length < 12) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('Номер должен быть введен полностью');
+      } else if (value.length > 11) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('');
+      }
+      return {...prevState, phoneNumber: value};
+    });
   };
 
   const handleClickShowPassword = () => setShowPass((show) => !show);
@@ -136,6 +147,12 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
         }
       }
 
+      if (formData.phoneNumber.length < 12) {
+        setPhoneNumberLabel('Пропишите номер полностью');
+        setPhoneNumberIsValid(false);
+        return;
+      }
+
       if (regEx.test(formData.email)) {
         setEmailIsValid(true);
       } else if (!regEx.test(formData.email) && formData.email !== '') {
@@ -161,10 +178,10 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
         }}
       >
         <IconButton
-          sx={{ position: 'absolute', top: 5, right: 5 }}
+          sx={{position: 'absolute', top: 5, right: 5}}
           onClick={onClose}
         >
-          <CloseIcon />
+          <CloseIcon/>
         </IconButton>
         <Typography gutterBottom component="h1" variant="h5" mb={3}>
           {isEdit ? 'Обновление Сотрудника' : 'Регистрация Сотрудника'}
@@ -173,7 +190,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
           component="form"
           autoComplete="off"
           onSubmit={submitFormHandler}
-          sx={{ mt: 0, width: '100%' }}
+          sx={{mt: 0, width: '100%'}}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid item xs={12} sm={6}>
@@ -235,7 +252,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                           onMouseDown={handleMouseDownPassword}
                           edge="end"
                         >
-                          {showPass ? <VisibilityOff /> : <Visibility />}
+                          {showPass ? <VisibilityOff/> : <Visibility/>}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -258,9 +275,9 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
             <Grid item xs={12} sm={6}>
               <PhoneInput
                 country="kg"
-                masks={{ kg: '(...) ..-..-..' }}
+                masks={{kg: '(...) ..-..-..'}}
                 onlyCountries={['kg']}
-                containerStyle={{ width: '100%' }}
+                containerStyle={{width: '100%'}}
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 defaultErrorMessage={getError('phoneNumber')}
@@ -276,18 +293,31 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                   required: true,
                 }}
               />
-              {getError('phoneNumber') && (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
-                  }}
-                >
-                  {getError('phoneNumber')}
-                </Typography>
-              )}
+              {getError('phoneNumber') ? (
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {getError('phoneNumber')}
+                  </Typography>
+                ) :
+                (
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {phoneNumberLabel}
+                  </Typography>
+                )
+              }
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -415,7 +445,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      <b style={{marginRight: '10px'}}>{pup.name}</b>
                       {pup.region.name} обл., {pup.address}, {pup.settlement}
                     </MenuItem>
                   ))
@@ -442,7 +472,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 <LoadingButton
                   type="submit"
                   variant="contained"
-                  sx={{ mt: 3, mb: 2, py: 1 }}
+                  sx={{mt: 3, mb: 2, py: 1}}
                   disableElevation
                   disabled={!isFormValid() || loading}
                   loading={loading}

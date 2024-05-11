@@ -85,11 +85,6 @@ const ShipmentsForm = () => {
           {'Введенные данные не верны. Попробуйте снова!'}
         </Alert>
       )}
-      {loading && (
-        <Alert severity="success" sx={{ mt: 3, mb: 1, width: '100%' }}>
-          {'Данные успешно отправлены!'}
-        </Alert>
-      )}
       <Box component="form" onSubmit={onFormHandle}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

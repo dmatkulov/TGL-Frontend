@@ -11,6 +11,7 @@ import { createShipment } from '../shipmentsThunk';
 import React, { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
 import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
@@ -58,6 +59,19 @@ const ShipmentsForm = () => {
     }
   };
 
+  const isFormValid = () => {
+    const { userMarketId, trackerNumber, weight, dimensions } = state;
+
+    return (
+      userMarketId &&
+      trackerNumber &&
+      weight &&
+      dimensions.height &&
+      dimensions.length &&
+      dimensions.width
+    );
+  };
+
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(createShipment(state));
@@ -88,6 +102,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.userMarketId}
               autoComplete="new-userMarketId"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">№</InputAdornment>
+                ),
+              }}
               autoFocus
             />
           </Grid>
@@ -101,6 +120,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.trackerNumber}
               autoComplete="new-trackerNumber"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">№</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -113,6 +137,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.dimensions.height}
               autoComplete="new-height"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -125,6 +154,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.dimensions.length}
               autoComplete="new-length"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -137,6 +171,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.dimensions.width}
               autoComplete="new-width"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -149,6 +188,11 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.weight}
               autoComplete="new-weight"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
         </Grid>
@@ -156,7 +200,7 @@ const ShipmentsForm = () => {
           type="submit"
           variant="contained"
           sx={{ mt: 3 }}
-          disabled={loading}
+          disabled={!isFormValid() || loading}
         >
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>

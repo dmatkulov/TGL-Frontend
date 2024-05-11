@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, useMediaQuery,
+  ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
@@ -97,7 +98,8 @@ const AdminNavigation = () => {
             sx={{
               display: isSmallScreen ? 'flex' : '',
               flexWrap: isSmallScreen ? 'wrap' : '',
-            }}>
+            }}
+          >
             {adminLinks.map((link) => (
               <ListItem key={link.id} disableGutters>
                 <ListItemButton

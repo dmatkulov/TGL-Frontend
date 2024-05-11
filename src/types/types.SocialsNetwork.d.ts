@@ -1,4 +1,3 @@
-
 export interface Socials {
   _id: string;
   link: string;
@@ -17,5 +16,5 @@ export interface SocialDataMutation {
 
 export interface ResponseSocials {
   message: string;
-  socials: Socials [];
+  socials: Socials[];
 }

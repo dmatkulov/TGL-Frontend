@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { Warehouse } from '../../types/types.Warehouses';
-import {createWarehouse, fetchOneWarehouse, fetchWarehouseData} from './warehousesThunks';
+import {
+  createWarehouse,
+  fetchOneWarehouse,
+  fetchWarehouseData,
+} from './warehousesThunks';
 
 interface WarehousesState {
   warehouses: Warehouse[];
@@ -37,10 +41,13 @@ const WarehouseSlice = createSlice({
     builder.addCase(fetchOneWarehouse.pending, (state) => {
       state.fetchOneLoading = true;
     });
-    builder.addCase(fetchOneWarehouse.fulfilled, (state,{payload: current}) => {
-      state.fetchOneLoading = false;
-      state.warehouse = current;
-    });
+    builder.addCase(
+      fetchOneWarehouse.fulfilled,
+      (state, { payload: current }) => {
+        state.fetchOneLoading = false;
+        state.warehouse = current;
+      },
+    );
     builder.addCase(fetchOneWarehouse.rejected, (state) => {
       state.fetchOneLoading = false;
     });
@@ -68,4 +75,3 @@ export const selectOneWarehouseFetching = (state: RootState) =>
   state.warehouses.fetchOneLoading;
 export const isWarehousesCreateLoading = (state: RootState) =>
   state.warehouses.isCreateLoading;
-

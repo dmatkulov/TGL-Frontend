@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Grid, MenuItem, TextField, Typography} from '@mui/material';
+import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import PhoneInput from 'react-phone-input-2';
 import { LoadingButton } from '@mui/lab';
 import { PupMutation } from '../../../types/types.Pup';
@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { selectPupCreating, selectPupEditing } from '../pupsSlice';
 import { fetchRegions } from '../../regions/regionsThunks';
-import {selectRegisterError} from '../../users/usersSlice';
+import { selectRegisterError } from '../../users/usersSlice';
 
 const initialState: PupMutation = {
   region: '',
@@ -36,7 +36,7 @@ const PupForm: React.FC<Props> = ({
   const editing = useAppSelector(selectPupEditing);
   const [state, setState] = useState<PupMutation>(initialPupState);
   const [disabled, setIsDisabled] = useState(true);
-  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
   const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   useEffect(() => {
@@ -79,7 +79,6 @@ const PupForm: React.FC<Props> = ({
   };
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
-
       const updateState = { ...prevState, phoneNumber: value };
       if (value.length < 11) {
         setPhoneNumberIsValid(true);
@@ -111,7 +110,8 @@ const PupForm: React.FC<Props> = ({
               type="text"
               value={state.region}
               autoComplete="new-region"
-              onChange={inputChangeHandler}>
+              onChange={inputChangeHandler}
+            >
               <MenuItem value="" disabled>
                 Выберите регион
               </MenuItem>
@@ -167,30 +167,28 @@ const PupForm: React.FC<Props> = ({
               )}
             />
             {getFieldError('phoneNumber') ? (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
-                  }}
-                >
-                  {getFieldError('phoneNumber')}
-                </Typography>
-              ) :
-              (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
-                  }}
-                >
-                  {phoneNumberLabel}
-                </Typography>
-              )
-            }
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  ml: '14px',
+                  mt: '4px',
+                  color: '#d32f2f',
+                }}
+              >
+                {getFieldError('phoneNumber')}
+              </Typography>
+            ) : (
+              <Typography
+                sx={{
+                  fontSize: '12px',
+                  ml: '14px',
+                  mt: '4px',
+                  color: '#d32f2f',
+                }}
+              >
+                {phoneNumberLabel}
+              </Typography>
+            )}
           </Grid>
         </Grid>
         <Grid item xs>

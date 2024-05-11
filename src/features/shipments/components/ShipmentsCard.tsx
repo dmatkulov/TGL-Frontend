@@ -6,7 +6,6 @@ interface Props {
   shipment: ShipmentData;
 }
 
-
 const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
   return (
     <Card variant="outlined" sx={{ minWidth: 275, mb: '20px' }}>
@@ -51,7 +50,7 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
           Оплачено: {shipment.isPaid ? 'Да' : 'Нет'}
         </Typography>
         <Typography variant="body1">
-          Время: { dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
+          Время: {dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
         </Typography>
       </CardContent>
     </Card>

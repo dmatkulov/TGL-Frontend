@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {Box, Container, Grid, TextField, Typography} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
-import {WarehouseMutation} from '../../../types/types.Warehouses';
-import {useAppSelector} from '../../../app/hooks';
-import {isWarehousesCreateLoading} from '../warehousesSlice';
+import React, { useState } from 'react';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { WarehouseMutation } from '../../../types/types.Warehouses';
+import { useAppSelector } from '../../../app/hooks';
+import { isWarehousesCreateLoading } from '../warehousesSlice';
 import PhoneInput from 'react-phone-input-2';
-import {selectRegisterError} from '../../users/usersSlice';
+import { selectRegisterError } from '../../users/usersSlice';
 
 interface Props {
   onSubmit: (mutation: WarehouseMutation) => void;
@@ -19,19 +19,23 @@ const initialState = {
   phoneNumber: '',
 };
 
-const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWarehouse = initialState}) => {
+const WarehouseForm: React.FC<Props> = ({
+  onSubmit,
+  isEdit = false,
+  initialWarehouse = initialState,
+}) => {
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
   const error = useAppSelector(selectRegisterError);
 
   const [state, setState] = useState<WarehouseMutation>(initialWarehouse);
-  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
   const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
 
     setState((prevState) => {
-      return {...prevState, [name]: value};
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -44,7 +48,7 @@ const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWareho
         setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
-      return {...prevState, phoneNumber: value};
+      return { ...prevState, phoneNumber: value };
     });
   };
 
@@ -82,7 +86,7 @@ const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWareho
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{mt: 3, width: '100%'}}
+          sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid
@@ -92,7 +96,7 @@ const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWareho
               sm={6}
               direction="row"
               spacing={2}
-              sx={{margin: 'auto'}}
+              sx={{ margin: 'auto' }}
             >
               <Grid item xs={12}>
                 <TextField
@@ -121,15 +125,15 @@ const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWareho
               <Grid item xs={12}>
                 <PhoneInput
                   country="cn"
-                  masks={{cn: '(..) ...-....-..'}}
+                  masks={{ cn: '(..) ...-....-..' }}
                   onlyCountries={['cn']}
-                  containerStyle={{width: '100%'}}
+                  containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
                   onChange={handlePhoneChange}
                   defaultErrorMessage={getFieldError('phoneNumber')}
                   specialLabel="Номер телефона*"
                   disableDropdown
-                  inputStyle={{width: '100%'}}
+                  inputStyle={{ width: '100%' }}
                   inputProps={{
                     name: 'phoneNumber',
                     required: true,
@@ -139,37 +143,35 @@ const WarehouseForm: React.FC<Props> = ({onSubmit, isEdit = false, initialWareho
                   )}
                 />
                 {getFieldError('phoneNumber') ? (
-                    <Typography
-                      sx={{
-                        fontSize: '12px',
-                        ml: '14px',
-                        mt: '4px',
-                        color: '#d32f2f',
-                      }}
-                    >
-                      {getFieldError('phoneNumber')}
-                    </Typography>
-                  ) :
-                  (
-                    <Typography
-                      sx={{
-                        fontSize: '12px',
-                        ml: '14px',
-                        mt: '4px',
-                        color: '#d32f2f',
-                      }}
-                    >
-                      {phoneNumberLabel}
-                    </Typography>
-                  )
-                }
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {getFieldError('phoneNumber')}
+                  </Typography>
+                ) : (
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {phoneNumberLabel}
+                  </Typography>
+                )}
               </Grid>
               <LoadingButton
                 type={'submit'}
                 variant="contained"
                 loading={isCreateLoading}
                 disabled={isCreateLoading}
-                sx={{marginTop: 1, marginLeft: 2, width: 690}}
+                sx={{ marginTop: 1, marginLeft: 2, width: 690 }}
               >
                 {isEdit ? 'Обновить' : 'Добавить'}
               </LoadingButton>

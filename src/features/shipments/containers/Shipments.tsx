@@ -4,7 +4,7 @@ import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
 import { fetchShipments } from '../shipmentsThunk';
 import ShipmentsCard from '../components/ShipmentsCard';
 import { Box, CircularProgress } from '@mui/material';
-import {selectUser} from '../../users/usersSlice';
+import { selectUser } from '../../users/usersSlice';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -25,18 +25,21 @@ const Shipments = () => {
 
   if (user?.role === 'manager' && user.region) {
     filteredShipments = shipments.filter(
-      (shipment) => shipment.pupId.region === user.region._id);
+      (shipment) => shipment.pupId.region === user.region._id,
+    );
   }
 
   return (
     <>
-      {loading ?
+      {loading ? (
         <Box sx={styleBoxSpinner}>
           <CircularProgress size={100} />
         </Box>
-        : filteredShipments.map((shipment) => (
-        <ShipmentsCard key={shipment._id} shipment={shipment} />
-      ))}
+      ) : (
+        filteredShipments.map((shipment) => (
+          <ShipmentsCard key={shipment._id} shipment={shipment} />
+        ))
+      )}
     </>
   );
 };

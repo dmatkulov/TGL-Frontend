@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { PriceList } from '../../types/types.PriceLists';
-import { fetchAllPriceLists } from './priceListsThunks';
+import { fetchAllPriceLists, uploadPriceList } from './priceListsThunks';
 
 interface PriceListsState {
   priceLists: PriceList[];
@@ -36,6 +36,16 @@ const priceListsSlice = createSlice({
       })
       .addCase(fetchAllPriceLists.rejected, (state) => {
         state.isLoading = false;
+      });
+    builder
+      .addCase(uploadPriceList.pending, (state) => {
+        state.isUploading = true;
+      })
+      .addCase(uploadPriceList.fulfilled, (state) => {
+        state.isUploading = false;
+      })
+      .addCase(uploadPriceList.rejected, (state) => {
+        state.isUploading = false;
       });
   },
 });

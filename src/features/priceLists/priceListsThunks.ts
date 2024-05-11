@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { PriceListsResponse } from '../../types/types.PriceLists';
+import { CombinedData, PriceListsResponse } from '../../types/types.PriceLists';
 import axiosApi from '../../utils/axiosApi';
 
 export const fetchAllPriceLists = createAsyncThunk<PriceListsResponse>(
@@ -13,3 +13,15 @@ export const fetchAllPriceLists = createAsyncThunk<PriceListsResponse>(
     }
   },
 );
+
+export const uploadPriceList = createAsyncThunk<
+  PriceListsResponse,
+  CombinedData
+>('priceLists/upload', async (arg) => {
+  try {
+    const response = await axiosApi.post('/price-lists', arg);
+    return response.data;
+  } catch (e) {
+    console.log('Caught on try - UPLOAD PRICE LIST - ', e);
+  }
+});

@@ -10,6 +10,7 @@ export const serverRoute = {
   companyAddresses: '/company-addresses',
   companyAddressesAdd: '/company-addresses/add',
   staff: '/users/staff',
+  socials:'/socials'
 };
 
 export const Roles = [
@@ -42,6 +43,8 @@ export const appRoutes = {
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
   priceEdit: '/admin-profile/price/edit',
+  socials: '/admin-profile/socials',
+  socialsForm: '/admin-profile/socialsForm',
 };
 
 export const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;

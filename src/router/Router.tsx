@@ -22,6 +22,8 @@ import EditWarehouse from '../features/warehouses/components/EditWarehouse';
 import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
 import Price from '../features/prices/Price';
+import Socials from '../features/socials/Socials';
+import SocialsForm from '../features/socials/SocialsForm';
 
 export const router = createBrowserRouter([
   {
@@ -123,6 +125,22 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <Price />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.socials,
+            element:(
+              <ProtectedRoute>
+                <Socials />
+              </ProtectedRoute>
+            )
+          },
+          {
+            path: appRoutes.socialsForm,
+            element:(
+              <ProtectedRoute>
+                <SocialsForm />
               </ProtectedRoute>
             ),
           },

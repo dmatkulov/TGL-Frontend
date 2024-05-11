@@ -1,10 +1,10 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { isWarehousesLoading, warehousesState } from './warehousesSlice';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { fetchWarehouseData } from './warehousesThunks';
 import { selectUser } from '../users/usersSlice';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Slide, toast } from 'react-toastify';
 
 const Warehouses = () => {
   const dispatch = useAppDispatch();
@@ -12,24 +12,39 @@ const Warehouses = () => {
   const isLoading = useAppSelector(isWarehousesLoading);
   const user = useAppSelector(selectUser);
 
-  const [textToCopy, setTextToCopy] = useState('');
+  useEffect(() => {
+    dispatch(fetchWarehouseData());
+  }, [dispatch]);
 
-  const onCopy = async () => {
-    if (textToCopy === '' && user?.marketId) {
-      const string =
+  const handleCopy = async () => {
+    if (user?.marketId) {
+      const text =
         state[0].name +
         ' ' +
         state[0].phoneNumber +
         ' ' +
         state[0].address +
         user?.marketId;
-      setTextToCopy(string);
+
+      try {
+        await navigator.clipboard.writeText(text);
+        toast.success('Скопировано', {
+          autoClose: 500,
+          hideProgressBar: true,
+          pauseOnHover: false,
+          draggable: false,
+          transition: Slide,
+        });
+      } catch {
+        toast.error('Не удалось скопировать', {
+          autoClose: 500,
+          hideProgressBar: true,
+          pauseOnHover: false,
+          transition: Slide,
+        });
+      }
     }
   };
-
-  useEffect(() => {
-    dispatch(fetchWarehouseData());
-  }, [dispatch]);
 
   let content;
 
@@ -55,9 +70,9 @@ const Warehouses = () => {
         <Typography sx={{ mb: 3 }}>
           {state[0].address + user?.marketId}
         </Typography>
-        <CopyToClipboard text={textToCopy} onCopy={onCopy}>
-          <Button variant="contained">Скопировать</Button>
-        </CopyToClipboard>
+        <Button variant="contained" onClick={handleCopy}>
+          Скопировать
+        </Button>
       </>
     );
   }

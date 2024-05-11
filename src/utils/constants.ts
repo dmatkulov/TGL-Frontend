@@ -10,11 +10,13 @@ export const serverRoute = {
   companyAddresses: '/company-addresses',
   companyAddressesAdd: '/company-addresses/add',
   staff: '/users/staff',
+  socials:'/socials'
 };
 
 export const Roles = [
   { id: 1, name: 'admin' },
   { id: 2, name: 'manager' },
+  { id: 3, name: 'client' },
 ];
 export const appRoutes = {
   notFound: '*',
@@ -37,13 +39,13 @@ export const appRoutes = {
   adminWarehousesEdit: '/admin-profile/warehouse/:id',
   adminCompanyAddress: '/admin-profile/company-addresses',
   calculate: '/calculate',
-  addStaff: '/admin-profile/add-staff',
-  editStaff: '/admin-profile/edit-staff/:id',
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
   priceLists: '/admin-profile/price-lists',
   priceListsAdd: '/admin-profile/price-lists/add',
   priceEdit: '/admin-profile/price/edit',
+  socials: '/admin-profile/socials',
+  socialsForm: '/admin-profile/socialsForm',
 };
 
 export const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;

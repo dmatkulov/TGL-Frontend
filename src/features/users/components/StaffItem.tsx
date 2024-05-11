@@ -18,7 +18,7 @@ const StaffItem: React.FC<Props> = ({ user, onSubmit }) => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = async () => {
-    await dispatch(getStaff(user._id));
+    await dispatch(getStaff(user._id)).unwrap();
     setOpen(true);
   };
 

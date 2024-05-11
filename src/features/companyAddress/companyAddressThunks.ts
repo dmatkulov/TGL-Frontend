@@ -4,6 +4,7 @@ import { serverRoute } from '../../utils/constants';
 import {
   CompanyAddressEditRequest,
   CompanyAddressMutation,
+  CompanyAddressOneResponse,
   CompanyAddressResponse,
 } from '../../types/types.CompanyAddress';
 
@@ -14,11 +15,24 @@ export const fetchCompanyAddresses = createAsyncThunk<
     const response = await axiosApi.get<CompanyAddressResponse>(
       serverRoute.companyAddresses,
     );
-    if (response.data) {
-      return response.data;
-    }
+    return response.data;
   } catch (e) {
     console.log('Caught on try - FETCH ALL COMPANY ADDRESSES - ', e);
+  }
+});
+
+export const fetchOneAddress = createAsyncThunk<
+  CompanyAddressOneResponse,
+  string
+>('companyAddresses/fetchOne', async (id) => {
+  try {
+    const response = await axiosApi.get<CompanyAddressOneResponse>(
+      `${serverRoute.companyAddresses}/${id}`,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('Caught on try - FETCH ONE COMPANY ADDRESSES - ', e);
+    throw e;
   }
 });
 

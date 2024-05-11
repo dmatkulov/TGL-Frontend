@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
 import {
   Box,
   Container,
@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import {LoadingButton} from '@mui/lab';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
@@ -21,15 +21,15 @@ import {
   selectRegisterLoading,
   setRegisterError,
 } from './usersSlice';
-import { register } from './usersThunks';
-import { appRoutes } from '../../utils/constants';
-import { selectPups } from '../pups/pupsSlice';
-import { fetchPups } from '../pups/pupsThunks';
-import { regionsState } from '../regions/regionsSlice';
-import { fetchRegions } from '../regions/regionsThunks';
-import { RegisterMutation } from '../../types/types.User';
+import {register} from './usersThunks';
+import {appRoutes} from '../../utils/constants';
+import {selectPups} from '../pups/pupsSlice';
+import {fetchPups} from '../pups/pupsThunks';
+import {regionsState} from '../regions/regionsSlice';
+import {fetchRegions} from '../regions/regionsThunks';
+import {RegisterMutation} from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
-import { regEx } from '../../utils/constants';
+import {regEx} from '../../utils/constants';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -60,6 +60,9 @@ const Register: React.FC = () => {
   const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
     undefined,
   );
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
+
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
 
@@ -72,14 +75,14 @@ const Register: React.FC = () => {
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
     setState((prevState) => {
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
 
-      return { ...prevState, [name]: value };
+      return {...prevState, [name]: value};
     });
   };
 
@@ -103,7 +106,17 @@ const Register: React.FC = () => {
   };
 
   const handlePhoneChange = (value: string) => {
-    setState((prevState) => ({ ...prevState, phoneNumber: value }));
+
+    setState((prevState) => {
+      if (value.length < 10) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('Номер должен быть введен полностью');
+      } else if (value.length > 11) {
+        setPhoneNumberIsValid(true);
+        setPhoneNumberLabel('');
+      }
+      return {...prevState, phoneNumber: value};
+    });
   };
 
   useEffect(() => {
@@ -122,6 +135,12 @@ const Register: React.FC = () => {
       if (state.password.length >= 1 && state.password.length < 8) {
         setPassLabel('Пароль слишком короткий');
         setPassIsValid(false);
+        return;
+      }
+
+      if (state.phoneNumber.length < 12) {
+        setPhoneNumberLabel('Пропишите номер полностью');
+        setPhoneNumberIsValid(false);
         return;
       }
 
@@ -157,7 +176,7 @@ const Register: React.FC = () => {
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{ mt: 3, width: '100%' }}
+          sx={{mt: 3, width: '100%'}}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid item xs={12} sm={6}>
@@ -234,7 +253,7 @@ const Register: React.FC = () => {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPass ? <VisibilityOff /> : <Visibility />}
+                        {showPass ? <VisibilityOff/> : <Visibility/>}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -260,9 +279,9 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <PhoneInput
                 country="kg"
-                masks={{ kg: '(...) ..-..-..' }}
+                masks={{kg: '(...) ..-..-..'}}
                 onlyCountries={['kg']}
-                containerStyle={{ width: '100%' }}
+                containerStyle={{width: '100%'}}
                 value={state.phoneNumber}
                 countryCodeEditable={false}
                 onChange={handlePhoneChange}
@@ -277,19 +296,35 @@ const Register: React.FC = () => {
                   name: 'phoneNumber',
                   required: true,
                 }}
+                error={Boolean(
+                  getFieldError('phoneNumber') || !phoneNumberIsValid,
+                )}
               />
-              {getFieldError('phoneNumber') && (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
-                  }}
-                >
-                  {getFieldError('phoneNumber')}
-                </Typography>
-              )}
+              {getFieldError('phoneNumber') ? (
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {getFieldError('phoneNumber')}
+                  </Typography>
+                ) :
+                (
+                  <Typography
+                    sx={{
+                      fontSize: '12px',
+                      ml: '14px',
+                      mt: '4px',
+                      color: '#d32f2f',
+                    }}
+                  >
+                    {phoneNumberLabel}
+                  </Typography>
+                )
+              }
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -402,7 +437,7 @@ const Register: React.FC = () => {
                 {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      <b style={{marginRight: '10px'}}>{pup.name}</b>
                       {pup.region.name} обл., {pup.address}, {pup.settlement}
                     </MenuItem>
                   ))
@@ -429,9 +464,9 @@ const Register: React.FC = () => {
                 <LoadingButton
                   type="submit"
                   variant="contained"
-                  sx={{ mt: 3, mb: 2, py: 1 }}
-                  disableElevation
-                  disabled={!isFormValid() || loading}
+                  sx={{mt: 3, mb: 2, py: 1}}
+                  // disableElevation
+                  // disabled={!isFormValid() || loading}
                   loading={loading}
                 >
                   Зарегистрироваться

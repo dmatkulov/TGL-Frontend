@@ -63,7 +63,8 @@ const SocialItem: React.FC<Props> = ({ id, name, link, image }) => {
               loading={isDelete}
               onClick={deleteHandler}
               sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
-              color="error">
+              color="error"
+            >
               <IconButton sx={{ color: 'inherit' }}>
                 <CancelIcon />
               </IconButton>
@@ -80,9 +81,7 @@ const SocialItem: React.FC<Props> = ({ id, name, link, image }) => {
           </Box>
         </Box>
         <Box>
-          <Typography>
-            {link}
-          </Typography>
+          <Typography>{link}</Typography>
         </Box>
       </Box>
     </>

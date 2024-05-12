@@ -6,7 +6,12 @@ import { selectUser } from '../../usersSlice';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '../../../../utils/constants';
 
-const WarehousesListItem: FC<Warehouse> = ({_id, address, name, phoneNumber }) => {
+const WarehousesListItem: FC<Warehouse> = ({
+  _id,
+  address,
+  name,
+  phoneNumber,
+}) => {
   const user = useAppSelector(selectUser);
   const isSuper = user?.role === 'super';
   return (

@@ -1,6 +1,13 @@
-import React, {useMemo, useState} from 'react';
-import {Box, Container, Grid, TextField, Typography} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
+
+import React, { useMemo, useState } from 'react';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  TextField,
+} from '@mui/material';
 import FileInput from '../../components/FileInput/FileInput';
 import { useAppSelector } from '../../app/hooks';
 import {SocialData} from '../../types/types.SocialsNetwork';
@@ -18,14 +25,14 @@ const initialState = {
   link: '',
   image: null,
 }
-const SocialsForm:React.FC<Props> = ({onSubmit, isEdit = false, initialSocial = initialState, existingImage}) => {
+const SocialsForm:React.FC<Props> = ({ onSubmit, isEdit = false, initialSocial = initialState, existingImage }) => {
   const loading = useAppSelector(isPostLoadingSocials);
   const [state, setState] = useState<SocialData>(initialSocial);
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setState(prevState => {
-      return {...prevState, [name]: value};
+    const { name, value } = e.target;
+    setState((prevState) => {
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -36,10 +43,11 @@ const SocialsForm:React.FC<Props> = ({onSubmit, isEdit = false, initialSocial = 
   };
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, files} = e.target;
+    const { name, files } = e.target;
     if (files) {
-      setState(prevState => ({
-        ...prevState, [name]: files[0]
+      setState((prevState) => ({
+        ...prevState,
+        [name]: files[0],
       }));
     }
   };

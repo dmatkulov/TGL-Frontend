@@ -15,7 +15,6 @@ export interface WarehouseResponse {
   warehouses: Warehouse[];
 }
 
-
 export interface UpdateWarehouseArg {
   warehouseId: string;
   warehouseMutation: WarehouseMutation;

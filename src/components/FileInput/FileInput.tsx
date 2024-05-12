@@ -9,7 +9,8 @@ interface Props {
   filename?: string;
 }
 
-const FileInput: React.FC<Props> = ({onChange, onClear, name, label, filename}) => {
+const FileInput: React.FC<Props> = ({ onChange, onClear, name, label, filename }) => {
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   // const [filename, setFilename] = useState('');
@@ -50,7 +51,9 @@ const FileInput: React.FC<Props> = ({onChange, onClear, name, label, filename}) 
           />
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={activateInput}>Browse</Button>
+          <Button variant="contained" onClick={activateInput}>
+            Browse
+          </Button>
         </Grid>
         {onClear && (
           <Grid item>

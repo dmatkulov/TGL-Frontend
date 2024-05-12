@@ -1,6 +1,7 @@
 import {
   // Box,
-  Button, IconButton,
+  Button,
+  IconButton,
   // Modal,
   TableCell,
   TableRow,
@@ -19,7 +20,6 @@ import {
 import { FC, useState } from 'react';
 import { Shipment } from '../../../types/types.Shipments';
 import WarningModal from './WarningModal';
-
 
 const OrdersRowItem: FC<Shipment> = ({
   _id,
@@ -55,7 +55,8 @@ const OrdersRowItem: FC<Shipment> = ({
       <WarningModal
         changeColor={changeColorField}
         closeModal={closeWarningModalWindow}
-        stateModal={state} />
+        stateModal={state}
+      />
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell component="th" scope="row">
           {trackerNumber}
@@ -64,18 +65,20 @@ const OrdersRowItem: FC<Shipment> = ({
         <TableCell align="left">{price.som} СОМ</TableCell>
         <TableCell align="left">{status}</TableCell>
         <TableCell align="left">
-          <Button
-            variant="contained"
-            onClick={showModal}
-            disabled={color}>
-            {delivery.status ? 'Отменить доставку' : (color ? 'Отмена' : 'Доставка')}
+          <Button variant="contained" onClick={showModal} disabled={color}>
+            {delivery.status
+              ? 'Отменить доставку'
+              : color
+                ? 'Отмена'
+                : 'Доставка'}
           </Button>
         </TableCell>
         <TableCell align="center">
           <LoadingButton
             sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
             onClick={openWarningModalWindow}
-            color="error">
+            color="error"
+          >
             <IconButton sx={{ color: 'inherit' }}>
               <CancelIcon />
             </IconButton>

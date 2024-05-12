@@ -22,6 +22,8 @@ import EditWarehouse from '../features/warehouses/components/EditWarehouse';
 import NewWarehouse from '../features/warehouses/components/NewWarehouse';
 import Calculator from '../components/UI/Calculator/Calculator';
 import Price from '../features/prices/Price';
+import PriceLists from '../features/priceLists/PriceLists';
+import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
 import NewSocial from '../features/socials/components/NewSocial';
 import EditSocial from '../features/socials/components/EditSocial';
@@ -131,11 +133,11 @@ export const router = createBrowserRouter([
           },
           {
             path: appRoutes.socials,
-            element:(
+            element: (
               <ProtectedRoute>
                 <Socials />
               </ProtectedRoute>
-            )
+            ),
           },
           {
             path: appRoutes.socialsAdd,
@@ -150,6 +152,22 @@ export const router = createBrowserRouter([
             element:(
               <ProtectedRoute>
                 <EditSocial />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.priceLists,
+            element: (
+              <ProtectedRoute>
+                <PriceLists />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.priceListsAdd,
+            element: (
+              <ProtectedRoute>
+                <PriceListsForm />
               </ProtectedRoute>
             ),
           },

@@ -16,6 +16,7 @@ import { pricesReducer } from '../features/prices/pricesSlice';
 import { regionsReducer } from '../features/regions/regionsSlice';
 import { shipmentsReducer } from '../features/shipments/shipmentsSlice';
 import { companyAddressReducer } from '../features/companyAddress/companyAddressesSlice';
+import { priceListsReducer } from '../features/priceLists/priceListsSlice';
 import { socialReducer } from '../features/socials/socialsSlice';
 
 const usersPersistConfig = {
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   regions: regionsReducer,
   shipments: shipmentsReducer,
   companyAddress: companyAddressReducer,
+  priceLists: priceListsReducer,
   socials: socialReducer,
 });
 

@@ -6,8 +6,10 @@ import {
   CardContent,
   Dialog,
   DialogContent,
+  DialogTitle,
   Divider,
   Grid,
+  IconButton,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -15,6 +17,7 @@ import { editPup, fetchPups } from '../pupsThunks';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import PupForm from './PupForm';
 import { selectUser } from '../../users/usersSlice';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
   pupItem: Pup;
@@ -83,6 +86,20 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
         </CardContent>
       </Card>
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
+        <DialogTitle>
+          <Typography>Добавить ПВЗ:</Typography>
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent
           sx={{
             mt: '20px',

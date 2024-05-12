@@ -10,12 +10,14 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
   Typography,
 } from '@mui/material';
 import { selectUser } from '../users/usersSlice';
 import PageTitle from '../users/components/PageTitle';
 import EditPrice from './EditPrice';
 import NewPrice from './NewPrice';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Price = () => {
   const dispatch = useAppDispatch();
@@ -99,7 +101,20 @@ const Price = () => {
       {form}
 
       <Dialog open={open} onClose={handleClose} maxWidth="md">
-        <DialogTitle>{edit ? 'Редактирование' : 'Создать'}</DialogTitle>
+        <DialogTitle>
+          <Typography>{edit ? 'Редактирование' : 'Создать'}</Typography>
+          <IconButton
+            onClick={handleClose}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <DialogContent
           sx={{
             mt: '20px',

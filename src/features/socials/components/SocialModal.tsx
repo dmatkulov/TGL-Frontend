@@ -1,22 +1,25 @@
-import React, { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { SocialData } from '../../../types/types.SocialsNetwork';
+import { isPostLoadingSocials, selectSocial } from '../socialsSlice';
 import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   Grid,
   TextField,
   Typography,
 } from '@mui/material';
-import FileInput from '../../components/FileInput/FileInput';
-import { useAppSelector } from '../../app/hooks';
-import { SocialData } from '../../types/types.SocialsNetwork';
-import { isPostLoadingSocials } from './socialsSlice';
+import FileInput from '../../../components/FileInput/FileInput';
 import { LoadingButton } from '@mui/lab';
+import { createSocials, fetchOneSocial, fetchSocials } from '../socialsThunk';
 
 interface Props {
-  onSubmit: (mutation: SocialData) => void;
-  isEdit?: boolean;
+  open: boolean;
+  edit: boolean;
+  onClose: () => void;
+  setEdit: () => void;
+  id: string;
   initialSocial?: SocialData;
   existingImage?: string | null;
 }
@@ -26,14 +29,34 @@ const initialState = {
   link: '',
   image: null,
 };
-const SocialsForm: React.FC<Props> = ({
-  onSubmit,
-  isEdit = false,
-  initialSocial = initialState,
-  existingImage,
-}) => {
+
+const SocialModal: React.FC<Props> = ({ open, edit, onClose, setEdit, id }) => {
+  const dispatch = useAppDispatch();
   const loading = useAppSelector(isPostLoadingSocials);
-  const [state, setState] = useState<SocialData>(initialSocial);
+  const social = useAppSelector(selectSocial);
+  const [state, setState] = useState<SocialData>(initialState);
+  const [existingImage, setExistingImage] = useState('');
+
+  useEffect(() => {
+    if (edit) {
+      dispatch(fetchOneSocial(id));
+    }
+  }, [dispatch, edit, id]);
+
+  useEffect(() => {
+    if (social) {
+      setState(social);
+      if (social.image) {
+        setExistingImage(social?.image);
+      }
+    }
+  }, [social]);
+
+  useEffect(() => {
+    if (!open) {
+      setState(initialState);
+    }
+  }, [open]);
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -42,10 +65,17 @@ const SocialsForm: React.FC<Props> = ({
     });
   };
 
+  const handleClose = () => {
+    onClose();
+  };
+
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    onSubmit(state);
+    await dispatch(createSocials(state)).unwrap();
+    setEdit();
+    handleClose();
+    await dispatch(fetchSocials());
   };
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,13 +104,18 @@ const SocialsForm: React.FC<Props> = ({
       image: 'delete',
     }));
   };
-
   return (
-    <Container maxWidth="sm">
-      <Box>
-        <Typography component="h1" variant="h5" mb={2}>
-          {isEdit ? 'Обновить cоциальную сеть' : 'Добавить социальную сеть'}
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogTitle>
+        <Typography>
+          {edit ? 'Обновить cоциальную сеть' : 'Добавить социальную сеть'}
         </Typography>
+      </DialogTitle>
+      <DialogContent
+        sx={{
+          mt: '20px',
+        }}
+      >
         <form autoComplete="off" onSubmit={onFormSubmit}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs>
@@ -124,14 +159,14 @@ const SocialsForm: React.FC<Props> = ({
                 variant="contained"
                 loading={loading}
               >
-                {isEdit ? 'Обновить' : 'Добавить'}
+                {edit ? 'Обновить' : 'Добавить'}
               </LoadingButton>
             </Grid>
           </Grid>
         </form>
-      </Box>
-    </Container>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default SocialsForm;
+export default SocialModal;

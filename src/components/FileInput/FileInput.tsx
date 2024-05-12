@@ -7,6 +7,7 @@ interface Props {
   label: string;
 }
 
+
 const FileInput: React.FC<Props> = ({onChange, name, label}) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,7 +48,9 @@ const FileInput: React.FC<Props> = ({onChange, name, label}) => {
           />
         </Grid>
         <Grid item>
-          <Button variant="contained" onClick={activateInput}>Browse</Button>
+          <Button variant="contained" onClick={activateInput}>
+            Browse
+          </Button>
         </Grid>
       </Grid>
     </>

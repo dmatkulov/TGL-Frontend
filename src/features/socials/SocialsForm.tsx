@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import { Box, Button, CircularProgress, Container, Grid, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Grid,
+  TextField,
+} from '@mui/material';
 import FileInput from '../../components/FileInput/FileInput';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { createSocials } from './socialsThunk';
@@ -8,7 +15,7 @@ import { isPostLoadingSocials } from './socialsSlice';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '../../utils/constants';
 
-const SocialsForm:React.FC = () => {
+const SocialsForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(isPostLoadingSocials);
   const navigate = useNavigate();
@@ -18,9 +25,9 @@ const SocialsForm:React.FC = () => {
   });
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setState(prevState => {
-      return {...prevState, [name]: value};
+    const { name, value } = e.target;
+    setState((prevState) => {
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -41,19 +48,18 @@ const SocialsForm:React.FC = () => {
   };
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, files} = e.target;
+    const { name, files } = e.target;
     if (files) {
-      setState(prevState => ({
-        ...prevState, [name]: files[0]
+      setState((prevState) => ({
+        ...prevState,
+        [name]: files[0],
       }));
     }
   };
   return (
     <Container maxWidth="sm">
       <Box>
-        <form
-          autoComplete="off"
-          onSubmit={onFormSubmit}>
+        <form autoComplete="off" onSubmit={onFormSubmit}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs>
               <TextField
@@ -79,7 +85,8 @@ const SocialsForm:React.FC = () => {
                 fullWidth
                 type="submit"
                 color="primary"
-                variant="contained">
+                variant="contained"
+              >
                 {loading ? <CircularProgress /> : 'Добавить социальную сеть'}
               </Button>
             </Grid>

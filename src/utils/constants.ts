@@ -10,7 +10,7 @@ export const serverRoute = {
   companyAddresses: '/company-addresses',
   companyAddressesAdd: '/company-addresses/add',
   staff: '/users/staff',
-  socials:'/socials'
+  socials: '/socials',
 };
 
 export const Roles = [
@@ -41,6 +41,8 @@ export const appRoutes = {
   calculate: '/calculate',
   warehouse: 'warehouseForm',
   price: '/admin-profile/price',
+  priceLists: '/admin-profile/price-lists',
+  priceListsAdd: '/admin-profile/price-lists/add',
   priceEdit: '/admin-profile/price/edit',
   socials: '/admin-profile/socials',
   socialsForm: '/admin-profile/socialsForm',

@@ -1,4 +1,11 @@
-import { Alert, Box, Button, CircularProgress, Grid, TextField } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
 import { useState } from 'react';
@@ -23,12 +30,19 @@ const ShipmentsForm = () => {
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
 
-  const valueFields: string [] = ['userMarketId', 'trackerNumber', 'weight', 'height', 'width', 'length'];
+  const valueFields: string[] = [
+    'userMarketId',
+    'trackerNumber',
+    'weight',
+    'height',
+    'width',
+    'length',
+  ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     if (valueFields.includes(name)) {
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         [name]: value,
         dimensions: {
@@ -48,12 +62,12 @@ const ShipmentsForm = () => {
   return (
     <>
       {error && (
-        <Alert severity="error" sx={{mt: 3, mb: 1, width: '100%'}}>
+        <Alert severity="error" sx={{ mt: 3, mb: 1, width: '100%' }}>
           {'Введенные данные не верны. Попробуйте снова!'}
         </Alert>
       )}
       {loading && (
-        <Alert severity="success" sx={{mt: 3, mb: 1, width: '100%'}}>
+        <Alert severity="success" sx={{ mt: 3, mb: 1, width: '100%' }}>
           {'Данные успешно отправлены!'}
         </Alert>
       )}
@@ -136,7 +150,8 @@ const ShipmentsForm = () => {
           type="submit"
           variant="contained"
           sx={{ mt: 3 }}
-          disabled={loading}>
+          disabled={loading}
+        >
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>
       </Box>

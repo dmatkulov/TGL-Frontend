@@ -48,14 +48,15 @@ const UserDialog: React.FC<Props> = ({
             {/*onsubmit */}
             <Button
               sx={{
-                '&.MuiButton-root:hover': {background: '#D2122E'},
+                '&.MuiButton-root:hover': { background: '#D2122E' },
                 color: 'white',
                 background: '#9e1b32',
                 position: 'absolute',
                 top: 0,
-                right: 0
+                right: 0,
               }}
-              onClick={handleClose}>
+              onClick={handleClose}
+            >
               X
             </Button>
             <Grid container direction="column" spacing={2}>

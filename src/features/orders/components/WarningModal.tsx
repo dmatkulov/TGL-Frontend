@@ -36,16 +36,20 @@ interface PropsModal {
   stateModal: boolean;
 }
 
-const WarningModal: React.FC<PropsModal> = ({ closeModal, stateModal, changeColor }) => {
+const WarningModal: React.FC<PropsModal> = ({
+  closeModal,
+  stateModal,
+  changeColor,
+}) => {
   return (
     <>
       <Modal open={stateModal} onClose={closeModal}>
         <Box sx={mainBoxStyle}>
           <Box sx={innerFirstBoxStyle}>
             <Box
-              component='img'
+              component="img"
               src={WarningPicture}
-              alt='Warning Picture'
+              alt="Warning Picture"
               sx={{ width: 30, height: 30 }}
             />
             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -53,14 +57,12 @@ const WarningModal: React.FC<PropsModal> = ({ closeModal, stateModal, changeColo
             </Typography>
           </Box>
           <Box sx={innerSecondBoxStyle}>
-            <Button
-              onClick={changeColor}
-              variant="contained"
-              color="success">Да</Button>
-            <Button
-              variant="contained"
-              onClick={closeModal}
-              color="error">Нет</Button>
+            <Button onClick={changeColor} variant="contained" color="success">
+              Да
+            </Button>
+            <Button variant="contained" onClick={closeModal} color="error">
+              Нет
+            </Button>
           </Box>
         </Box>
       </Modal>

@@ -9,40 +9,42 @@ import { NavLink as SocialsFormLink } from 'react-router-dom';
 import { appRoutes } from '../../utils/constants';
 
 const historyButtonEffect = {
-  marginRight: "30px",
-  border: "2px solid white",
-  borderRadius: "10px",
+  marginRight: '30px',
+  border: '2px solid white',
+  borderRadius: '10px',
   marginBottom: '10px',
 };
 
 const Socials = () => {
   const dispatch = useAppDispatch();
   const socials = useAppSelector(selectSocials);
-  console.log(socials)
+  console.log(socials);
 
   useEffect(() => {
     dispatch(fetchSocials());
   }, [dispatch]);
 
   return (
-   <>
-     <Box>
-       <Button component={SocialsFormLink}
-               variant="contained"
-               to={appRoutes.socialsForm}
-               sx={historyButtonEffect}>
-         Добавить социальную сеть
-       </Button>
-       {socials.map((item) => (
-         <SocialItem
-           id={item._id}
-           key={item._id}
-           link={item.link}
-           image={item.image}
-         />
-       ))}
-     </Box>
-   </>
+    <>
+      <Box>
+        <Button
+          component={SocialsFormLink}
+          variant="contained"
+          to={appRoutes.socialsForm}
+          sx={historyButtonEffect}
+        >
+          Добавить социальную сеть
+        </Button>
+        {socials.map((item) => (
+          <SocialItem
+            id={item._id}
+            key={item._id}
+            link={item.link}
+            image={item.image}
+          />
+        ))}
+      </Box>
+    </>
   );
 };
 

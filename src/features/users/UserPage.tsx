@@ -1,4 +1,4 @@
-import {Grid, useMediaQuery} from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import UserNavigation from './components/UserNavigation';
 import { Outlet, useNavigate } from 'react-router-dom';
 import Profile from './containers/Profile';
@@ -24,7 +24,7 @@ const UserPage = () => {
   }, [navigate, user]);
   return (
     <>
-      <Grid container direction={ isSmallScreen ? 'column' : 'row' }>
+      <Grid container direction={isSmallScreen ? 'column' : 'row'}>
         <Grid
           item
           xs={12}

@@ -23,7 +23,7 @@ import {
 import { createStaff, getStaffData, updateStaff } from '../usersThunks';
 import StaffItem from '../components/StaffItem';
 import AddStaff from './AddStaff';
-import {IStaff, UsersRequestParams} from '../../../types/types.User';
+import { IStaff, UsersRequestParams } from '../../../types/types.User';
 
 const Staff: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -70,7 +70,7 @@ const Staff: React.FC = () => {
         const params: UsersRequestParams = {
           region: user.region.name,
         };
-        await dispatch(getStaffData( params ));
+        await dispatch(getStaffData(params));
       } else {
         await dispatch(getStaffData({ role }));
       }

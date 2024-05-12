@@ -60,7 +60,7 @@ const Register: React.FC = () => {
   const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
     undefined,
   );
-  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('',);
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
   const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
@@ -106,7 +106,6 @@ const Register: React.FC = () => {
   };
 
   const handlePhoneChange = (value: string) => {
-
     setState((prevState) => {
       if (value.length < 10) {
         setPhoneNumberIsValid(true);
@@ -115,7 +114,7 @@ const Register: React.FC = () => {
         setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
-      return {...prevState, phoneNumber: value};
+      return { ...prevState, phoneNumber: value };
     });
   };
 
@@ -301,30 +300,28 @@ const Register: React.FC = () => {
                 )}
               />
               {getFieldError('phoneNumber') ? (
-                  <Typography
-                    sx={{
-                      fontSize: '12px',
-                      ml: '14px',
-                      mt: '4px',
-                      color: '#d32f2f',
-                    }}
-                  >
-                    {getFieldError('phoneNumber')}
-                  </Typography>
-                ) :
-                (
-                  <Typography
-                    sx={{
-                      fontSize: '12px',
-                      ml: '14px',
-                      mt: '4px',
-                      color: '#d32f2f',
-                    }}
-                  >
-                    {phoneNumberLabel}
-                  </Typography>
-                )
-              }
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {getFieldError('phoneNumber')}
+                </Typography>
+              ) : (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {phoneNumberLabel}
+                </Typography>
+              )}
             </Grid>
 
             <Grid item xs={12} sm={6}>
@@ -464,7 +461,7 @@ const Register: React.FC = () => {
                 <LoadingButton
                   type="submit"
                   variant="contained"
-                  sx={{mt: 3, mb: 2, py: 1}}
+                  sx={{ mt: 3, mb: 2, py: 1 }}
                   // disableElevation
                   // disabled={!isFormValid() || loading}
                   loading={loading}

@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, useMediaQuery,
+  ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '../../../utils/constants';
@@ -52,10 +53,12 @@ const UserNavigation = () => {
     <>
       <Box sx={{ bgcolor: 'background.paper' }}>
         <nav>
-          <List sx={{
-            display: isSmallScreen ? 'flex' : '',
-            flexWrap: isSmallScreen ? 'wrap' : '',
-          }}>
+          <List
+            sx={{
+              display: isSmallScreen ? 'flex' : '',
+              flexWrap: isSmallScreen ? 'wrap' : '',
+            }}
+          >
             {userLinks.map((link) => (
               <ListItem key={link.id} disableGutters>
                 <ListItemButton

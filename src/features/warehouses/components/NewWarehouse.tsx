@@ -1,8 +1,8 @@
-import {useAppDispatch} from '../../../app/hooks';
-import {useNavigate} from 'react-router-dom';
-import { WarehouseMutation} from '../../../types/types.Warehouses';
-import {appRoutes} from '../../../utils/constants';
-import {createWarehouse} from '../warehousesThunks';
+import { useAppDispatch } from '../../../app/hooks';
+import { useNavigate } from 'react-router-dom';
+import { WarehouseMutation } from '../../../types/types.Warehouses';
+import { appRoutes } from '../../../utils/constants';
+import { createWarehouse } from '../warehousesThunks';
 import WarehouseForm from './WarehouseForm';
 
 const NewWarehouse = () => {

@@ -1,9 +1,9 @@
-import {Box, Button, Grid, Typography} from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import {LoadingButton} from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {selectOrdersCancelLoading, toggleModal} from '../ordersSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectOrdersCancelLoading, toggleModal } from '../ordersSlice';
 
 const OrdersItem = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,10 @@ const OrdersItem = () => {
 
   return (
     <>
-      <Box component="div" sx={{ border: '2px solid #000', borderRadius: '10px', p: 1 }}>
+      <Box
+        component="div"
+        sx={{ border: '2px solid #000', borderRadius: '10px', p: 1 }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography sx={{ mt: 1 }}>

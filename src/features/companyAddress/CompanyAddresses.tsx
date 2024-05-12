@@ -8,12 +8,13 @@ import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { fetchCompanyAddresses } from './companyAddressThunks';
 import CompanyDialog from './components/CompanyDialog';
+import { selectUser } from '../users/usersSlice';
 
 const CompanyAddresses = () => {
   const dispatch = useAppDispatch();
   const addresses = useAppSelector(companyAddressState);
   const isLoading = useAppSelector(isCompanyAddressesLoading);
-
+  const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
   const [editToggle, setEditToggle] = useState(false);
   const [id, setId] = useState('');
@@ -57,13 +58,12 @@ const CompanyAddresses = () => {
   return (
     <>
       <Box>
-        <Button variant="contained" onClick={handleClickOpen}>
+        {(user && user?.role === 'super') &&
+          <Button variant="contained" onClick={handleClickOpen}>
           Добавить адрес
-        </Button>
+        </Button>}
       </Box>
-
       {isLoading ? <CircularProgress /> : content}
-
       <CompanyDialog
         open={open}
         onClose={() => setOpen(false)}

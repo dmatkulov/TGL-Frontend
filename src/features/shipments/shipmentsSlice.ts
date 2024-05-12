@@ -1,11 +1,13 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
   createShipment,
-  fetchShipments, fetchShipmentsByRegionAndPup,
+  fetchShipments,
+  fetchShipmentsByRegionAndPup,
   fetchShipmentsByUser,
 } from './shipmentsThunk';
-import {RootState} from '../../app/store';
+import { RootState } from '../../app/store';
+import { toast } from 'react-toastify';
 
 interface shipmentsState {
   shipments: ShipmentData[];
@@ -22,7 +24,7 @@ const initialState: shipmentsState = {
   shipmentsError: false,
   addShipment: null,
   addShipmentLoading: false,
-  addShipmentError:  false,
+  addShipmentError: false,
 };
 
 export const shipmentsSlice = createSlice({
@@ -34,7 +36,7 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipments.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipments.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipments.fulfilled, (state, { payload }) => {
         state.shipmentsLoading = false;
         state.shipments = payload.shipments;
       })
@@ -48,9 +50,12 @@ export const shipmentsSlice = createSlice({
         state.addShipmentLoading = true;
         state.addShipmentError = false;
       })
-      .addCase(createShipment.fulfilled, (state, {payload: data}) => {
+      .addCase(createShipment.fulfilled, (state, { payload: data }) => {
         state.addShipmentLoading = false;
-        state.addShipment = data
+        state.addShipment = data;
+        if (data.message) {
+          toast.success(data.message);
+        }
       })
       .addCase(createShipment.rejected, (state) => {
         state.addShipmentLoading = false;
@@ -61,7 +66,7 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipmentsByUser.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByUser.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipmentsByUser.fulfilled, (state, { payload }) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
@@ -70,12 +75,11 @@ export const shipmentsSlice = createSlice({
         state.shipmentsError = true;
       });
 
-
     builder
       .addCase(fetchShipmentsByRegionAndPup.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByRegionAndPup.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipmentsByRegionAndPup.fulfilled, (state, { payload }) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
@@ -83,7 +87,6 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-
   },
 });
 
@@ -94,5 +97,7 @@ export const selectShipmentsLoading = (state: RootState) =>
 export const selectShipmentsError = (state: RootState) =>
   state.shipments.shipmentsError;
 
-export const addShipmentGetLoad = (state: RootState) => state.shipments.addShipmentLoading;
-export const addShipmentGetError = (state: RootState) => state.shipments.addShipmentError;
+export const addShipmentGetLoad = (state: RootState) =>
+  state.shipments.addShipmentLoading;
+export const addShipmentGetError = (state: RootState) =>
+  state.shipments.addShipmentError;

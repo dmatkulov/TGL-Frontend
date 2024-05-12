@@ -7,6 +7,7 @@ import {
   fetchShipmentsByUser,
 } from './shipmentsThunk';
 import { RootState } from '../../app/store';
+import { toast } from 'react-toastify';
 
 interface shipmentsState {
   shipments: ShipmentData[];
@@ -52,6 +53,9 @@ export const shipmentsSlice = createSlice({
       .addCase(createShipment.fulfilled, (state, { payload: data }) => {
         state.addShipmentLoading = false;
         state.addShipment = data;
+        if (data.message) {
+          toast.success(data.message);
+        }
       })
       .addCase(createShipment.rejected, (state) => {
         state.addShipmentLoading = false;

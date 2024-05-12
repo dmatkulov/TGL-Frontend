@@ -9,18 +9,10 @@ interface Props {
   onSubmit: (data: IStaff) => void;
 }
 const AddStaff: React.FC<Props> = ({ open, onClose, onSubmit }) => {
-  // const dispatch = useAppDispatch();
-  // const onFormSubmit = async (staffMutation: IStaff) => {
-  //   try {
-  //     await dispatch(createStaff(staffMutation)).unwrap();
-  //   } catch {
-  //     //
-  //   }
-  // };
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg">
       <DialogContent sx={{}}>
-        <StaffForm onSubmit={onSubmit} />
+        <StaffForm onSubmit={onSubmit} onClose={onClose} />
       </DialogContent>
     </Dialog>
   );

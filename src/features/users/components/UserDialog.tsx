@@ -5,13 +5,13 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
-  TextField
+  TextField,
 } from '@mui/material';
-import React, {useEffect} from 'react';
-import {ProfileMutation} from '../../../types/types.Profile';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {regionsState} from '../../regions/regionsSlice';
-import {fetchRegions} from '../../regions/regionsThunks';
+import React, { useEffect } from 'react';
+import { ProfileMutation } from '../../../types/types.Profile';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { regionsState } from '../../regions/regionsSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 
 interface Props {
   state: ProfileMutation;
@@ -60,7 +60,7 @@ const UserDialog: React.FC<Props> = ({
               X
             </Button>
             <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'} sx={{mt: 1}}>
+              <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
                 <TextField
                   id="firstName"
                   label="Имя"

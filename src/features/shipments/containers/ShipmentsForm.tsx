@@ -8,9 +8,10 @@ import {
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
 import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
@@ -41,6 +42,11 @@ const ShipmentsForm = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
+
+    if (parseFloat(value) <= 0) {
+      return;
+    }
+
     if (valueFields.includes(name)) {
       setState((prevState) => ({
         ...prevState,
@@ -51,6 +57,19 @@ const ShipmentsForm = () => {
         },
       }));
     }
+  };
+
+  const isFormValid = () => {
+    const { userMarketId, trackerNumber, weight, dimensions } = state;
+
+    return (
+      userMarketId &&
+      trackerNumber &&
+      weight &&
+      dimensions.height &&
+      dimensions.length &&
+      dimensions.width
+    );
   };
 
   const onFormHandle = async (e: React.FormEvent) => {
@@ -77,11 +96,17 @@ const ShipmentsForm = () => {
             <TextField
               fullWidth
               required
+              type="number"
               name="userMarketId"
               label="Маркет"
               onChange={handleChange}
               value={state.userMarketId}
               autoComplete="new-userMarketId"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">№</InputAdornment>
+                ),
+              }}
               autoFocus
             />
           </Grid>
@@ -89,12 +114,17 @@ const ShipmentsForm = () => {
             <TextField
               fullWidth
               required
+              type="number"
               name="trackerNumber"
               label="Номер трека"
               onChange={handleChange}
               value={state.trackerNumber}
               autoComplete="new-trackerNumber"
-              autoFocus
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="end">№</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -102,11 +132,16 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="height"
+              type="number"
               label="Высота"
               onChange={handleChange}
               value={state.dimensions.height}
               autoComplete="new-height"
-              autoFocus
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -114,11 +149,16 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="length"
+              type="number"
               label="Длина"
               onChange={handleChange}
               value={state.dimensions.length}
               autoComplete="new-length"
-              autoFocus
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -126,11 +166,16 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="width"
+              type="number"
               label="Ширина"
               onChange={handleChange}
               value={state.dimensions.width}
               autoComplete="new-width"
-              autoFocus
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
           <Grid item xs={3}>
@@ -138,11 +183,16 @@ const ShipmentsForm = () => {
               fullWidth
               required
               name="weight"
+              type="number"
               label="Килограмм"
               onChange={handleChange}
               value={state.weight}
               autoComplete="new-weight"
-              autoFocus
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">см</InputAdornment>
+                ),
+              }}
             />
           </Grid>
         </Grid>
@@ -150,7 +200,7 @@ const ShipmentsForm = () => {
           type="submit"
           variant="contained"
           sx={{ mt: 3 }}
-          disabled={loading}
+          disabled={!isFormValid() || loading}
         >
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>

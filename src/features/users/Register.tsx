@@ -107,7 +107,7 @@ const Register: React.FC = () => {
 
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
-      if (value.length < 10) {
+      if (value.length < 12) {
         setPhoneNumberIsValid(true);
         setPhoneNumberLabel('Номер должен быть введен полностью');
       } else if (value.length > 11) {
@@ -295,9 +295,6 @@ const Register: React.FC = () => {
                   name: 'phoneNumber',
                   required: true,
                 }}
-                error={Boolean(
-                  getFieldError('phoneNumber') || !phoneNumberIsValid,
-                )}
               />
               {getFieldError('phoneNumber') ? (
                 <Typography
@@ -462,8 +459,8 @@ const Register: React.FC = () => {
                   type="submit"
                   variant="contained"
                   sx={{ mt: 3, mb: 2, py: 1 }}
-                  // disableElevation
-                  // disabled={!isFormValid() || loading}
+                  disableElevation
+                  disabled={!isFormValid() || loading}
                   loading={loading}
                 >
                   Зарегистрироваться

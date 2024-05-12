@@ -79,7 +79,6 @@ const PupForm: React.FC<Props> = ({
   };
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
-
       const updateState = { ...prevState, phoneNumber: value };
       if (value.length < 11) {
         setPhoneNumberIsValid(true);
@@ -163,9 +162,6 @@ const PupForm: React.FC<Props> = ({
                 name: 'phoneNumber',
                 required: true,
               }}
-              error={Boolean(
-                getFieldError('phoneNumber') || !phoneNumberIsValid,
-              )}
             />
             {getFieldError('phoneNumber') ? (
               <Typography

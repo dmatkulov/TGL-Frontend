@@ -58,10 +58,11 @@ const CompanyAddresses = () => {
   return (
     <>
       <Box>
-        {(user && user?.role === 'super') &&
+        {user && user?.role === 'super' && (
           <Button variant="contained" onClick={handleClickOpen}>
-          Добавить адрес
-        </Button>}
+            Добавить адрес
+          </Button>
+        )}
       </Box>
       {isLoading ? <CircularProgress /> : content}
       <CompanyDialog

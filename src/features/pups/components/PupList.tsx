@@ -8,14 +8,18 @@ import {
   CircularProgress,
   Dialog,
   DialogContent,
+  DialogTitle,
   Grid,
+  IconButton,
   Stack,
+  Typography,
 } from '@mui/material';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
 import { PupMutation } from '../../../types/types.Pup';
 import { selectUser } from '../../users/usersSlice';
 import PupForm from './PupForm';
+import CloseIcon from '@mui/icons-material/Close';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -66,6 +70,20 @@ const PupList = () => {
           pups.map((pup) => <PupItem key={pup._id} pupItem={pup} />)
         )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
+          <DialogTitle>
+            <Typography>Добавить ПВЗ:</Typography>
+            <IconButton
+              onClick={handleClose}
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
           <DialogContent sx={{ mt: '20px' }}>
             <PupForm onSubmit={submitFormHandler} isCreate />
           </DialogContent>

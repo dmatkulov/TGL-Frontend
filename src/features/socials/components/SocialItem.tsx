@@ -1,19 +1,19 @@
-import { Box, CardMedia, IconButton, Typography } from '@mui/material';
+import { Box, CardMedia, Typography } from '@mui/material';
 import noLogoImage from '../../../assets/nologo.png';
 import { apiURL, appRoutes } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import {isDeleteSocialNetwork, isEditing} from '../socialsSlice';
+import { isDeleteSocialNetwork, isEditing } from '../socialsSlice';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
-
-import {NavLink, useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   id: string;
   name: string;
   link: string;
   image: string | null;
+  editHandler: () => void;
 }
 
 const outerBoxStyle = {
@@ -28,7 +28,13 @@ const imgBtnBoxStyle = {
   justifyContent: 'space-between',
 };
 
-const SocialItem: React.FC<Props> = ({ id, name, link, image }) => {
+const SocialItem: React.FC<Props> = ({
+  id,
+  name,
+  link,
+  image,
+  editHandler,
+}) => {
   const isDelete = useAppSelector(isDeleteSocialNetwork);
   const isEdit = useAppSelector(isEditing);
   const dispatch = useAppDispatch();
@@ -65,13 +71,10 @@ const SocialItem: React.FC<Props> = ({ id, name, link, image }) => {
               sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
               color="error"
             >
-              <IconButton sx={{ color: 'inherit' }}>
-                <CancelIcon />
-              </IconButton>
+              <CancelIcon />
             </LoadingButton>
             <LoadingButton
-              component={NavLink}
-              to={appRoutes.socialsEdit.replace(':id', id)}
+              onClick={editHandler}
               disabled={isEdit}
               loading={isEdit}
               variant="contained"

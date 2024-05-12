@@ -21,7 +21,7 @@ export interface SocialDataMutation {
 
 export interface ResponseSocials {
   message: string;
-  socials: Socials [];
+  socials: Socials[];
 }
 
 export interface UpdateSocialArg {

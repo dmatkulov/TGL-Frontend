@@ -19,9 +19,12 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
   TextField,
+  Typography,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import CloseIcon from '@mui/icons-material/Close';
 
 const initialState: CompanyAddressMutation = {
   address: '',
@@ -55,6 +58,7 @@ const CompanyDialog: React.FC<Props> = ({
       dispatch(fetchOneAddress(id));
     }
   }, [dispatch, edit, id]);
+
   useEffect(() => {
     if (address) {
       setState(address);
@@ -97,7 +101,20 @@ const CompanyDialog: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg">
-      <DialogTitle>Новый адрес:</DialogTitle>
+      <DialogTitle>
+        <Typography>Новый адрес:</Typography>
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent
         sx={{
           mt: '20px',

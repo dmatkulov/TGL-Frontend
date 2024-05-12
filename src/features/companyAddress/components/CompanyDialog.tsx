@@ -56,6 +56,7 @@ const CompanyDialog: React.FC<Props> = ({
     }
   }, [dispatch, edit, id]);
 
+
   useEffect(() => {
     if (address) {
       setState(address);

@@ -1,4 +1,4 @@
-import {Button, Grid, Typography} from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
@@ -57,7 +57,7 @@ const Profile = () => {
             >
               {user?.firstName} {user?.lastName}
             </Typography>
-            { isAdmin ? (
+            {isAdmin ? (
               <></>
             ) : (
               <>
@@ -65,13 +65,14 @@ const Profile = () => {
                   Ваш персональный код: {user?.marketId}
                 </Typography>
                 <Typography variant="subtitle1">
-                  Ваш адрес: {user?.region.name} область, {user?.settlement} {user?.address}
+                  Ваш адрес: {user?.region.name} область, {user?.settlement}{' '}
+                  {user?.address}
                 </Typography>
                 <Typography variant="subtitle1">
-                  Ваш {user?.pupID.name} находится по адресу: {user?.pupID.address}
+                  Ваш {user?.pupID.name} находится по адресу:{' '}
+                  {user?.pupID.address}
                 </Typography>
               </>
-
             )}
           </Grid>
           <Grid item>
@@ -85,7 +86,7 @@ const Profile = () => {
             </Button>
           </Grid>
         </Grid>
-        { isAdmin ? (
+        {isAdmin ? (
           <></>
         ) : (
           <Grid item>

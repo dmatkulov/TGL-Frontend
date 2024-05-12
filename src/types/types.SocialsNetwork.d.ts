@@ -1,16 +1,20 @@
+import {WarehouseMutation} from './types.Warehouses';
 
 export interface Socials {
   _id: string;
+  name: string;
   link: string;
   image: null | string;
 }
 
 export interface SocialData {
+  name: string;
   link: string;
-  image: File | null;
+  image: File | string | null;
 }
 
 export interface SocialDataMutation {
+  name: string;
   link: string;
   image: null | string;
 }
@@ -18,4 +22,9 @@ export interface SocialDataMutation {
 export interface ResponseSocials {
   message: string;
   socials: Socials [];
+}
+
+export interface UpdateSocialArg {
+  socialId: string;
+  socialMutation: SocialData;
 }

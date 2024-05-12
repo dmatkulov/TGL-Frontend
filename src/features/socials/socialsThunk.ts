@@ -1,35 +1,49 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
-import { ResponseSocials, SocialData, SocialDataMutation } from '../../types/types.SocialsNetwork';
+import {
+  ResponseSocials,
+  SocialData, 
+  Socials,
+  SocialDataMutation,
+  UpdateSocialArg
+} from '../../types/types.SocialsNetwork';
 
-
-export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>
-('socials/fetchSocials', async () => {
-  try {
-    const response = await axiosApi.get<ResponseSocials>(serverRoute.socials);
-    if (response.data) {
-      return response.data;
+export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
+  'socials/fetchSocials',
+  async () => {
+    try {
+      const response = await axiosApi.get<ResponseSocials>(serverRoute.socials);
+      if (response.data) {
+        return response.data;
+      }
+    } catch (e) {
+      console.log('Try to fetch Social Network ', e);
+      throw e;
     }
-  } catch (e) {
-    console.log('Try to fetch Social Network ', e);
-    throw e;
-  }
-});
+  },
+);
 
-export const createSocials = createAsyncThunk<SocialDataMutation, SocialData>(
+export const fetchOneSocial = createAsyncThunk<Socials,string>(
+  'socials/fetchOne',
+  async(id) => {
+    const response = await axiosApi.get(`${serverRoute.socials}/${id}`);
+    return response.data;
+  }
+);
+
+export const createSocials = createAsyncThunk<null, SocialData>(
   'albums/albumCreate',
   async (socialsNetwork) => {
     try {
       const formData = new FormData();
       const keys = Object.keys(socialsNetwork) as (keyof SocialData)[];
 
-      keys.forEach(key => {
-
+      keys.forEach((key) => {
         const value = socialsNetwork[key];
         if (value !== null) {
-            formData.append(key, value);
-          }
+          formData.append(key, value);
+        }
       });
       const response = await axiosApi.post(serverRoute.socials, formData);
       return response.data;
@@ -37,13 +51,28 @@ export const createSocials = createAsyncThunk<SocialDataMutation, SocialData>(
       console.log('Try to create new Social Network ', e);
       throw e;
     }
-  }
+  },
 );
 
+export const updateSocial = createAsyncThunk<void, UpdateSocialArg>(
+  'socials/update',
+  async({socialId,socialMutation}) => {
+    const formData = new FormData();
+    const keys = Object.keys(socialMutation) as (keyof SocialData)[];
+    keys.forEach(key => {
+      const value = socialMutation[key];
+
+      if (value) {
+        formData.append(key, value);
+      }
+    });
+    return axiosApi.patch(  `${serverRoute.socials}/${socialId}`, formData);
+  }
+);
 export const deleteSocialNetwork = createAsyncThunk<void, string>(
   'socials/deleteSocialNetwork',
   async (id) => {
-      const response = await axiosApi.delete(`${serverRoute.socials}/${id}`);
-      return response.data;
+    const response = await axiosApi.delete(`${serverRoute.socials}/${id}`);
+    return response.data;
   },
 );

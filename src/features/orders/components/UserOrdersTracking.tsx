@@ -1,6 +1,9 @@
 import {
-  Box, Button, CircularProgress,
-  TextField, Typography,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
   useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -35,7 +38,14 @@ const UserOrdersTracking = () => {
           required
           name="search"
           label="поиск по трек номеру"
-          sx={{ width: isExtraSmallScreen ? '175px' : isSmallScreen ? '320px' : '500px', mt: 1 }}
+          sx={{
+            width: isExtraSmallScreen
+              ? '175px'
+              : isSmallScreen
+                ? '320px'
+                : '500px',
+            mt: 1,
+          }}
           value={state}
           onChange={handleChange}
         />
@@ -43,7 +53,8 @@ const UserOrdersTracking = () => {
           type="submit"
           sx={{ ml: 2, mt: 2 }}
           variant="contained"
-          disabled={loadingOneOrder}>
+          disabled={loadingOneOrder}
+        >
           {loadingOneOrder ? <CircularProgress size={25} /> : 'Поиск'}
         </Button>
       </Box>

@@ -21,7 +21,7 @@ const styleBoxSpinner = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: '50px'
+  marginTop: '50px',
 };
 
 const PupList = () => {
@@ -52,21 +52,21 @@ const PupList = () => {
     <>
       <Stack>
         {user?.role === 'super' && (
-          <Grid item sx={{marginBottom: 3}}>
+          <Grid item sx={{ marginBottom: 3 }}>
             <Button variant="contained" onClick={handleClickOpen}>
               Добавить склад
             </Button>
           </Grid>
         )}
-        {loading ?
+        {loading ? (
           <Box sx={styleBoxSpinner}>
             <CircularProgress size={100} />
-          </Box> :
-          pups.map((pup) => (
-            <PupItem key={pup._id} pupItem={pup} />
-          ))}
+          </Box>
+        ) : (
+          pups.map((pup) => <PupItem key={pup._id} pupItem={pup} />)
+        )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <DialogContent sx={{mt: '20px'}}>
+          <DialogContent sx={{ mt: '20px' }}>
             <PupForm onSubmit={submitFormHandler} isCreate />
           </DialogContent>
         </Dialog>

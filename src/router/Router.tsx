@@ -25,7 +25,8 @@ import Price from '../features/prices/Price';
 import PriceLists from '../features/priceLists/PriceLists';
 import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
-import SocialsForm from '../features/socials/SocialsForm';
+import NewSocial from '../features/socials/components/NewSocial';
+import EditSocial from '../features/socials/components/EditSocial';
 
 export const router = createBrowserRouter([
   {
@@ -139,10 +140,18 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: appRoutes.socialsForm,
-            element: (
+            path: appRoutes.socialsAdd,
+            element:(
               <ProtectedRoute>
-                <SocialsForm />
+                <NewSocial />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.socialsEdit,
+            element:(
+              <ProtectedRoute>
+                <EditSocial />
               </ProtectedRoute>
             ),
           },

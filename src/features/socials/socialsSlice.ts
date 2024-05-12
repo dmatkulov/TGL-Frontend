@@ -1,18 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SocialDataMutation, Socials } from '../../types/types.SocialsNetwork';
-import {
-  createSocials,
-  deleteSocialNetwork,
-  fetchSocials,
+import { Socials } from '../../types/types.SocialsNetwork';
+import { 
+  createSocials, 
+  deleteSocialNetwork, 
+  fetchOneSocial, 
+  fetchSocials
 } from './socialsThunk';
 import { RootState } from '../../app/store';
 
 interface SocialsState {
-  socials: Socials[];
-  loadingSocials: boolean;
-  errorLoadingSocials: boolean;
-  isDelete: boolean;
-  social: SocialDataMutation | null;
+  socials: Socials[],
+  loadingSocials: boolean,
+  errorLoadingSocials: boolean,
+  isDelete: boolean,
+  social: Socials | null;
   isLoadingDataSocial: boolean;
   isErrorLoadDataSocial: boolean;
   isEditing: boolean;
@@ -49,6 +50,19 @@ export const socialsSlice = createSlice({
         state.loadingSocials = false;
         state.errorLoadingSocials = true;
       });
+
+    builder
+      .addCase(fetchOneSocial.pending, (state) => {
+      state.isLoadingDataSocial = true;
+    })
+    .addCase(fetchOneSocial.fulfilled, (state,{payload: current}) => {
+      state.isLoadingDataSocial = false;
+      state.social = current;
+    })
+    .addCase(fetchOneSocial.rejected, (state) => {
+      state.isLoadingDataSocial = false;
+    });
+
     builder
       .addCase(createSocials.pending, (state) => {
         state.isLoadingDataSocial = true;
@@ -56,7 +70,6 @@ export const socialsSlice = createSlice({
       })
       .addCase(createSocials.fulfilled, (state, { payload: data }) => {
         state.isLoadingDataSocial = false;
-        state.social = data;
       })
       .addCase(createSocials.rejected, (state) => {
         state.isLoadingDataSocial = false;
@@ -76,12 +89,18 @@ export const socialsSlice = createSlice({
 });
 
 export const socialReducer = socialsSlice.reducer;
-export const selectSocials = (state: RootState) => state.socials.socials;
-export const getLoadingSocials = (state: RootState) =>
-  state.socials.loadingSocials;
-export const getErrorSocials = (state: RootState) =>
-  state.socials.loadingSocials;
-export const isPostLoadingSocials = (state: RootState) =>
-  state.socials.isLoadingDataSocial;
-export const isDeleteSocialNetwork = (state: RootState) =>
-  state.socials.isDelete;
+export const selectSocials = (state: RootState) => 
+state.socials.socials;
+export const selectSocial = (state: RootState) => 
+state.socials.social;
+export const getLoadingSocials = (state: RootState) => 
+state.socials.loadingSocials;
+export const getErrorSocials = (state: RootState) => 
+state.socials.loadingSocials;
+export const isPostLoadingSocials = (state: RootState) => 
+state.socials.isLoadingDataSocial;
+export const isDeleteSocialNetwork = (state: RootState) => 
+state.socials.isDelete;
+export const isEditing = (state: RootState) => 
+state.socials.isEditing;
+

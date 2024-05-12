@@ -25,26 +25,25 @@ const Socials = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <Box>
-        <Button
-          component={SocialsFormLink}
-          variant="contained"
-          to={appRoutes.socialsForm}
-          sx={historyButtonEffect}
-        >
-          Добавить социальную сеть
-        </Button>
-        {socials.map((item) => (
-          <SocialItem
-            id={item._id}
-            key={item._id}
-            link={item.link}
-            image={item.image}
-          />
-        ))}
-      </Box>
-    </>
+   <>
+     <Box>
+       <Button component={SocialsFormLink}
+               variant="contained"
+               to={appRoutes.socialsAdd}
+               sx={historyButtonEffect}>
+         Добавить социальную сеть
+       </Button>
+       {socials.map((item) => (
+         <SocialItem
+           id={item._id}
+           key={item._id}
+           name={item.name}
+           link={item.link}
+           image={item.image}
+         />
+       ))}
+     </Box>
+   </>
   );
 };
 

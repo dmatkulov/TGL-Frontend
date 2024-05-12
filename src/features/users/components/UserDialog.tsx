@@ -5,7 +5,7 @@ import {
   DialogTitle,
   Grid,
   MenuItem,
-  TextField, Typography,
+  TextField
 } from '@mui/material';
 import React, {useEffect} from 'react';
 import {ProfileMutation} from '../../../types/types.Profile';

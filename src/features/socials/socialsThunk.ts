@@ -3,8 +3,10 @@ import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
 import {
   ResponseSocials,
-  SocialData,
+  SocialData, 
+  Socials,
   SocialDataMutation,
+  UpdateSocialArg
 } from '../../types/types.SocialsNetwork';
 
 export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
@@ -22,7 +24,15 @@ export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
   },
 );
 
-export const createSocials = createAsyncThunk<SocialDataMutation, SocialData>(
+export const fetchOneSocial = createAsyncThunk<Socials,string>(
+  'socials/fetchOne',
+  async(id) => {
+    const response = await axiosApi.get(`${serverRoute.socials}/${id}`);
+    return response.data;
+  }
+);
+
+export const createSocials = createAsyncThunk<null, SocialData>(
   'albums/albumCreate',
   async (socialsNetwork) => {
     try {
@@ -44,6 +54,21 @@ export const createSocials = createAsyncThunk<SocialDataMutation, SocialData>(
   },
 );
 
+export const updateSocial = createAsyncThunk<void, UpdateSocialArg>(
+  'socials/update',
+  async({socialId,socialMutation}) => {
+    const formData = new FormData();
+    const keys = Object.keys(socialMutation) as (keyof SocialData)[];
+    keys.forEach(key => {
+      const value = socialMutation[key];
+
+      if (value) {
+        formData.append(key, value);
+      }
+    });
+    return axiosApi.patch(  `${serverRoute.socials}/${socialId}`, formData);
+  }
+);
 export const deleteSocialNetwork = createAsyncThunk<void, string>(
   'socials/deleteSocialNetwork',
   async (id) => {

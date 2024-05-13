@@ -1,13 +1,10 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectSocials } from './socialsSlice';
 import { useEffect, useState } from 'react';
-import { createSocials, fetchSocials } from './socialsThunk';
+import { fetchSocials } from './socialsThunk';
 import { Box, Button } from '@mui/material';
 import SocialItem from './components/SocialItem';
-import { NavLink as SocialsFormLink } from 'react-router-dom';
-import { appRoutes } from '../../utils/constants';
 import SocialModal from './components/SocialModal';
-import { SocialData } from '../../types/types.SocialsNetwork';
 
 const historyButtonEffect = {
   marginRight: '30px',

@@ -7,12 +7,14 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from '@mui/material';
 import FileInput from '../../../components/FileInput/FileInput';
 import { LoadingButton } from '@mui/lab';
 import { createSocials, fetchOneSocial, fetchSocials } from '../socialsThunk';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {
   open: boolean;
@@ -110,6 +112,17 @@ const SocialModal: React.FC<Props> = ({ open, edit, onClose, setEdit, id }) => {
         <Typography>
           {edit ? 'Обновить cоциальную сеть' : 'Добавить социальную сеть'}
         </Typography>
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent
         sx={{

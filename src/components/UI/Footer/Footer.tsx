@@ -6,9 +6,6 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import tt from '..//..//../assets/tt.svg';
-import inst from '..//..//../assets/instagram.svg';
-import wtsp from '..//..//../assets/whatsapp.svg';
 import SocialMedia from './SocialMedia';
 import PlaceIcon from '@mui/icons-material/Place';
 import { useEffect } from 'react';
@@ -17,7 +14,6 @@ import { fetchCompanyAddresses } from '../../../features/companyAddress/companyA
 import { companyAddressState } from '../../../features/companyAddress/companyAddressesSlice';
 import { fetchSocials } from '../../../features/socials/socialsThunk';
 import { selectSocials } from '../../../features/socials/socialsSlice';
-import socials from '../../../features/socials/Socials';
 
 const Footer = () => {
   const isSmallScreen = useMediaQuery('(max-width:660px)');

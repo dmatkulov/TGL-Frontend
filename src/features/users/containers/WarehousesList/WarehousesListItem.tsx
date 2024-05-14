@@ -26,14 +26,15 @@ const WarehousesListItem: FC<Warehouse> = ({
           <b>Phone Number:</b> {phoneNumber}
         </Typography>
       </Box>
-      {(user && user?.role === 'super') &&  <Button
-        component={NavLink}
-        to={appRoutes.adminWarehousesEdit.replace(':id', _id)}
-        variant="contained"
-      >
-        Изменить
-      </Button>}
-
+      {user && user?.role === 'super' && (
+        <Button
+          component={NavLink}
+          to={appRoutes.adminWarehousesEdit.replace(':id', _id)}
+          variant="contained"
+        >
+          Изменить
+        </Button>
+      )}
     </Box>
   );
 };

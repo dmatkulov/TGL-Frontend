@@ -51,23 +51,27 @@ const CompanyAddressesItem: FC<CompanyAddress> = ({
           <Typography variant="h6">Район: {district}</Typography>
         </Box>
         <Grid container gap={2}>
-          {(user && user?.role === 'super') &&
+          {user && user?.role === 'super' && (
             <LoadingButton
-            loading={isCreating}
-            onClick={editHandler}
-            disabled={isCreating}
-            variant="contained">
-            Редактировать
-          </LoadingButton>}
-          {(user && user?.role === 'super') &&
+              loading={isCreating}
+              onClick={editHandler}
+              disabled={isCreating}
+              variant="contained"
+            >
+              Редактировать
+            </LoadingButton>
+          )}
+          {user && user?.role === 'super' && (
             <LoadingButton
-            loading={isDeleting}
-            disabled={isDeleting}
-            onClick={deleteHandler}
-            variant="contained"
-            color="error">
-            Удалить
-          </LoadingButton>}
+              loading={isDeleting}
+              disabled={isDeleting}
+              onClick={deleteHandler}
+              variant="contained"
+              color="error"
+            >
+              Удалить
+            </LoadingButton>
+          )}
         </Grid>
       </Box>
     </Grid>

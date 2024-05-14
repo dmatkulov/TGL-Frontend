@@ -6,7 +6,6 @@ interface Props {
   shipment: ShipmentData;
 }
 
-
 const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
   return (
     <Card variant="outlined" sx={{ minWidth: 275, mb: '20px' }}>

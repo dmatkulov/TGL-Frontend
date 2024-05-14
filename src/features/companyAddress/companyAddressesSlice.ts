@@ -33,7 +33,6 @@ const companyAddressesSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    
     builder.addCase(fetchCompanyAddresses.pending, (state) => {
       state.isLoading = true;
     });

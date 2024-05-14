@@ -1,36 +1,15 @@
 import React from 'react';
 import { CardMedia, Link } from '@mui/material';
+import { apiURL } from '../../../utils/constants';
 
 interface Props {
   href: string;
-  tiktok?: boolean;
-  whatsapp?: boolean;
-  instagram?: boolean;
-  imagePath: string;
-  alt: string;
+  imagePath: string | null;
+  name: string;
 }
-const SocialMedia: React.FC<Props> = ({
-  href,
-  tiktok = false,
-  whatsapp = false,
-  instagram = false,
-  imagePath,
-  alt,
-}) => {
-  const itemBgColor: Record<string, string> = {
-    staticColor: '',
-    hoverColor: '',
-  };
-  if (whatsapp) {
-    itemBgColor.staticColor = '#128c7e';
-    itemBgColor.hoverColor = '#075e54';
-  } else if (instagram) {
-    itemBgColor.staticColor = '#bc2a8d';
-    itemBgColor.hoverColor = '#a41779';
-  } else if (tiktok) {
-    itemBgColor.staticColor = '#212121';
-    itemBgColor.hoverColor = '#151515';
-  }
+const SocialMedia: React.FC<Props> = ({ href, imagePath, name }) => {
+  const apiImgPath = apiURL + '/' + imagePath;
+  const defaultImgPath = 'http://localhost:5173/assets/no-social-icon.png';
 
   return (
     <>
@@ -44,18 +23,18 @@ const SocialMedia: React.FC<Props> = ({
           width: '40px',
           height: '40px',
           textDecoration: 'none',
-          bgcolor: itemBgColor.staticColor,
           borderRadius: '50%',
-          '&:hover': {
-            bgcolor: itemBgColor.hoverColor,
-          },
         }}
       >
         <CardMedia
-          sx={{ width: 22, height: 22 }}
+          sx={{
+            width: 40,
+            height: 40,
+            objectFit: 'contain',
+          }}
           component="img"
-          alt={alt}
-          image={imagePath}
+          alt={name}
+          image={imagePath ? apiImgPath : defaultImgPath}
         />
       </Link>
     </>

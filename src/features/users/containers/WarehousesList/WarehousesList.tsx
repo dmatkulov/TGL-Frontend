@@ -45,7 +45,8 @@ const WarehousesList = () => {
         {user?.role === 'super' && (
           <Button
             variant="contained"
-            onClick={() => navigate(appRoutes.adminWarehousesAdd)}>
+            onClick={() => navigate(appRoutes.adminWarehousesAdd)}
+          >
             Добавить склад в Китае
           </Button>
         )}

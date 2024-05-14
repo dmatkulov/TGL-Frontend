@@ -5,7 +5,7 @@ import { WarehouseMutation } from '../../../types/types.Warehouses';
 import { useAppSelector } from '../../../app/hooks';
 import { isWarehousesCreateLoading } from '../warehousesSlice';
 import PhoneInput from 'react-phone-input-2';
-import {selectRegisterError} from '../../users/usersSlice';
+import { selectRegisterError } from '../../users/usersSlice';
 
 interface Props {
   onSubmit: (mutation: WarehouseMutation) => void;
@@ -32,10 +32,10 @@ const WarehouseForm: React.FC<Props> = ({
   const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
 
     setState((prevState) => {
-      return {...prevState, [name]: value};
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -86,7 +86,7 @@ const WarehouseForm: React.FC<Props> = ({
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{mt: 3, width: '100%'}}
+          sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid
@@ -96,7 +96,7 @@ const WarehouseForm: React.FC<Props> = ({
               sm={6}
               direction="row"
               spacing={2}
-              sx={{margin: 'auto'}}
+              sx={{ margin: 'auto' }}
             >
               <Grid item xs={12}>
                 <TextField
@@ -125,15 +125,15 @@ const WarehouseForm: React.FC<Props> = ({
               <Grid item xs={12}>
                 <PhoneInput
                   country="cn"
-                  masks={{cn: '(..) ...-....-..'}}
+                  masks={{ cn: '(..) ...-....-..' }}
                   onlyCountries={['cn']}
-                  containerStyle={{width: '100%'}}
+                  containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
                   onChange={handlePhoneChange}
                   defaultErrorMessage={getFieldError('phoneNumber')}
                   specialLabel="Номер телефона*"
                   disableDropdown
-                  inputStyle={{width: '100%'}}
+                  inputStyle={{ width: '100%' }}
                   inputProps={{
                     name: 'phoneNumber',
                     required: true,
@@ -171,7 +171,7 @@ const WarehouseForm: React.FC<Props> = ({
                 variant="contained"
                 loading={isCreateLoading}
                 disabled={isCreateLoading}
-                sx={{marginTop: 1, marginLeft: 2, width: 690}}
+                sx={{ marginTop: 1, marginLeft: 2, width: 690 }}
               >
                 {isEdit ? 'Обновить' : 'Добавить'}
               </LoadingButton>

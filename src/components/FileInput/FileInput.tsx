@@ -9,8 +9,13 @@ interface Props {
   filename?: string;
 }
 
-const FileInput: React.FC<Props> = ({ onChange, onClear, name, label, filename }) => {
-
+const FileInput: React.FC<Props> = ({
+  onChange,
+  onClear,
+  name,
+  label,
+  filename,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   // const [filename, setFilename] = useState('');
@@ -25,7 +30,6 @@ const FileInput: React.FC<Props> = ({ onChange, onClear, name, label, filename }
   //   onChange(e);
   // };
 
-
   const activateInput = () => {
     if (inputRef.current) {
       inputRef.current.click();
@@ -35,7 +39,7 @@ const FileInput: React.FC<Props> = ({ onChange, onClear, name, label, filename }
   return (
     <>
       <input
-        style={{display: 'none'}}
+        style={{ display: 'none' }}
         type="file"
         name={name}
         onChange={onChange}
@@ -57,7 +61,9 @@ const FileInput: React.FC<Props> = ({ onChange, onClear, name, label, filename }
         </Grid>
         {onClear && (
           <Grid item>
-            <Button variant="contained" onClick={onClear}>Clear</Button>
+            <Button variant="contained" onClick={onClear}>
+              Clear
+            </Button>
           </Grid>
         )}
       </Grid>

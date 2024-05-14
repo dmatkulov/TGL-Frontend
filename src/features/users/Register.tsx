@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {LoadingButton} from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
@@ -21,15 +21,15 @@ import {
   selectRegisterLoading,
   setRegisterError,
 } from './usersSlice';
-import {register} from './usersThunks';
-import {appRoutes} from '../../utils/constants';
-import {selectPups} from '../pups/pupsSlice';
-import {fetchPups} from '../pups/pupsThunks';
-import {regionsState} from '../regions/regionsSlice';
-import {fetchRegions} from '../regions/regionsThunks';
-import {RegisterMutation} from '../../types/types.User';
+import { register } from './usersThunks';
+import { appRoutes } from '../../utils/constants';
+import { selectPups } from '../pups/pupsSlice';
+import { fetchPups } from '../pups/pupsThunks';
+import { regionsState } from '../regions/regionsSlice';
+import { fetchRegions } from '../regions/regionsThunks';
+import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
-import {regEx} from '../../utils/constants';
+import { regEx } from '../../utils/constants';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -75,14 +75,14 @@ const Register: React.FC = () => {
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
     setState((prevState) => {
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
 
-      return {...prevState, [name]: value};
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -175,7 +175,7 @@ const Register: React.FC = () => {
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{mt: 3, width: '100%'}}
+          sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid item xs={12} sm={6}>
@@ -252,7 +252,7 @@ const Register: React.FC = () => {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPass ? <VisibilityOff/> : <Visibility/>}
+                        {showPass ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -278,9 +278,9 @@ const Register: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <PhoneInput
                 country="kg"
-                masks={{kg: '(...) ..-..-..'}}
+                masks={{ kg: '(...) ..-..-..' }}
                 onlyCountries={['kg']}
-                containerStyle={{width: '100%'}}
+                containerStyle={{ width: '100%' }}
                 value={state.phoneNumber}
                 countryCodeEditable={false}
                 onChange={handlePhoneChange}
@@ -431,7 +431,7 @@ const Register: React.FC = () => {
                 {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{marginRight: '10px'}}>{pup.name}</b>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
                       {pup.region.name} обл., {pup.address}, {pup.settlement}
                     </MenuItem>
                   ))

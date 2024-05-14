@@ -1,5 +1,3 @@
-import {WarehouseMutation} from './types.Warehouses';
-
 export interface Socials {
   _id: string;
   name: string;

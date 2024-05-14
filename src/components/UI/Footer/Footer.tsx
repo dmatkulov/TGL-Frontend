@@ -15,16 +15,20 @@ import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { fetchCompanyAddresses } from '../../../features/companyAddress/companyAddressThunks';
 import { companyAddressState } from '../../../features/companyAddress/companyAddressesSlice';
+import { fetchSocials } from '../../../features/socials/socialsThunk';
+import { selectSocials } from '../../../features/socials/socialsSlice';
+import socials from '../../../features/socials/Socials';
 
 const Footer = () => {
   const isSmallScreen = useMediaQuery('(max-width:660px)');
-
+  const state = useAppSelector(selectSocials);
   const dispatch = useAppDispatch();
   const addresses = useAppSelector(companyAddressState);
   const isEmpty = addresses.length === 0;
 
   useEffect(() => {
     dispatch(fetchCompanyAddresses());
+    dispatch(fetchSocials());
   }, [dispatch]);
 
   return (
@@ -75,26 +79,15 @@ const Footer = () => {
             justifyContent: { sm: 'flex-end', xs: 'center' },
           }}
         >
-          <SocialMedia
-            tiktok
-            alt="ТикТок"
-            href="https://www.tiktok.com/@techgear.logistics"
-            imagePath={tt}
-          />
+          {state.map((item) => (
+            <SocialMedia
+              key={item._id}
+              name={item.name}
+              href={item.link}
+              imagePath={item.image}
+            />
+          ))}
 
-          <SocialMedia
-            instagram
-            alt="Инстаграм"
-            href="https://www.instagram.com/cargo.878_kg"
-            imagePath={inst}
-          />
-
-          <SocialMedia
-            whatsapp
-            alt="WhatsApp"
-            href="https://wa.me/996222601960?text=Здравствуйте,"
-            imagePath={wtsp}
-          />
           <Stack direction="row" spacing={2}></Stack>
         </Grid>
       </Grid>

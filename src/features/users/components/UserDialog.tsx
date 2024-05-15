@@ -67,7 +67,6 @@ const UserDialog: React.FC<Props> = ({
                   value={state.firstName}
                   onChange={inputChangeHandler}
                   name="firstName"
-                  required
                 />
                 <TextField
                   id="lastName"
@@ -75,9 +74,7 @@ const UserDialog: React.FC<Props> = ({
                   value={state.lastName}
                   onChange={inputChangeHandler}
                   name="lastName"
-                  required
                 />
-
                 <TextField
                   id="middleName"
                   label="Отчество"
@@ -86,7 +83,6 @@ const UserDialog: React.FC<Props> = ({
                   name="middleName"
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -95,15 +91,12 @@ const UserDialog: React.FC<Props> = ({
                   value={state.email}
                   onChange={inputChangeHandler}
                   name="email"
-                  required
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   fullWidth
                   select
-                  required
                   name="region"
                   label="Регион"
                   type="text"
@@ -120,7 +113,6 @@ const UserDialog: React.FC<Props> = ({
                   ))}
                 </TextField>
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -129,10 +121,8 @@ const UserDialog: React.FC<Props> = ({
                   value={state.settlement}
                   onChange={inputChangeHandler}
                   name="settlement"
-                  required
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -141,10 +131,8 @@ const UserDialog: React.FC<Props> = ({
                   value={state.address}
                   onChange={inputChangeHandler}
                   name="address"
-                  required
                 />
               </Grid>
-
               <Grid item xs>
                 <Button
                   fullWidth

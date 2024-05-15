@@ -10,16 +10,18 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 const Profile = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  console.log('On profile page', user);
+
 
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
-    email: user?.email || '',
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    middleName: user?.middleName || '',
-    region: user?.region?._id || '',
-    settlement: user?.settlement || '',
-    address: user?.address || '',
+    email: user?.email,
+    firstName: user?.firstName,
+    lastName: user?.lastName,
+    middleName: user?.middleName,
+    region: user?.region?._id,
+    settlement: user?.settlement,
+    address: user?.address,
   });
   const isAdmin = user?.role === 'super' || user?.role === 'admin';
   const handleClickOpen = () => {
@@ -69,8 +71,8 @@ const Profile = () => {
                   {user?.address}
                 </Typography>
                 <Typography variant="subtitle1">
-                  Ваш {user?.pupID.name} находится по адресу:{' '}
-                  {user?.pupID.address}
+                  Ваш {user?.pupID.name} находится по адресу: {user?.pupID.address}
+
                 </Typography>
               </>
             )}

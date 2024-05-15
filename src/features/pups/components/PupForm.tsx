@@ -37,7 +37,7 @@ const PupForm: React.FC<Props> = ({
   const [state, setState] = useState<PupMutation>(initialPupState);
   const [disabled, setIsDisabled] = useState(true);
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
+  // const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   useEffect(() => {
     dispatch(fetchRegions());
@@ -47,7 +47,7 @@ const PupForm: React.FC<Props> = ({
     event.preventDefault();
     if (state.phoneNumber.length < 12) {
       setPhoneNumberLabel('Пропишите номер полностью');
-      setPhoneNumberIsValid(false);
+      // setPhoneNumberIsValid(false);
       return;
     }
     onSubmit(state);
@@ -81,10 +81,10 @@ const PupForm: React.FC<Props> = ({
     setState((prevState) => {
       const updateState = { ...prevState, phoneNumber: value };
       if (value.length < 11) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('Номер должен быть введен полностью');
       } else if (value.length > 11) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
 

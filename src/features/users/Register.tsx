@@ -61,7 +61,7 @@ const Register: React.FC = () => {
     undefined,
   );
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
+  // const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
 
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
@@ -108,10 +108,10 @@ const Register: React.FC = () => {
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
       if (value.length < 12) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('Номер должен быть введен полностью');
       } else if (value.length > 11) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
       return { ...prevState, phoneNumber: value };
@@ -139,7 +139,7 @@ const Register: React.FC = () => {
 
       if (state.phoneNumber.length < 12) {
         setPhoneNumberLabel('Пропишите номер полностью');
-        setPhoneNumberIsValid(false);
+        // setPhoneNumberIsValid(false);
         return;
       }
 
@@ -152,8 +152,8 @@ const Register: React.FC = () => {
       }
 
       await dispatch(register(state)).unwrap();
-      navigate(appRoutes.profile);
-      setState(initialState);
+      navigate(appRoutes.login);
+      // setState(initialState);
     } catch (e) {
       console.error(e);
     }

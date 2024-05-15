@@ -20,8 +20,9 @@ import { priceListsReducer } from '../features/priceLists/priceListsSlice';
 import { socialReducer } from '../features/socials/socialsSlice';
 
 const usersPersistConfig = {
-  key: 'techGear:users',
+  key: 'techGear:user',
   storage: storage,
+  whitelist: ['user'],
 };
 
 const rootReducer = combineReducers({

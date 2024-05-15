@@ -6,7 +6,7 @@ import {
   getStaffData,
   login,
   loginByLastSession,
-  logOut,
+  logout,
   register,
   update,
 } from './usersThunks';
@@ -154,13 +154,13 @@ export const usersSlice = createSlice({
       });
 
     builder
-      .addCase(logOut.pending, (state) => {
+      .addCase(logout.pending, (state) => {
         state.logOutLoading = true;
       })
-      .addCase(logOut.fulfilled, (state) => {
+      .addCase(logout.fulfilled, (state) => {
         state.logOutLoading = false;
       })
-      .addCase(logOut.rejected, (state) => {
+      .addCase(logout.rejected, (state) => {
         state.logOutLoading = false;
       });
   },

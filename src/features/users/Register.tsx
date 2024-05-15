@@ -152,8 +152,8 @@ const Register: React.FC = () => {
       }
 
       await dispatch(register(state)).unwrap();
-      navigate(appRoutes.login);
-      // setState(initialState);
+      navigate(appRoutes.profile);
+      setState(initialState);
     } catch (e) {
       console.error(e);
     }

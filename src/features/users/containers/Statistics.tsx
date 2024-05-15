@@ -5,13 +5,13 @@ import {
   CircularProgress,
   Grid,
   MenuItem,
-  TextField,
+  TextField, useMediaQuery,
 } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { regionsState } from '../../regions/regionsSlice';
-import { fetchPups } from '../../pups/pupsThunks';
-import { selectPups, selectPupsLoading } from '../../pups/pupsSlice';
-import React, { useEffect, useState } from 'react';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {regionsState} from '../../regions/regionsSlice';
+import {fetchPups} from '../../pups/pupsThunks';
+import {selectPups, selectPupsLoading} from '../../pups/pupsSlice';
+import React, {useEffect, useState} from 'react';
 import {
   fetchShipments,
   fetchShipmentsByRegionAndPup,
@@ -21,7 +21,15 @@ import {
   selectShipmentsLoading,
 } from '../../shipments/shipmentsSlice';
 import ShipmentsCard from '../../shipments/components/ShipmentsCard';
-import { Statistics } from '../../../types/types.Statistics';
+import {Statistics} from '../../../types/types.Statistics';
+import ShipmentTable from '../../shipments/components/ShipmentTable';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
 
 const initialState: Statistics = {
   pupId: '',
@@ -36,6 +44,7 @@ const styleBoxSpinner = {
 };
 
 const Statistics = () => {
+  const isSmallScreen = useMediaQuery('(max-width:1200px)');
   const regions = useAppSelector(regionsState);
   const loadingPups = useAppSelector(selectPupsLoading);
   const pups = useAppSelector(selectPups);
@@ -50,7 +59,7 @@ const Statistics = () => {
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
 
     setState((prevState) => ({
       ...prevState,
@@ -86,20 +95,19 @@ const Statistics = () => {
 
   return (
     <>
-      <Alert sx={{ width: 450, marginBottom: 1 }} severity="warning">
-        чтоб увидеть статистику за месяц или за год сначала выберите регион и
-        ПВЗ
+      <Alert sx={{width: 450, marginBottom: 1}} severity="warning">
+        Для получения статистики, пожалуйста, укажите все параметры
       </Alert>
 
       <Box display={'flex'}>
         <Grid
           component={'form'}
           onSubmit={submitFormHandler}
-          sx={{ marginRight: 3 }}
+          sx={{marginRight: 3}}
         >
           <Grid item xs={12} sm={6}>
             <TextField
-              sx={{ width: 200, marginBottom: 1 }}
+              sx={{width: 200, marginBottom: 1}}
               select
               required
               name="region"
@@ -126,7 +134,7 @@ const Statistics = () => {
 
           <Grid item xs={12} sm={6}>
             <TextField
-              sx={{ width: 200 }}
+              sx={{width: 200}}
               disabled={loadingPups}
               required
               select
@@ -145,7 +153,7 @@ const Statistics = () => {
               {pups.length > 0 ? (
                 pups.map((pup) => (
                   <MenuItem key={pup._id} value={pup._id}>
-                    <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                    <b style={{marginRight: '10px'}}>{pup.name}</b>
                     {pup.region.name} обл., {pup.address}, {pup.settlement}
                   </MenuItem>
                 ))
@@ -159,7 +167,7 @@ const Statistics = () => {
 
           <Grid item xs={12} sm={6}>
             <TextField
-              sx={{ width: 200, marginTop: 1, marginBottom: 1 }}
+              sx={{width: 200, marginTop: 1, marginBottom: 1}}
               select
               name="datetime"
               label="Период"
@@ -181,7 +189,7 @@ const Statistics = () => {
             <Button
               disabled={loading}
               sx={{
-                '&.MuiButton-root:hover': { background: '#018749' },
+                '&.MuiButton-root:hover': {background: '#018749'},
                 color: 'white',
                 width: 200,
                 background: 'green',
@@ -195,7 +203,7 @@ const Statistics = () => {
           <Button
             disabled={loading}
             sx={{
-              '&.MuiButton-root:hover': { background: '#D2122E' },
+              '&.MuiButton-root:hover': {background: '#D2122E'},
               color: 'white',
               width: 200,
               background: '#9e1b32',
@@ -212,17 +220,52 @@ const Statistics = () => {
           )}
           {loading ? (
             <Box sx={styleBoxSpinner}>
-              <CircularProgress size={100} />
+              <CircularProgress size={100}/>
             </Box>
           ) : (
-            shipments.map((shipment) => (
-              <ShipmentsCard key={shipment._id} shipment={shipment} />
-            ))
+            <TableContainer component={Paper} sx={{width: '100%', overflowX: isSmallScreen ? 'scroll' : ''}}>
+              <Table
+                aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{textTransform: 'uppercase'}}>
+                    <TableCell align="left" sx={{fontWeight: 'bold'}}>
+                      Пользователь
+                    </TableCell>
+                    <TableCell align="left" sx={{fontWeight: 'bold'}}>
+                      Статус
+                    </TableCell>
+                    <TableCell align="left" sx={{fontWeight: 'bold'}}>
+                      Оплачено
+                    </TableCell>
+                    <TableCell align="left" sx={{fontWeight: 'bold'}}>
+                      Номер трэка
+                    </TableCell>
+                    <TableCell align="left" sx={{fontWeight: 'bold'}}>
+                      Цена
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {
+                    shipments.map((shipment) => (
+                      <TableRow key={shipment._id} sx={{'&:last-child td, &:last-child th': {border: 0}}}>
+                        <TableCell align="left">{shipment.userId.firstName}</TableCell>
+                        <TableCell align="left">{shipment.status}</TableCell>
+                        <TableCell align="left">{shipment.isPaid ? 'Да' : 'Нет'}</TableCell>
+                        <TableCell align="left">{shipment.trackerNumber}</TableCell>
+                        <TableCell align="left">{shipment.price.som}</TableCell>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
         </Box>
       </Box>
     </>
   );
 };
+
 
 export default Statistics;

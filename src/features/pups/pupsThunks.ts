@@ -32,3 +32,11 @@ export const createPup = createAsyncThunk<void, PupMutation>(
     return await axiosApi.post(serverRoute.pups, pupMutation);
   },
 );
+
+export const deletePup = createAsyncThunk<void, string>(
+  'pups/deletePup',
+  async (id) => {
+    const response = await axiosApi.delete(`${serverRoute.pups}/${id}`);
+    return response.data;
+  },
+);

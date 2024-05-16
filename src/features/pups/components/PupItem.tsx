@@ -13,11 +13,16 @@ import {
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { editPup, fetchPups } from '../pupsThunks';
+import { deletePup, editPup, fetchPups } from '../pupsThunks';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import PupForm from './PupForm';
 import { selectUser } from '../../users/usersSlice';
 import CloseIcon from '@mui/icons-material/Close';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { LoadingButton } from '@mui/lab';
+import { isDeletePup } from '../pupsSlice';
+import { useNavigate } from 'react-router-dom';
+import { appRoutes } from '../../../utils/constants';
 
 interface Props {
   pupItem: Pup;
@@ -26,6 +31,8 @@ interface Props {
 const PupItem: React.FC<Props> = ({ pupItem }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const isDelete = useAppSelector(isDeletePup);
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
   const toggleOpen = () => {
@@ -43,6 +50,12 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
     setOpen(false);
   };
 
+  const deleteHandler = async () => {
+    await dispatch(deletePup(pupItem?._id));
+    await dispatch(fetchPups());
+    navigate(appRoutes.pups);
+  };
+
   const pupMutation: PupMutation = {
     region: pupItem.region._id,
     settlement: pupItem.settlement,
@@ -58,21 +71,33 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
             display="flex"
             justifyContent="space-between"
             alignItems="center"
-            mb={2}
-          >
+            mb={2}>
             <Typography variant="h5" component="div">
               {pupItem.name}
             </Typography>
-            {user && user?.role === 'super' && (
-              <Button
-                size="small"
-                variant="contained"
-                color="secondary"
-                onClick={toggleOpen}
-              >
-                Редактировать
-              </Button>
-            )}
+            <Box
+              display="flex"
+              gap={2}>
+              {user && user?.role === 'super' && (
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={toggleOpen}>
+                  Редактировать
+                </Button>
+              )}
+              {user && user?.role === 'super' && (
+                <LoadingButton
+                  disabled={isDelete}
+                  loading={isDelete}
+                  onClick={deleteHandler}
+                  sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
+                  color="error">
+                  <CancelIcon />
+                </LoadingButton>
+              )}
+            </Box>
           </Box>
           <Divider />
           <Typography variant="body2" color="text.secondary">

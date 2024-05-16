@@ -10,9 +10,6 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 const Profile = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  console.log('On profile page', user);
-
-
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<ProfileMutation>({
     email: user?.email,

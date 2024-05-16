@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  CircularProgress,
+  // CircularProgress,
   IconButton,
   Menu,
   MenuItem,
@@ -8,9 +8,9 @@ import {
   Typography,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { logOut } from '../../../features/users/usersThunks';
-import { selectLogOutLoading } from '../../../features/users/usersSlice';
+import { useAppDispatch } from '../../../app/hooks';
+import { logout } from '../../../features/users/usersThunks';
+// import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { User } from '../../../types/types.User';
@@ -22,21 +22,20 @@ interface Props {
 const UserMenu: React.FC<Props> = ({ user }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const loading = useAppSelector(selectLogOutLoading);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => setAnchorEl(null);
 
   const handleLogOut = async () => {
-    await dispatch(logOut()).unwrap();
+    await dispatch(logout());
     navigate(appRoutes.login);
   };
 
   return (
     <>
-      {loading && <CircularProgress />}
       <Stack direction="row" alignItems="center">
         <Typography color="inherit" onClick={handleClick}>
           {user.firstName} {user.lastName}

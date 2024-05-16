@@ -72,7 +72,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
     undefined,
   );
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
+  // const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
   const getError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -109,10 +109,10 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   const handlePhoneChange = (value: string) => {
     setFormData((prevState) => {
       if (value.length < 12) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('Номер должен быть введен полностью');
       } else if (value.length > 11) {
-        setPhoneNumberIsValid(true);
+        // setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
       return { ...prevState, phoneNumber: value };
@@ -148,7 +148,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
 
       if (formData.phoneNumber.length < 12) {
         setPhoneNumberLabel('Пропишите номер полностью');
-        setPhoneNumberIsValid(false);
+        // setPhoneNumberIsValid(false);
         return;
       }
 

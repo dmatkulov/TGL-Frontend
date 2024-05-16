@@ -22,6 +22,7 @@ import { socialReducer } from '../features/socials/socialsSlice';
 const usersPersistConfig = {
   key: 'techGear:users',
   storage: storage,
+  whitelist: ['user'],
 };
 
 const rootReducer = combineReducers({

@@ -177,10 +177,10 @@ export const loginByLastSession = createAsyncThunk<
   },
 );
 
-export const logOut = createAsyncThunk<void, undefined, { state: RootState }>(
+export const logout = createAsyncThunk<void, undefined>(
   'users/logout',
   async (_, { dispatch }) => {
-    // await axiosApi.delete(serverRoute.sessions);
+    await axiosApi.delete(serverRoute.sessions);
     dispatch(unsetUser());
   },
 );

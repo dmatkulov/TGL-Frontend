@@ -30,6 +30,7 @@ import { fetchRegions } from '../regions/regionsThunks';
 import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
 import { regEx } from '../../utils/constants';
+import { checkForBadWords } from '../../utils/BadWordCheck';
 
 const initialState: RegisterMutation = {
   email: '',
@@ -66,6 +67,13 @@ const Register: React.FC = () => {
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
 
+  const [validateFirstNameBadWord, setFirstNameBadWord] = useState<string>('');
+  const [validateLasNameBadWord, setLasNameBadWord] = useState<string>('');
+  const [validateMiddleNameBadWord, setMiddleNameBadWord] = useState<string>('');
+  const [lastNameValid, setLastNameValid] = useState<boolean | undefined>(undefined);
+  const [firstNameValid, setFirstNameValid] = useState<boolean | undefined>(undefined);
+  const [middleNameValid, setMiddleNameValid] = useState<boolean | undefined>(undefined);
+
   const getFieldError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -80,6 +88,21 @@ const Register: React.FC = () => {
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
+      }
+
+      const isBadWord = checkForBadWords(name, value);
+
+      if (name === 'lastName') {
+        setLastNameValid(!isBadWord);
+        setLasNameBadWord(isBadWord ? 'В ваших данных присутствует не нормативная лексика!' : '');
+      }
+      if (name === 'firstName') {
+        setFirstNameValid(!isBadWord);
+        setFirstNameBadWord(isBadWord ? 'В ваших данных присутствует не нормативная лексика!' : '');
+      }
+      if (name === 'middleName') {
+        setMiddleNameValid(!isBadWord);
+        setMiddleNameBadWord(isBadWord ? 'В ваших данных присутствует не нормативная лексика!' : '');
       }
 
       return { ...prevState, [name]: value };
@@ -188,8 +211,8 @@ const Register: React.FC = () => {
                 value={state.lastName}
                 autoComplete="new-lastName"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('lastName'))}
-                helperText={getFieldError('lastName')}
+                error={Boolean(getFieldError('lastName') || lastNameValid === false)}
+                helperText={getFieldError('lastName') ? getFieldError('lastName') : validateLasNameBadWord}
                 sx={{
                   input: {
                     color:
@@ -208,8 +231,8 @@ const Register: React.FC = () => {
                 value={state.firstName}
                 autoComplete="new-firstName"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('firstName'))}
-                helperText={getFieldError('firstName')}
+                error={Boolean(getFieldError('firstName') || firstNameValid === false)}
+                helperText={getFieldError('firstName') ? getFieldError('firstName') : validateFirstNameBadWord}
                 sx={{
                   input: {
                     color:
@@ -227,8 +250,8 @@ const Register: React.FC = () => {
                 value={state.middleName}
                 autoComplete="new-middleName"
                 onChange={inputChangeHandler}
-                error={Boolean(getFieldError('middleName'))}
-                helperText={getFieldError('middleName')}
+                error={Boolean(getFieldError('middleName') || middleNameValid === false)}
+                helperText={getFieldError('middleName') ? getFieldError('firstName') : validateMiddleNameBadWord}
                 sx={{
                   input: {
                     color:

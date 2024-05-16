@@ -1,13 +1,14 @@
 import { Pup } from '../../types/types.Pup';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { createPup, editPup, fetchPups } from './pupsThunks';
+import { createPup, deletePup, editPup, fetchPups } from './pupsThunks';
 
 interface PupsState {
   items: Pup[];
   creating: boolean;
   isEditing: boolean;
   fetchLoading: boolean;
+  isDelete: boolean;
 }
 
 const initialState: PupsState = {
@@ -15,6 +16,7 @@ const initialState: PupsState = {
   creating: false,
   isEditing: false,
   fetchLoading: false,
+  isDelete: false,
 };
 
 export const pupsSlice = createSlice({
@@ -35,6 +37,7 @@ export const pupsSlice = createSlice({
       .addCase(fetchPups.rejected, (state) => {
         state.fetchLoading = false;
       })
+
       .addCase(createPup.pending, (state) => {
         state.creating = true;
       })
@@ -55,6 +58,17 @@ export const pupsSlice = createSlice({
       .addCase(editPup.rejected, (state) => {
         state.isEditing = false;
       });
+
+    builder
+      .addCase(deletePup.pending, (state) => {
+        state.isDelete = true;
+      })
+      .addCase(deletePup.fulfilled, (state) => {
+        state.isDelete = false;
+      })
+      .addCase(deletePup.rejected, (state) => {
+        state.isDelete = false;
+      });
   },
 });
 
@@ -64,3 +78,4 @@ export const selectPups = (state: RootState) => state.pups.items;
 export const selectPupsLoading = (state: RootState) => state.pups.fetchLoading;
 export const selectPupCreating = (state: RootState) => state.pups.creating;
 export const selectPupEditing = (state: RootState) => state.pups.isEditing;
+export const isDeletePup = (state: RootState) => state.pups.isDelete;

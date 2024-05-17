@@ -79,9 +79,7 @@ const OrdersRowItem: FC<Shipment> = ({
             onClick={openWarningModalWindow}
             color="error"
           >
-            <IconButton sx={{ color: 'inherit' }}>
-              <CancelIcon />
-            </IconButton>
+            <CancelIcon />
           </LoadingButton>
         </TableCell>
       </TableRow>

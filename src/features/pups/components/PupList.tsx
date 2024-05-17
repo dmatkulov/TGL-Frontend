@@ -52,6 +52,7 @@ const PupList = () => {
     await dispatch(fetchPups());
     handleClose();
   };
+
   return (
     <>
       <Stack>

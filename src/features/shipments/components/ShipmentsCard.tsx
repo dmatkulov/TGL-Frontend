@@ -11,7 +11,7 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
     <Card variant="outlined" sx={{ minWidth: 275, mb: '20px' }}>
       <CardContent>
         <Typography variant="h5" component="div">
-          Посылка №: {shipment._id}
+          Посылка №: {shipment.trackerNumber}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

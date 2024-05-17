@@ -190,7 +190,7 @@ const ShipmentsForm = () => {
               autoComplete="new-weight"
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">см</InputAdornment>
+                  <InputAdornment position="end">кг</InputAdornment>
                 ),
               }}
             />

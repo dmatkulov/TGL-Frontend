@@ -47,6 +47,7 @@ export const appRoutes = {
   socials: '/admin-profile/socials',
   socialsAdd: '/admin-profile/social-new',
   socialsEdit: '/admin-profile/social/:id',
+  adminClients: '/admin-profile/clients',
 };
 
 export const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;

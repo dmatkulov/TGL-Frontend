@@ -20,7 +20,7 @@ import FeedIcon from '@mui/icons-material/Feed';
 import HomeIcon from '@mui/icons-material/Home';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import RecommendIcon from '@mui/icons-material/Recommend';
-
+import GroupsIcon from '@mui/icons-material/Groups';
 const adminLinks: UserNav[] = [
   {
     id: 1,
@@ -81,6 +81,12 @@ const adminLinks: UserNav[] = [
     name: 'Социальные сети',
     navLink: appRoutes.socials,
     icon: <RecommendIcon color="primary" />,
+  },
+  {
+    id: 11,
+    name: 'Клиенты',
+    navLink: appRoutes.adminClients,
+    icon: <GroupsIcon color="primary" />,
   },
 ];
 

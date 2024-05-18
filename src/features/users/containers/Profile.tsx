@@ -11,7 +11,6 @@ import { ProfileMutation } from '../../../types/types.Profile';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const Profile = () => {
-
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
@@ -57,10 +56,13 @@ const Profile = () => {
               gutterBottom
               variant="h6"
               component="h1"
-              fontWeight="bold">
+              fontWeight="bold"
+            >
               {user?.firstName} {user?.lastName}
             </Typography>
-            {isAdmin ? (<></>) : (
+            {isAdmin ? (
+              <></>
+            ) : (
               <>
                 <Typography variant="subtitle1">
                   Ваш персональный код: {user?.marketId}
@@ -70,7 +72,7 @@ const Profile = () => {
                   {user?.address}
                 </Typography>
                 <Typography variant="subtitle1">
-                  Ваш {user?.pupID.name} находится по адресу: {' '}
+                  Ваш {user?.pupID.name} находится по адресу:{' '}
                   {user?.pupID.address}
                 </Typography>
               </>
@@ -81,12 +83,15 @@ const Profile = () => {
               startIcon={<BorderColorIcon />}
               onClick={handleClickOpen}
               color="secondary"
-              sx={{ textTransform: 'none' }}>
+              sx={{ textTransform: 'none' }}
+            >
               Редактировать профиль
             </Button>
           </Grid>
         </Grid>
-        {isAdmin ? (<></>) : (
+        {isAdmin ? (
+          <></>
+        ) : (
           <Grid item>
             <Warehouses />
           </Grid>

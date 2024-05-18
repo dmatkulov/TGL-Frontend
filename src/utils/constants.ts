@@ -49,6 +49,13 @@ export const appRoutes = {
   socialsEdit: '/admin-profile/social/:id',
 };
 
-export const Statuses = ['КР_ОТПРАВЛЕНО', 'КР_ПРИБЫЛО', 'КНР_ОТПРАВЛЕНО', 'КНР_ПРИБЫЛО', 'ЗАВЕРШЕН', 'ОТКАЗ'];
+export const Statuses = [
+  'КР_ОТПРАВЛЕНО',
+  'КР_ПРИБЫЛО',
+  'КНР_ОТПРАВЛЕНО',
+  'КНР_ПРИБЫЛО',
+  'ЗАВЕРШЕН',
+  'ОТКАЗ',
+];
 
 export const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;

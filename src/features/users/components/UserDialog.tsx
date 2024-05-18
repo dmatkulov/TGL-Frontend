@@ -5,6 +5,8 @@ import { regionsState } from '../../regions/regionsSlice';
 import { fetchRegions } from '../../regions/regionsThunks';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { ProfileMutation } from '../../../types/types.Profile';
+import { selectPups } from '../../pups/pupsSlice';
+import { fetchPups } from '../../pups/pupsThunks';
 
 interface Props {
   state: ProfileMutation;
@@ -22,11 +24,16 @@ const UserDialog: React.FC<Props> = ({
   inputChangeHandler,
 }) => {
   const regions = useAppSelector(regionsState);
+  const pups = useAppSelector(selectPups);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchRegions());
   }, [dispatch]);
+
+  const fetchPupsByRegion = async (region: string) => {
+    await dispatch(fetchPups(region));
+  };
 
   return (
     <>
@@ -95,11 +102,16 @@ const UserDialog: React.FC<Props> = ({
                   <MenuItem value="" disabled>
                     Выберите регион
                   </MenuItem>
-                  {regions.map((region) => (
-                    <MenuItem key={region._id} value={region._id}>
-                      {region.name}
-                    </MenuItem>
-                  ))}
+                  {regions.length > 0 &&
+                    regions.map((region) => (
+                      <MenuItem
+                        key={region._id}
+                        value={region._id}
+                        onClick={() => fetchPupsByRegion(region._id)}
+                      >
+                        {region.name}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -121,6 +133,37 @@ const UserDialog: React.FC<Props> = ({
                   onChange={inputChangeHandler}
                   name="address"
                 />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  required
+                  name="pupID"
+                  label="ПВЗ"
+                  type="text"
+                  value={pups.length > 0 ? state.pupID : ''}
+                  autoComplete="new-pupID"
+                  onChange={inputChangeHandler}
+                >
+                  {pups.length > 0 && (
+                    <MenuItem value="" disabled>
+                      Выберите ближайший ПВЗ
+                    </MenuItem>
+                  )}
+                  {pups.length > 0 ? (
+                    pups.map((pup) => (
+                      <MenuItem key={pup._id} value={pup._id}>
+                        <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                        {pup.region.name} обл., {pup.address}, {pup.settlement}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="" disabled>
+                      Сначала выберите регион
+                    </MenuItem>
+                  )}
+                </TextField>
               </Grid>
               <Grid item xs>
                 <Button

@@ -1,4 +1,5 @@
 export interface ProfileMutation {
+  pupID: string | undefined;
   email: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;

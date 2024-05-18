@@ -22,7 +22,6 @@ const Clients = () => {
   useEffect(() => {
     dispatch(fetchClients());
   }, [dispatch]);
-  console.log(state);
   let content;
 
   if (isLoading) {
@@ -34,6 +33,9 @@ const Clients = () => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow sx={{ textTransform: 'uppercase' }}>
+            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+              ID
+            </TableCell>
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               Ф
             </TableCell>
@@ -67,6 +69,7 @@ const Clients = () => {
           {state.map((item) => (
             <ClientsItem
               key={item._id}
+              marketId={item.marketId}
               email={item.email}
               pupID={item.pupID}
               firstName={item.firstName}
@@ -83,7 +86,7 @@ const Clients = () => {
     </TableContainer>
   );
 
-  return content;
+  return <>{content}</>;
 };
 
 export default Clients;

@@ -12,9 +12,11 @@ const ClientsItem: FC<Client> = ({
   settlement,
   pupID,
   email,
+  marketId,
 }) => {
   return (
     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+      <TableCell align="left">{marketId}</TableCell>
       <TableCell align="left">{firstName}</TableCell>
       <TableCell align="left">{lastName}</TableCell>
       <TableCell align="left">{middleName}</TableCell>

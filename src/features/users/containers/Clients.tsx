@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { clientsState } from '../usersSlice';
+import { clientsState, isClientsLoading } from '../usersSlice';
 import {
+  CircularProgress,
   Paper,
   Table,
   TableBody,
@@ -10,12 +11,25 @@ import {
   TableRow,
 } from '@mui/material';
 import ClientsItem from '../components/ClientsItem';
+import { useEffect } from 'react';
+import { fetchClients } from '../usersThunks';
 
 const Clients = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector(clientsState);
+  const isLoading = useAppSelector(isClientsLoading);
 
-  return (
+  useEffect(() => {
+    dispatch(fetchClients());
+  }, [dispatch]);
+  console.log(state);
+  let content;
+
+  if (isLoading) {
+    content = <CircularProgress />;
+  }
+
+  content = (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
@@ -33,7 +47,7 @@ const Clients = () => {
               Почта
             </TableCell>{' '}
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Регион
+              Область
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               Нас. пункт
@@ -68,6 +82,8 @@ const Clients = () => {
       </Table>
     </TableContainer>
   );
+
+  return content;
 };
 
 export default Clients;

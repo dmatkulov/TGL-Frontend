@@ -2,6 +2,7 @@ import { GlobalErrorMessage, ValidationError } from '../../types/types';
 import { createSlice } from '@reduxjs/toolkit';
 import {
   createStaff,
+  fetchClients,
   getStaff,
   getStaffData,
   login,
@@ -26,6 +27,7 @@ interface UserState {
   logOutLoading: boolean;
   getStaffLoading: boolean;
   getStaffDataLoading: boolean;
+  isClientsLoading: boolean;
 }
 
 const initialState: UserState = {
@@ -41,6 +43,7 @@ const initialState: UserState = {
   logOutLoading: false,
   getStaffLoading: false,
   getStaffDataLoading: false,
+  isClientsLoading: false,
 };
 
 export const usersSlice = createSlice({
@@ -165,6 +168,17 @@ export const usersSlice = createSlice({
       .addCase(logout.rejected, (state) => {
         state.logOutLoading = false;
       });
+    builder
+      .addCase(fetchClients.pending, (state) => {
+        state.isClientsLoading = true;
+      })
+      .addCase(fetchClients.fulfilled, (state, { payload }) => {
+        state.clients = payload.clients;
+        state.isClientsLoading = false;
+      })
+      .addCase(fetchClients.rejected, (state) => {
+        state.isClientsLoading = false;
+      });
   },
 });
 
@@ -189,3 +203,5 @@ export const selectLogOutLoading = (state: RootState) =>
 export const { unsetUser, setRegisterError, setLoginError } =
   usersSlice.actions;
 export const clientsState = (state: RootState) => state.users.clients;
+export const isClientsLoading = (state: RootState) =>
+  state.users.isClientsLoading;

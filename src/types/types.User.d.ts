@@ -68,7 +68,7 @@ export interface Staff {
 }
 
 export interface Client {
-  _id?: string; // пока необязательный
+  _id?: string;
   email: string;
   pupID: Pup;
   firstName: string;

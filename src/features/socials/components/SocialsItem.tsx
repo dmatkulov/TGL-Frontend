@@ -1,11 +1,10 @@
 import { Box, CardMedia, Typography } from '@mui/material';
 import noLogoImage from '../../../assets/nologo.png';
-import { apiURL, appRoutes } from '../../../utils/constants';
+import { apiURL } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useAppDispatch } from '../../../app/hooks';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
-import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
 interface Props {
@@ -36,12 +35,9 @@ const SocialsItem: React.FC<Props> = ({
   editHandler,
 }) => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const deleteHandler = async () => {
     await dispatch(deleteSocialNetwork(id));
     await dispatch(fetchSocials());
-    navigate(appRoutes.socials);
   };
 
   let coverImage = noLogoImage;

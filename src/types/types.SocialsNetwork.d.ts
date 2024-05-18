@@ -22,6 +22,11 @@ export interface ResponseSocials {
   socials: Social[];
 }
 
+export interface ResponseSocial {
+  message: string;
+  socials: Social[];
+}
+
 export interface UpdateSocialArg {
   socialId: string;
   socialMutation: SocialData;

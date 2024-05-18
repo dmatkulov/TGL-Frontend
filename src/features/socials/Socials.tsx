@@ -1,26 +1,38 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
+  isSingleSocialLoading,
+  isSocialsLoading,
   isSocialUploading,
   singleSocialState,
   socialsState,
 } from './socialsSlice';
 import React, { useEffect, useState } from 'react';
-import { addSocial, fetchSocials } from './socialsThunk';
+import {
+  addSocial,
+  fetchOneSocial,
+  fetchSocials,
+  updateSocial,
+} from './socialsThunk';
 import {
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Grid,
+  Skeleton,
   TextField,
 } from '@mui/material';
 import SocialsItem from './components/SocialsItem';
 import FileInput from '../../components/FileInput/FileInput';
 import { LoadingButton } from '@mui/lab';
-import { SocialMutation } from '../../types/types.SocialsNetwork';
+import {
+  SocialMutation,
+  UpdateSocialArg,
+} from '../../types/types.SocialsNetwork';
 
 const historyButtonEffect = {
   marginRight: '30px',
@@ -46,8 +58,12 @@ const Socials = () => {
   const socials = useAppSelector(socialsState);
   const social = useAppSelector(singleSocialState);
   const isUploading = useAppSelector(isSocialUploading);
+  const isLoading = useAppSelector(isSocialsLoading);
+  const isSingleLoading = useAppSelector(isSingleSocialLoading);
+  const anyLoading = isLoading || isSingleLoading;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<SocialMutation>(initial);
+  const [editId, setEditId] = useState<string>('');
   const [toggleState, setToggleState] = useState<StateStatus>(
     StateStatus.initial,
   );
@@ -62,16 +78,22 @@ const Socials = () => {
     });
   };
 
-  const toggleToEditMode = (id: string) => {
+  useEffect(() => {
+    setState((prevState) => ({
+      ...prevState,
+      name: social.name,
+      link: social.link,
+    }));
+  }, [social]);
+
+  const toggleToEditMode = async (id: string) => {
     setOpen(true);
     setToggleState((prevState) => {
       prevState = StateStatus.edit;
       return prevState;
     });
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
+    setEditId(id);
+    await dispatch(fetchOneSocial(id)).unwrap();
   };
 
   const handleClose = () => {
@@ -84,6 +106,7 @@ const Socials = () => {
       prevState = initial;
       return prevState;
     });
+    setEditId('');
   };
 
   useEffect(() => {
@@ -121,7 +144,17 @@ const Socials = () => {
               if (isAddMode) {
                 await dispatch(addSocial(state));
                 dispatch(fetchSocials());
+                handleClose();
+                return;
               }
+
+              const editedSocialData: UpdateSocialArg = {
+                socialId: editId,
+                socialMutation: state,
+              };
+
+              await dispatch(updateSocial(editedSocialData));
+              dispatch(fetchSocials());
               handleClose();
             },
           }}
@@ -130,18 +163,22 @@ const Socials = () => {
           <DialogContent>
             <DialogContentText mb={2}>Тут будет инструкция.</DialogContentText>
             <Grid container direction="column" spacing={2}>
-              <Grid item xs>
-                <TextField
-                  required
-                  fullWidth
-                  id="name"
-                  label="Введите название социальной сети"
-                  name="name"
-                  autoComplete="new-name"
-                  value={state.name}
-                  onChange={inputChangeHandler}
-                />
-              </Grid>
+              {anyLoading ? (
+                <Skeleton variant="rounded" width={210} height={60} />
+              ) : (
+                <Grid item xs>
+                  <TextField
+                    required
+                    fullWidth
+                    id="name"
+                    label="Введите название социальной сети"
+                    name="name"
+                    autoComplete="new-name"
+                    value={state.name}
+                    onChange={inputChangeHandler}
+                  />
+                </Grid>
+              )}
               <Grid item xs>
                 <TextField
                   required
@@ -169,7 +206,7 @@ const Socials = () => {
               type="submit"
               color="primary"
               loading={isUploading}
-              disabled={isImageEmpty || isUploading}
+              disabled={isAddMode ? isImageEmpty || isUploading : isUploading}
               variant="contained"
             >
               Подтвердить
@@ -183,16 +220,20 @@ const Socials = () => {
         >
           Добавить социальную сеть
         </Button>
-        {socials.map((item) => (
-          <SocialsItem
-            id={item._id}
-            key={item._id}
-            name={item.name}
-            link={item.link}
-            image={item.image}
-            editHandler={() => toggleToEditMode(item._id)}
-          />
-        ))}
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          socials.map((item) => (
+            <SocialsItem
+              id={item._id}
+              key={item._id}
+              name={item.name}
+              link={item.link}
+              image={item.image}
+              editHandler={() => toggleToEditMode(item._id)}
+            />
+          ))
+        )}
       </Box>
     </>
   );

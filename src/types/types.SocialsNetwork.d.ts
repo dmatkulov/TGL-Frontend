@@ -1,8 +1,14 @@
-export interface Socials {
+export interface Social {
   _id: string;
   name: string;
   link: string;
   image: null | string;
+}
+
+export interface SocialMutation {
+  name: string;
+  link: string;
+  image: File | null;
 }
 
 export interface SocialData {
@@ -11,15 +17,9 @@ export interface SocialData {
   image: File | string | null;
 }
 
-export interface SocialDataMutation {
-  name: string;
-  link: string;
-  image: null | string;
-}
-
 export interface ResponseSocials {
   message: string;
-  socials: Socials[];
+  socials: Social[];
 }
 
 export interface UpdateSocialArg {

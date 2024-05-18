@@ -7,6 +7,8 @@ import { RootState } from '../../app/store';
 import { unsetUser } from './usersSlice';
 import { ProfileMutation } from '../../types/types.Profile';
 import {
+  ClientResponse,
+  ClientsResponse,
   IStaff,
   IStaffResponse,
   IStaffResponseData,
@@ -185,11 +187,28 @@ export const logout = createAsyncThunk<void, undefined>(
   },
 );
 
-export const fetchClients = createAsyncThunk('users/fetchClients', async () => {
+export const fetchClients = createAsyncThunk<ClientsResponse | undefined>(
+  'users/fetchClients',
+  async () => {
+    try {
+      const response = await axiosApi.get<ClientsResponse>(serverRoute.clients);
+      return response.data;
+    } catch (e) {
+      console.log('Caught on try - FETCH CLIENTS - ', e);
+    }
+  },
+);
+export const fetchSingleClient = createAsyncThunk<
+  ClientResponse | undefined,
+  string
+>('users/fetchSingleClient', async (arg) => {
   try {
-    const response = await axiosApi.get(serverRoute.clients);
+    console.log(arg);
+    const response = await axiosApi.get<ClientResponse>(
+      serverRoute.clients + '?marketId=' + arg,
+    );
     return response.data;
   } catch (e) {
-    console.log('Caught on try - FETCH CLIENTS - ', e);
+    console.log('Caught on try - FETCH SINGLE CLIENT - ', e);
   }
 });

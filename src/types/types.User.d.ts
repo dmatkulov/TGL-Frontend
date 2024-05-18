@@ -80,6 +80,14 @@ export interface Client {
   settlement: string;
   address: string;
 }
+export interface ClientsResponse {
+  message: string;
+  clients: Client[];
+}
+export interface ClientResponse {
+  message: string;
+  client: Client;
+}
 
 export interface IStaff {
   email: string;

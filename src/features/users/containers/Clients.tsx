@@ -1,71 +1,103 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { clientsState, isClientsLoading } from '../usersSlice';
 import {
-  CircularProgress,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@mui/material';
+  clientsState,
+  isClientsLoading,
+  isSingleClientLoading,
+  singleClientState,
+} from '../usersSlice';
+import { Box, CircularProgress, TextField } from '@mui/material';
 import ClientsItem from '../components/ClientsItem';
-import { useEffect } from 'react';
-import { fetchClients } from '../usersThunks';
+import React, { useEffect, useState } from 'react';
+import { fetchClients, fetchSingleClient } from '../usersThunks';
+import ClientsTable from '../components/ClientsTable';
+import { LoadingButton } from '@mui/lab';
+
+const isInputValid = (marketIdString: string) => {
+  const regex = /^\d{5}$/;
+  return regex.test(marketIdString);
+};
 
 const Clients = () => {
+  const [marketId, setMarketId] = useState<string>('');
   const dispatch = useAppDispatch();
   const state = useAppSelector(clientsState);
+  const singleState = useAppSelector(singleClientState);
   const isLoading = useAppSelector(isClientsLoading);
+  const isEmpty = singleState === null;
+  const isSingleLoading = useAppSelector(isSingleClientLoading);
 
   useEffect(() => {
     dispatch(fetchClients());
   }, [dispatch]);
-  let content;
 
-  if (isLoading) {
-    content = <CircularProgress />;
-  }
+  const submitHandler = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isInputValid(marketId)) {
+      await dispatch(fetchSingleClient(marketId));
+      setMarketId('');
+    }
+  };
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMarketId((prevState) => {
+      prevState = e.target.value;
+      return prevState;
+    });
+  };
 
-  content = (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow sx={{ textTransform: 'uppercase' }}>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              ID
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Ф
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              И
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              О
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Почта
-            </TableCell>{' '}
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Область
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Нас. пункт
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Адрес
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Номер
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              ПВЗ
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+  return (
+    <>
+      <Box mb={2} pb={2} borderBottom="1px solid grey">
+        <Box
+          display="flex"
+          alignItems="center"
+          component="form"
+          onSubmit={submitHandler}
+        >
+          <TextField
+            type="number"
+            onChange={inputChangeHandler}
+            value={marketId}
+            id="marketId"
+            name="marketId"
+            label="ID"
+            sx={{ marginRight: '8px' }}
+          ></TextField>
+          <LoadingButton
+            variant="contained"
+            loading={isSingleLoading}
+            disabled={isSingleLoading || !isInputValid(marketId)}
+            type="submit"
+          >
+            Поиск
+          </LoadingButton>
+        </Box>
+        {isSingleLoading ? (
+          <CircularProgress />
+        ) : (
+          <ClientsTable>
+            {isEmpty ? (
+              <></>
+            ) : (
+              <ClientsItem
+                marketId={singleState?.marketId}
+                email={singleState?.email}
+                pupID={singleState?.pupID}
+                firstName={singleState?.firstName}
+                lastName={singleState?.lastName}
+                middleName={singleState?.middleName}
+                phoneNumber={singleState?.phoneNumber}
+                region={singleState?.region}
+                settlement={singleState?.settlement}
+                address={singleState?.address}
+              />
+            )}
+          </ClientsTable>
+        )}
+      </Box>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <ClientsTable>
           {state.map((item) => (
             <ClientsItem
               key={item._id}
@@ -81,12 +113,10 @@ const Clients = () => {
               address={item.address}
             />
           ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+        </ClientsTable>
+      )}
+    </>
   );
-
-  return <>{content}</>;
 };
 
 export default Clients;

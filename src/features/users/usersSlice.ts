@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   createStaff,
   fetchClients,
+  fetchSingleClient,
   getStaff,
   getStaffData,
   login,
@@ -19,6 +20,7 @@ interface UserState {
   lastUser: User | null;
   staffData: Staff[];
   clients: Client[];
+  client: Client | null;
   staff: Staff | null;
   registerLoading: boolean;
   registerError: ValidationError | null;
@@ -28,6 +30,7 @@ interface UserState {
   getStaffLoading: boolean;
   getStaffDataLoading: boolean;
   isClientsLoading: boolean;
+  isSingleClientLoading: boolean;
 }
 
 const initialState: UserState = {
@@ -35,6 +38,7 @@ const initialState: UserState = {
   lastUser: null,
   staffData: [],
   clients: [],
+  client: null,
   staff: null,
   registerLoading: false,
   registerError: null,
@@ -44,6 +48,7 @@ const initialState: UserState = {
   getStaffLoading: false,
   getStaffDataLoading: false,
   isClientsLoading: false,
+  isSingleClientLoading: false,
 };
 
 export const usersSlice = createSlice({
@@ -173,11 +178,26 @@ export const usersSlice = createSlice({
         state.isClientsLoading = true;
       })
       .addCase(fetchClients.fulfilled, (state, { payload }) => {
-        state.clients = payload.clients;
+        if (payload) {
+          state.clients = payload.clients;
+        }
         state.isClientsLoading = false;
       })
       .addCase(fetchClients.rejected, (state) => {
         state.isClientsLoading = false;
+      });
+    builder
+      .addCase(fetchSingleClient.pending, (state) => {
+        state.isSingleClientLoading = true;
+      })
+      .addCase(fetchSingleClient.fulfilled, (state, { payload }) => {
+        if (payload) {
+          state.client = payload.client;
+        }
+        state.isSingleClientLoading = false;
+      })
+      .addCase(fetchSingleClient.rejected, (state) => {
+        state.isSingleClientLoading = false;
       });
   },
 });
@@ -203,5 +223,8 @@ export const selectLogOutLoading = (state: RootState) =>
 export const { unsetUser, setRegisterError, setLoginError } =
   usersSlice.actions;
 export const clientsState = (state: RootState) => state.users.clients;
+export const singleClientState = (state: RootState) => state.users.client;
 export const isClientsLoading = (state: RootState) =>
+  state.users.isClientsLoading;
+export const isSingleClientLoading = (state: RootState) =>
   state.users.isClientsLoading;

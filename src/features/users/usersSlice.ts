@@ -11,12 +11,13 @@ import {
   update,
 } from './usersThunks';
 import { RootState } from '../../app/store';
-import { Staff, User } from '../../types/types.User';
+import { Client, Staff, User } from '../../types/types.User';
 
 interface UserState {
   user: User | null;
   lastUser: User | null;
   staffData: Staff[];
+  clients: Client[];
   staff: Staff | null;
   registerLoading: boolean;
   registerError: ValidationError | null;
@@ -31,6 +32,7 @@ const initialState: UserState = {
   user: null,
   lastUser: null,
   staffData: [],
+  clients: [],
   staff: null,
   registerLoading: false,
   registerError: null,
@@ -186,3 +188,4 @@ export const selectLogOutLoading = (state: RootState) =>
   state.users.logOutLoading;
 export const { unsetUser, setRegisterError, setLoginError } =
   usersSlice.actions;
+export const clientsState = (state: RootState) => state.users.clients;

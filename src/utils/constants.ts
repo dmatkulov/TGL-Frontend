@@ -10,6 +10,7 @@ export const serverRoute = {
   companyAddresses: '/company-addresses',
   companyAddressesAdd: '/company-addresses/add',
   staff: '/users/staff',
+  clients: '/users/clients',
   socials: '/socials',
 };
 

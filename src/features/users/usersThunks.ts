@@ -184,3 +184,11 @@ export const logout = createAsyncThunk<void, undefined>(
     dispatch(unsetUser());
   },
 );
+
+export const fetchClients = createAsyncThunk('users/fetchClients', async () => {
+  try {
+    const response = await axiosApi.get();
+  } catch (e) {
+    console.log('Caught on try - FETCH CLIENTS - ', e);
+  }
+});

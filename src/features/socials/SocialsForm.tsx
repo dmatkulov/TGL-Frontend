@@ -1,13 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import {
-  Box,
-  // Button,
-  // CircularProgress,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Grid, TextField, Typography } from '@mui/material';
 import FileInput from '../../components/FileInput/FileInput';
 import { useAppSelector } from '../../app/hooks';
 import { SocialData } from '../../types/types.SocialsNetwork';
@@ -34,6 +26,7 @@ const SocialsForm: React.FC<Props> = ({
 }) => {
   const loading = useAppSelector(isPostLoadingSocials);
   const [state, setState] = useState<SocialData>(initialSocial);
+  const isImageEmpty = state.image === '' || state.image === null;
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -44,7 +37,7 @@ const SocialsForm: React.FC<Props> = ({
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    console.log(state);
     onSubmit(state);
   };
 
@@ -123,6 +116,7 @@ const SocialsForm: React.FC<Props> = ({
                 color="primary"
                 variant="contained"
                 loading={loading}
+                disabled={isImageEmpty}
               >
                 {isEdit ? 'Обновить' : 'Добавить'}
               </LoadingButton>

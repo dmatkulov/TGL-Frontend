@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { isDeleteSocialNetwork, isEditing } from '../socialsSlice';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 interface Props {
   id: string;
@@ -62,7 +63,7 @@ const SocialItem: React.FC<Props> = ({
             image={coverImage}
             alt={link}
           />
-          <Typography variant="subtitle1">{name}</Typography>
+          <Typography>{name}</Typography>
           <Box>
             <LoadingButton
               disabled={isDelete}
@@ -84,7 +85,7 @@ const SocialItem: React.FC<Props> = ({
           </Box>
         </Box>
         <Box>
-          <Typography>{link}</Typography>
+          <Typography noWrap>{link}</Typography>
         </Box>
       </Box>
     </>

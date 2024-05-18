@@ -13,9 +13,7 @@ interface SocialsState {
   social: Social;
   isLoading: boolean;
   isSingleLoading: boolean;
-  isSingleSocialLoading: boolean;
   isUploading: boolean;
-  isDeleting: boolean;
 }
 
 const initialState: SocialsState = {
@@ -28,9 +26,7 @@ const initialState: SocialsState = {
   },
   isLoading: false,
   isSingleLoading: false,
-  isSingleSocialLoading: false,
   isUploading: false,
-  isDeleting: false,
 };
 
 export const socialsSlice = createSlice({
@@ -65,13 +61,16 @@ export const socialsSlice = createSlice({
     builder
       .addCase(fetchOneSocial.pending, (state) => {
         state.isSingleLoading = true;
+        console.log('slice pending', state.isSingleLoading);
       })
       .addCase(fetchOneSocial.fulfilled, (state, { payload: current }) => {
-        state.isSingleLoading = false;
         state.social = current;
+        state.isSingleLoading = false;
+        console.log('slice ff', state.isSingleLoading);
       })
       .addCase(fetchOneSocial.rejected, (state) => {
         state.isSingleLoading = false;
+        console.log('slice r', state.isSingleLoading);
       });
     builder
       .addCase(updateSocial.pending, (state) => {
@@ -83,34 +82,14 @@ export const socialsSlice = createSlice({
       .addCase(updateSocial.rejected, (state) => {
         state.isUploading = false;
       });
-
-    // builder3
-    //   .addCase(deleteSocialNetwork.pending, (state) => {
-    //     state.isDelete = true;
-    //   })
-    //   .addCase(deleteSocialNetwork.fulfilled, (state) => {
-    //     state.isDelete = false;
-    //   })
-    //   .addCase(deleteSocialNetwork.rejected, (state) => {
-    //     state.isDelete = false;
-    //   });
   },
 });
 
 export const socialReducer = socialsSlice.reducer;
 export const socialsState = (state: RootState) => state.socials.socials;
 export const singleSocialState = (state: RootState) => state.socials.social;
-
 export const isSocialUploading = (state: RootState) =>
   state.socials.isUploading;
 export const isSocialsLoading = (state: RootState) => state.socials.isLoading;
 export const isSingleSocialLoading = (state: RootState) =>
-  state.socials.isSingleSocialLoading;
-
-// export const selectSocials = (state: RootState) => state.socials.socials;
-// export const selectSocial = (state: RootState) => state.socials.social;
-// export const isPostLoadingSocials = (state: RootState) =>
-//   state.socials.isUploading;
-// export const isDeleteSocialNetwork = (state: RootState) =>
-//   state.socials.isDelete;
-// export const isEditing = (state: RootState) => state.socials.isEditing;
+  state.socials.isSingleLoading;

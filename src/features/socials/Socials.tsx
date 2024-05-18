@@ -41,6 +41,10 @@ const historyButtonEffect = {
   marginBottom: '10px',
 };
 
+const skeletonStyle = {
+  width: '100%',
+  marginBottom: '8px',
+};
 enum StateStatus {
   edit = 'edit',
   add = 'add',
@@ -164,7 +168,7 @@ const Socials = () => {
             <DialogContentText mb={2}>Тут будет инструкция.</DialogContentText>
             <Grid container direction="column" spacing={2}>
               {anyLoading ? (
-                <Skeleton variant="rounded" width={210} height={60} />
+                <Skeleton variant="rounded" height={60} sx={skeletonStyle} />
               ) : (
                 <Grid item xs>
                   <TextField
@@ -179,25 +183,33 @@ const Socials = () => {
                   />
                 </Grid>
               )}
-              <Grid item xs>
-                <TextField
-                  required
-                  fullWidth
-                  id="link"
-                  label="Введите URL адрес"
-                  name="link"
-                  autoComplete="new-link"
-                  value={state.link}
-                  onChange={inputChangeHandler}
-                />
-              </Grid>
-              <Grid item xs>
-                <FileInput
-                  label="Image"
-                  name="image"
-                  onChange={fileInputChangeHandler}
-                />
-              </Grid>
+              {anyLoading ? (
+                <Skeleton variant="rounded" height={60} sx={skeletonStyle} />
+              ) : (
+                <Grid item xs>
+                  <TextField
+                    required
+                    fullWidth
+                    id="link"
+                    label="Введите URL адрес"
+                    name="link"
+                    autoComplete="new-link"
+                    value={state.link}
+                    onChange={inputChangeHandler}
+                  />
+                </Grid>
+              )}
+              {anyLoading ? (
+                <Skeleton variant="rounded" height={60} sx={skeletonStyle} />
+              ) : (
+                <Grid item xs>
+                  <FileInput
+                    label="Image"
+                    name="image"
+                    onChange={fileInputChangeHandler}
+                  />
+                </Grid>
+              )}
             </Grid>
           </DialogContent>
           <DialogActions>

@@ -6,12 +6,13 @@ import {
   Grid,
   MenuItem,
   TextField,
+  useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { fetchPups } from '../../pups/pupsThunks';
 import { selectPups, selectPupsLoading } from '../../pups/pupsSlice';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchShipments,
   fetchShipmentsByRegionAndPup,
@@ -20,10 +21,16 @@ import {
   selectShipments,
   selectShipmentsLoading,
 } from '../../shipments/shipmentsSlice';
-import ShipmentsCard from '../../shipments/components/ShipmentsCard';
-import { Statistics } from '../../../types/types.Statistics';
+import { Statistics as statistics } from '../../../types/types.Statistics';
+import TableContainer from '@mui/material/TableContainer';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableBody from '@mui/material/TableBody';
 
-const initialState: Statistics = {
+const initialState: statistics = {
   pupId: '',
   region: '',
   datetime: '',
@@ -36,6 +43,7 @@ const styleBoxSpinner = {
 };
 
 const Statistics = () => {
+  const isSmallScreen = useMediaQuery('(max-width:1200px)');
   const regions = useAppSelector(regionsState);
   const loadingPups = useAppSelector(selectPupsLoading);
   const pups = useAppSelector(selectPups);
@@ -43,7 +51,8 @@ const Statistics = () => {
   const loading = useAppSelector(selectShipmentsLoading);
   const dispatch = useAppDispatch();
 
-  const [state, setState] = useState<Statistics>(initialState);
+  const tableWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [state, setState] = useState<statistics>(initialState);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
@@ -87,11 +96,10 @@ const Statistics = () => {
   return (
     <>
       <Alert sx={{ width: 450, marginBottom: 1 }} severity="warning">
-        чтоб увидеть статистику за месяц или за год сначала выберите регион и
-        ПВЗ
+        Для получения статистики, пожалуйста, укажите все параметры
       </Alert>
 
-      <Box display={'flex'}>
+      <Box display={'flex'} sx={{ justifyContent: 'space-between' }}>
         <Grid
           component={'form'}
           onSubmit={submitFormHandler}
@@ -206,7 +214,7 @@ const Statistics = () => {
           </Button>
         </Grid>
 
-        <Box>
+        <Box ref={tableWrapperRef} sx={{ width: '100%' }}>
           {shipments.length === 0 && (
             <Alert severity="info">Заказов за этот период нет</Alert>
           )}
@@ -215,9 +223,58 @@ const Statistics = () => {
               <CircularProgress size={100} />
             </Box>
           ) : (
-            shipments.map((shipment) => (
-              <ShipmentsCard key={shipment._id} shipment={shipment} />
-            ))
+            <Box sx={{ width: tableWrapperRef?.current?.clientWidth }}>
+              <TableContainer
+                component={Paper}
+                sx={{
+                  overflowX: isSmallScreen ? 'scroll' : '',
+                }}
+              >
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow sx={{ textTransform: 'uppercase' }}>
+                      <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                        Пользователь
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                        Статус
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                        Оплачено
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                        Номер трэка
+                      </TableCell>
+                      <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                        Цена
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {shipments.map((shipment) => (
+                      <TableRow
+                        key={shipment._id}
+                        sx={{
+                          '&:last-child td, &:last-child th': { border: 0 },
+                        }}
+                      >
+                        <TableCell align="left">
+                          {shipment.userId.firstName}
+                        </TableCell>
+                        <TableCell align="left">{shipment.status}</TableCell>
+                        <TableCell align="left">
+                          {shipment.isPaid ? 'Да' : 'Нет'}
+                        </TableCell>
+                        <TableCell align="left">
+                          {shipment.trackerNumber}
+                        </TableCell>
+                        <TableCell align="left">{shipment.price.som}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
           )}
         </Box>
       </Box>

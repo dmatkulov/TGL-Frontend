@@ -24,6 +24,7 @@ const Profile = () => {
     region: user?.region?._id,
     settlement: user?.settlement,
     address: user?.address,
+    pupID: user?.pupID._id,
   });
 
   const isAdmin = user?.role === 'super' || user?.role === 'admin';

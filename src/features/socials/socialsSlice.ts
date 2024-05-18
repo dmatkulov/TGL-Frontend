@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Social } from '../../types/types.SocialsNetwork';
-import { fetchSocials } from './socialsThunk';
+import { addSocial, fetchSocials } from './socialsThunk';
 import { RootState } from '../../app/store';
 
 interface SocialsState {
@@ -44,6 +44,16 @@ export const socialsSlice = createSlice({
       .addCase(fetchSocials.rejected, (state) => {
         state.isLoading = false;
       });
+    builder
+      .addCase(addSocial.pending, (state) => {
+        state.isUploading = true;
+      })
+      .addCase(addSocial.fulfilled, (state) => {
+        state.isUploading = false;
+      })
+      .addCase(addSocial.rejected, (state) => {
+        state.isUploading = false;
+      });
 
     // builder
     //   .addCase(fetchOneSocial.pending, (state) => {
@@ -57,16 +67,7 @@ export const socialsSlice = createSlice({
     //     state.isLoadingDataSocial = false;
     //   });
     //
-    // builder
-    //   .addCase(createSocials.pending, (state) => {
-    //     state.isLoadingDataSocial = true;
-    //   })
-    //   .addCase(createSocials.fulfilled, (state) => {
-    //     state.isLoadingDataSocial = false;
-    //   })
-    //   .addCase(createSocials.rejected, (state) => {
-    //     state.isLoadingDataSocial = false;
-    //   });
+
     // builder
     //   .addCase(deleteSocialNetwork.pending, (state) => {
     //     state.isDelete = true;
@@ -84,9 +85,12 @@ export const socialReducer = socialsSlice.reducer;
 export const socialsState = (state: RootState) => state.socials.socials;
 export const singleSocialState = (state: RootState) => state.socials.social;
 
+export const isSocialUploading = (state: RootState) =>
+  state.socials.isUploading;
 export const isSocialsLoading = (state: RootState) => state.socials.isLoading;
 export const isSingleSocialLoading = (state: RootState) =>
   state.socials.isSingleSocialLoading;
+
 // export const selectSocials = (state: RootState) => state.socials.socials;
 // export const selectSocial = (state: RootState) => state.socials.social;
 // export const isPostLoadingSocials = (state: RootState) =>

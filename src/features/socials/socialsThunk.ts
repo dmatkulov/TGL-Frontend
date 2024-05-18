@@ -4,7 +4,7 @@ import { serverRoute } from '../../utils/constants';
 import {
   ResponseSocials,
   SocialData,
-  Socials,
+  Social,
   UpdateSocialArg,
 } from '../../types/types.SocialsNetwork';
 
@@ -23,7 +23,7 @@ export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
   },
 );
 
-export const fetchOneSocial = createAsyncThunk<Socials, string>(
+export const fetchOneSocial = createAsyncThunk<Social, string>(
   'socials/fetchOne',
   async (id) => {
     const response = await axiosApi.get(`${serverRoute.socials}/${id}`);
@@ -31,7 +31,7 @@ export const fetchOneSocial = createAsyncThunk<Socials, string>(
   },
 );
 
-export const createSocials = createAsyncThunk<null, SocialData>(
+export const addSocial = createAsyncThunk<null, SocialData>(
   'albums/albumCreate',
   async (socialsNetwork) => {
     try {
@@ -47,7 +47,7 @@ export const createSocials = createAsyncThunk<null, SocialData>(
       const response = await axiosApi.post(serverRoute.socials, formData);
       return response.data;
     } catch (e) {
-      console.log('Try to create new Social Network ', e);
+      console.log('Caught on try - ADD SOCIAL - ', e);
       throw e;
     }
   },
@@ -68,6 +68,7 @@ export const updateSocial = createAsyncThunk<void, UpdateSocialArg>(
     return axiosApi.patch(`${serverRoute.socials}/${socialId}`, formData);
   },
 );
+
 export const deleteSocialNetwork = createAsyncThunk<void, string>(
   'socials/deleteSocialNetwork',
   async (id) => {

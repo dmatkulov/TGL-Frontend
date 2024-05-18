@@ -3,8 +3,7 @@ import noLogoImage from '../../../assets/nologo.png';
 import { apiURL, appRoutes } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { isDeleteSocialNetwork, isEditing } from '../socialsSlice';
+import { useAppDispatch } from '../../../app/hooks';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
@@ -29,15 +28,13 @@ const imgBtnBoxStyle = {
   justifyContent: 'space-between',
 };
 
-const SocialItem: React.FC<Props> = ({
+const SocialsItem: React.FC<Props> = ({
   id,
   name,
   link,
   image,
   editHandler,
 }) => {
-  const isDelete = useAppSelector(isDeleteSocialNetwork);
-  const isEdit = useAppSelector(isEditing);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -66,20 +63,13 @@ const SocialItem: React.FC<Props> = ({
           <Typography>{name}</Typography>
           <Box>
             <LoadingButton
-              disabled={isDelete}
-              loading={isDelete}
               onClick={deleteHandler}
               sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
               color="error"
             >
               <CancelIcon />
             </LoadingButton>
-            <LoadingButton
-              onClick={editHandler}
-              disabled={isEdit}
-              loading={isEdit}
-              variant="contained"
-            >
+            <LoadingButton onClick={editHandler} variant="contained">
               Изменить
             </LoadingButton>
           </Box>
@@ -92,4 +82,4 @@ const SocialItem: React.FC<Props> = ({
   );
 };
 
-export default SocialItem;
+export default SocialsItem;

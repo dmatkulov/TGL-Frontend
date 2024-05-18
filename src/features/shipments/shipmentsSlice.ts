@@ -5,6 +5,7 @@ import {
   fetchShipments,
   fetchShipmentsByRegionAndPup,
   fetchShipmentsByUser,
+  updateShipmentStatus,
 } from './shipmentsThunk';
 import { RootState } from '../../app/store';
 import { toast } from 'react-toastify';
@@ -86,6 +87,18 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipmentsByRegionAndPup.rejected, (state) => {
         state.shipmentsLoading = false;
         state.shipmentsError = true;
+      });
+
+    builder
+      .addCase(updateShipmentStatus.pending, (state) => {
+        state.addShipmentLoading = true;
+      })
+      .addCase(updateShipmentStatus.fulfilled, (state) => {
+        state.addShipmentLoading = false;
+      })
+      .addCase(updateShipmentStatus.rejected, (state) => {
+        state.addShipmentLoading = false;
+        state.addShipmentError = true;
       });
   },
 });

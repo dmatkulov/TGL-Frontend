@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  ShipmentData,
   ShipmentMutation,
   ShipmentsResponse,
   oneShipmentResponse,
@@ -100,5 +101,20 @@ export const fetchShipmentsHistoryByUser = createAsyncThunk<
     return response.data ?? [];
   } catch (e) {
     console.log('Caught on try - FETCH SHIPMENTS HISTORY BY USER - ', e);
+  }
+});
+
+export const updateShipmentStatus = createAsyncThunk<
+  ShipmentsResponse,
+  ShipmentData
+>('companyAddresses/edit', async (ShipmentData) => {
+  try {
+    const response = await axiosApi.put(
+      serverRoute.shipments + '/' + ShipmentData._id,
+      ShipmentData,
+    );
+    return response.data;
+  } catch (e) {
+    console.log('Caught on try - UPLOAD NEW ADDRESS ', e);
   }
 });

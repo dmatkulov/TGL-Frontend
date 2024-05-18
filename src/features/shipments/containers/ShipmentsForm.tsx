@@ -1,22 +1,20 @@
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  TextField,
-} from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { createShipment } from '../shipmentsThunk';
-import React, { useState } from 'react';
-import { ShipmentMutation } from '../../../types/types.Shipments';
-import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
+import {Alert, Box, Button, CircularProgress, Grid, MenuItem, TextField,} from '@mui/material';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {createShipment} from '../shipmentsThunk';
+import React, {useEffect, useState} from 'react';
+import {ShipmentMutation} from '../../../types/types.Shipments';
+import {addShipmentGetError, addShipmentGetLoad} from '../shipmentsSlice';
 import InputAdornment from '@mui/material/InputAdornment';
+import {selectPups, selectPupsLoading} from '../../pups/pupsSlice';
+import {fetchPups} from '../../pups/pupsThunks';
+import {ShipmentStatus} from '../../../utils/constants';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
   trackerNumber: '',
   weight: '',
+  pupId: '',
+  status: '',
   dimensions: {
     height: '',
     width: '',
@@ -28,6 +26,8 @@ const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
   const [state, setState] = useState<ShipmentMutation>(initialState);
 
+  const pups = useAppSelector(selectPups);
+  const loadingPups = useAppSelector(selectPupsLoading);
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
 
@@ -38,10 +38,12 @@ const ShipmentsForm = () => {
     'height',
     'width',
     'length',
+    'pupId',
+    'status'
   ];
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
 
     if (parseFloat(value) <= 0) {
       return;
@@ -60,7 +62,7 @@ const ShipmentsForm = () => {
   };
 
   const isFormValid = () => {
-    const { userMarketId, trackerNumber, weight, dimensions } = state;
+    const {userMarketId, trackerNumber, weight, dimensions, pupId, status} = state;
 
     return (
       userMarketId &&
@@ -68,7 +70,9 @@ const ShipmentsForm = () => {
       weight &&
       dimensions.height &&
       dimensions.length &&
-      dimensions.width
+      dimensions.width &&
+      pupId &&
+      status
     );
   };
 
@@ -78,15 +82,19 @@ const ShipmentsForm = () => {
     setState(initialState);
   };
 
+  useEffect(() => {
+    dispatch(fetchPups());
+  }, [dispatch]);
+
   return (
     <>
       {error && (
-        <Alert severity="error" sx={{ mt: 3, mb: 1, width: '100%' }}>
+        <Alert severity="error" sx={{mt: 3, mb: 1, width: '100%'}}>
           {'Введенные данные не верны. Попробуйте снова!'}
         </Alert>
       )}
       {loading && (
-        <Alert severity="success" sx={{ mt: 3, mb: 1, width: '100%' }}>
+        <Alert severity="success" sx={{mt: 3, mb: 1, width: '100%'}}>
           {'Данные успешно отправлены!'}
         </Alert>
       )}
@@ -195,14 +203,69 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
+          <Grid item xs={3} sx={{marginRight: 5}}>
+            <TextField
+              sx={{width: 200}}
+              required
+              select
+              name="status"
+              label="Статус"
+              type="text"
+              value={state.status}
+              autoComplete="new-status"
+              onChange={handleChange}
+            >
+
+              {ShipmentStatus.length > 0 && (
+                <MenuItem value="" disabled>
+                  Выберите статус заказа
+                </MenuItem>
+              )}
+              {ShipmentStatus.length > 0 && (
+                ShipmentStatus.map((shipment) => (
+                  <MenuItem key={shipment.id} value={shipment.name}>
+                    {shipment.name}
+                  </MenuItem>
+                ))
+              )}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={3}>
+            <TextField
+              sx={{width: 200}}
+              disabled={loadingPups}
+              select
+              name="pupId"
+              label="ПВЗ"
+              type="text"
+              value={state.pupId}
+              autoComplete="new-pupId"
+              onChange={handleChange}
+            >
+              {pups.length > 0 && (
+                <MenuItem value="" disabled>
+                  Выберите ближайший ПВЗ
+                </MenuItem>
+              )}
+              {pups.length > 0 && (
+                pups.map((pup) => (
+                  <MenuItem key={pup._id} value={pup._id}>
+                    <b style={{marginRight: '10px'}}>{pup.name}</b>
+                    {pup.region.name} обл., {pup.address}, {pup.settlement}
+                  </MenuItem>
+                ))
+              )}
+            </TextField>
+          </Grid>
         </Grid>
         <Button
           type="submit"
           variant="contained"
-          sx={{ mt: 3 }}
+          sx={{mt: 3}}
           disabled={!isFormValid() || loading}
         >
-          {loading ? <CircularProgress /> : 'Добавить отправку'}
+          {loading ? <CircularProgress/> : 'Добавить отправку'}
         </Button>
       </Box>
     </>

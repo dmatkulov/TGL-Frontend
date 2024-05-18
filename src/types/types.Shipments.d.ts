@@ -79,6 +79,8 @@ export interface ShipmentMutation {
   userMarketId: string;
   trackerNumber: string;
   weight: string;
+  pupId: string;
+  status:string;
   dimensions: {
     height: string;
     width: string;

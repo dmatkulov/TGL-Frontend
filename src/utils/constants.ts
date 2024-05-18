@@ -18,6 +18,15 @@ export const Roles = [
   { id: 2, name: 'manager' },
   { id: 3, name: 'client' },
 ];
+
+export const ShipmentStatus = [
+  { id: 1, name: 'КР_ОТПРАВЛЕНО' },
+  { id: 2, name: 'КР_ПРИБЫЛО' },
+  { id: 3, name: 'КНР_ОТПРАВЛЕНО' },
+  { id: 4, name: 'КНР_ПРИБЫЛО' },
+  { id: 5, name: 'ЗАВЕРШЕН' },
+  { id: 6, name: 'ОТКАЗ' },
+];
 export const appRoutes = {
   notFound: '*',
   home: '/',

@@ -47,6 +47,7 @@ const UserDialog: React.FC<Props> = ({
             <Grid container direction="column" spacing={2}>
               <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
                 <TextField
+                  required
                   id="firstName"
                   label="Имя"
                   value={state.firstName}
@@ -54,6 +55,7 @@ const UserDialog: React.FC<Props> = ({
                   name="firstName"
                 />
                 <TextField
+                  required
                   id="lastName"
                   label="Фамилия"
                   value={state.lastName}
@@ -70,6 +72,7 @@ const UserDialog: React.FC<Props> = ({
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  required
                   fullWidth
                   id="email"
                   label="Адрес электронной почты"
@@ -80,6 +83,7 @@ const UserDialog: React.FC<Props> = ({
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  required
                   fullWidth
                   select
                   name="region"

@@ -13,11 +13,11 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { fetchCompanyAddresses } from '../../../features/companyAddress/companyAddressThunks';
 import { companyAddressState } from '../../../features/companyAddress/companyAddressesSlice';
 import { fetchSocials } from '../../../features/socials/socialsThunk';
-import { selectSocials } from '../../../features/socials/socialsSlice';
+import { socialsState } from '../../../features/socials/socialsSlice';
 
 const Footer = () => {
   const isSmallScreen = useMediaQuery('(max-width:660px)');
-  const state = useAppSelector(selectSocials);
+  const state = useAppSelector(socialsState);
   const dispatch = useAppDispatch();
   const addresses = useAppSelector(companyAddressState);
   const isEmpty = addresses.length === 0;

@@ -10,6 +10,7 @@ export const serverRoute = {
   companyAddresses: '/company-addresses',
   companyAddressesAdd: '/company-addresses/add',
   staff: '/users/staff',
+  clients: '/users/clients',
   socials: '/socials',
 };
 
@@ -47,6 +48,7 @@ export const appRoutes = {
   socials: '/admin-profile/socials',
   socialsAdd: '/admin-profile/social-new',
   socialsEdit: '/admin-profile/social/:id',
+  adminClients: '/admin-profile/clients',
 };
 
 export const Statuses = ['КР_ОТПРАВЛЕНО', 'КР_ПРИБЫЛО', 'КНР_ОТПРАВЛЕНО', 'КНР_ПРИБЫЛО', 'ЗАВЕРШЕН', 'ОТКАЗ'];

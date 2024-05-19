@@ -47,7 +47,7 @@ const Staff: React.FC = () => {
     void fetchStaffData(newValue);
   };
 
-  const tabs = ['admin', 'manager', 'client'];
+  const tabs = ['admin', 'manager'];
 
   const fetchStaffData = useCallback(
     async (roleIndex: number) => {
@@ -58,9 +58,6 @@ const Staff: React.FC = () => {
           break;
         case 1:
           role = 'manager';
-          break;
-        case 2:
-          role = 'client';
           break;
         default:
           role = 'admin';
@@ -172,7 +169,6 @@ const Staff: React.FC = () => {
         >
           <Tab label="Админы" />
           <Tab label="Менеджеры" />
-          <Tab label="Клиенты" />
         </Tabs>
       </Grid>
       <Grid mt={2}>{tableContent}</Grid>

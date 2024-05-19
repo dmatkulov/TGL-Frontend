@@ -67,6 +67,28 @@ export interface Staff {
   role: string;
 }
 
+export interface Client {
+  _id?: string;
+  marketId: string;
+  email: string;
+  pupID: Pup;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  phoneNumber: string;
+  region: Region;
+  settlement: string;
+  address: string;
+}
+export interface ClientsResponse {
+  message: string;
+  clients: Client[];
+}
+export interface ClientResponse {
+  message: string;
+  client: Client;
+}
+
 export interface IStaff {
   email: string;
   password: string;

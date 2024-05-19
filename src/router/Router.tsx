@@ -25,6 +25,7 @@ import Price from '../features/prices/Price';
 import PriceLists from '../features/priceLists/PriceLists';
 import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
+import Clients from '../features/users/containers/Clients';
 
 export const router = createBrowserRouter([
   {
@@ -96,6 +97,10 @@ export const router = createBrowserRouter([
           {
             path: appRoutes.adminWarehouses,
             element: <WarehousesList />,
+          },
+          {
+            path: appRoutes.adminClients,
+            element: <Clients />,
           },
           {
             path: appRoutes.adminWarehousesAdd,

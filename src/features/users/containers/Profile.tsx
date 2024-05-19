@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import { update } from '../usersThunks';
 
 import Warehouses from '../../warehouses/Warehouses';
 import UserDialog from '../components/UserDialog';
@@ -11,7 +10,6 @@ import { ProfileMutation } from '../../../types/types.Profile';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const Profile = () => {
-  const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
 
@@ -32,12 +30,6 @@ const Profile = () => {
   };
 
   const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await dispatch(update(state));
     setOpen(false);
   };
 
@@ -101,7 +93,6 @@ const Profile = () => {
         state={state}
         open={open}
         handleClose={handleClose}
-        handleUpdateProfile={handleUpdateProfile}
         inputChangeHandler={inputChangeHandler}
       />
     </>

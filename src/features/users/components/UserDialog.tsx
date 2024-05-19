@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
@@ -15,12 +15,14 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { ProfileMutation } from '../../../types/types.Profile';
 import { selectPups } from '../../pups/pupsSlice';
 import { fetchPups } from '../../pups/pupsThunks';
+import { update } from '../usersThunks';
+import { regEx } from '../../../utils/constants';
+import { selectRegisterError } from '../usersSlice';
 
 interface Props {
   state: ProfileMutation;
   open: boolean;
   handleClose: () => void;
-  handleUpdateProfile: React.FormEventHandler;
   inputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
 }
 
@@ -28,19 +30,64 @@ const UserDialog: React.FC<Props> = ({
   state,
   open,
   handleClose,
-  handleUpdateProfile,
   inputChangeHandler,
 }) => {
   const regions = useAppSelector(regionsState);
   const pups = useAppSelector(selectPups);
   const dispatch = useAppDispatch();
+  const error = useAppSelector(selectRegisterError);
+
+  const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+
+  const getFieldError = (fieldName: string) => {
+    try {
+      return error?.errors[fieldName].message;
+    } catch {
+      return undefined;
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchRegions());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (state.region) {
+      fetchPupsByRegion(state.region);
+    }
+  }, [state.region]);
+
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
+  };
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const newFieldErrors: { [key: string]: string } = {};
+    if (!state.firstName) newFieldErrors.firstName = 'Имя обязательно';
+    if (!state.lastName) newFieldErrors.lastName = 'Фамилия обязательна';
+    if (!state.email) {
+      newFieldErrors.email = 'Электронная почта обязательна';
+      setEmailIsValid(false);
+    } else if (!regEx.test(state.email)) {
+      newFieldErrors.email = 'Неверный формат электронной почты';
+      setEmailIsValid(false);
+    }
+    if (!state.region) newFieldErrors.region = 'Регион обязателен';
+    if (!state.pupID) newFieldErrors.pupID = 'ПВЗ обязателен';
+
+    setFieldErrors(newFieldErrors);
+
+    if (Object.keys(newFieldErrors).length > 0) return;
+
+    try {
+      await dispatch(update(state));
+      handleClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -71,6 +118,12 @@ const UserDialog: React.FC<Props> = ({
                   value={state.firstName}
                   onChange={inputChangeHandler}
                   name="firstName"
+                  error={Boolean(
+                    getFieldError('firstName') || fieldErrors.firstName,
+                  )}
+                  helperText={
+                    getFieldError('firstName') || fieldErrors.firstName
+                  }
                 />
                 <TextField
                   required
@@ -79,6 +132,10 @@ const UserDialog: React.FC<Props> = ({
                   value={state.lastName}
                   onChange={inputChangeHandler}
                   name="lastName"
+                  error={Boolean(
+                    getFieldError('lastName') || fieldErrors.lastName,
+                  )}
+                  helperText={getFieldError('lastName') || fieldErrors.lastName}
                 />
                 <TextField
                   id="middleName"
@@ -96,6 +153,16 @@ const UserDialog: React.FC<Props> = ({
                   label="Адрес электронной почты"
                   value={state.email}
                   onChange={inputChangeHandler}
+                  error={Boolean(
+                    getFieldError('email') ||
+                      !emailIsValid ||
+                      fieldErrors.email,
+                  )}
+                  helperText={
+                    getFieldError('email')
+                      ? getFieldError('email')
+                      : fieldErrors.email
+                  }
                   name="email"
                 />
               </Grid>
@@ -109,6 +176,8 @@ const UserDialog: React.FC<Props> = ({
                   type="text"
                   value={state.region}
                   onChange={inputChangeHandler}
+                  error={Boolean(getFieldError('region') || fieldErrors.region)}
+                  helperText={getFieldError('region') || fieldErrors.region}
                 >
                   <MenuItem value="" disabled>
                     Выберите регион
@@ -123,6 +192,28 @@ const UserDialog: React.FC<Props> = ({
                         {region.name}
                       </MenuItem>
                     ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  required
+                  name="pupID"
+                  label="ПВЗ"
+                  type="text"
+                  value={pups.length > 0 ? state.pupID : ''}
+                  autoComplete="new-pupID"
+                  onChange={inputChangeHandler}
+                  error={Boolean(getFieldError('pupID') || fieldErrors.pupID)}
+                  helperText={getFieldError('pupID') || fieldErrors.pupID}
+                >
+                  {pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
               <Grid item xs={12}>
@@ -145,26 +236,7 @@ const UserDialog: React.FC<Props> = ({
                   name="address"
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  select
-                  required
-                  name="pupID"
-                  label="ПВЗ"
-                  type="text"
-                  value={pups.length > 0 ? state.pupID : ''}
-                  autoComplete="new-pupID"
-                  onChange={inputChangeHandler}
-                >
-                  {pups.map((pup) => (
-                    <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+
               <Grid item xs>
                 <Button
                   fullWidth

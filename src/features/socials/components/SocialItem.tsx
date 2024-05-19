@@ -21,6 +21,7 @@ const outerBoxStyle = {
   borderRadius: '10px',
   padding: '10px',
   marginBottom: '10px',
+  overflow: 'hidden',
 };
 
 const imgBtnBoxStyle = {

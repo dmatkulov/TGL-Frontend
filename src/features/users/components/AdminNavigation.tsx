@@ -90,6 +90,13 @@ const AdminNavigation = () => {
   const navigate = useNavigate();
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
 
+  const scrollTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <>
       <Box sx={{ bgcolor: 'background.paper' }}>
@@ -107,6 +114,7 @@ const AdminNavigation = () => {
                   onClick={() => {
                     setSelectedLink(link.id);
                     navigate(link.navLink);
+                    scrollTop();
                   }}
                   sx={{ borderRadius: 2 }}
                 >

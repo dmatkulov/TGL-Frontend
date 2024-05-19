@@ -1,22 +1,8 @@
-import {
-  // Box,
-  Button,
-  IconButton,
-  // Modal,
-  TableCell,
-  TableRow,
-  // Typography
-} from '@mui/material';
+import { Button, TableCell, TableRow } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import {
-  useAppDispatch,
-  // useAppSelector
-} from '../../../app/hooks';
-import {
-  // selectOrdersCancelLoading,
-  toggleModal,
-} from '../ordersSlice';
+import { useAppDispatch } from '../../../app/hooks';
+import { toggleModal } from '../ordersSlice';
 import { FC, useState } from 'react';
 import { Shipment } from '../../../types/types.Shipments';
 import WarningModal from './WarningModal';
@@ -50,6 +36,17 @@ const OrdersRowItem: FC<Shipment> = ({
     dispatch(toggleModal({ toggle: true, id: { _id } }));
   };
 
+  const handleDeliveryButtonClick = () => {
+    if (delivery.status) {
+      const confirmed = window.confirm('Вы правда хотите отменити доставку');
+      if (confirmed) {
+        showModal();
+      }
+    } else {
+      showModal();
+    }
+  };
+
   return (
     <>
       <WarningModal
@@ -65,7 +62,11 @@ const OrdersRowItem: FC<Shipment> = ({
         <TableCell align="left">{price.som} СОМ</TableCell>
         <TableCell align="left">{status}</TableCell>
         <TableCell align="left">
-          <Button variant="contained" onClick={showModal} disabled={color}>
+          <Button
+            variant="contained"
+            onClick={handleDeliveryButtonClick}
+            disabled={color}
+          >
             {delivery.status
               ? 'Отменить доставку'
               : color

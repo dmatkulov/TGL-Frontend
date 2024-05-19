@@ -56,13 +56,13 @@ const FileInput: React.FC<Props> = ({
         </Grid>
         <Grid item>
           <Button variant="contained" onClick={activateInput}>
-            Browse
+            Выбрать
           </Button>
         </Grid>
         {onClear && (
           <Grid item>
             <Button variant="contained" onClick={onClear}>
-              Clear
+              Очистить
             </Button>
           </Grid>
         )}

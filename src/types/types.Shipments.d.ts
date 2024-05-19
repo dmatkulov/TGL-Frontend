@@ -80,7 +80,7 @@ export interface ShipmentMutation {
   trackerNumber: string;
   weight: string;
   pupId: string;
-  status:string;
+  status: string;
   dimensions: {
     height: string;
     width: string;

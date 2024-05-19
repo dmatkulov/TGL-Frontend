@@ -68,8 +68,8 @@ const Profile = () => {
                   {user?.address}
                 </Typography>
                 <Typography variant="subtitle1">
-                  Ваш {user?.pupID.name} находится по адресу: {user?.pupID.address}
-
+                  Ваш {user?.pupID.name} находится по адресу:{' '}
+                  {user?.pupID.address}
                 </Typography>
               </>
             )}

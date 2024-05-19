@@ -86,6 +86,10 @@ export interface ShipmentMutation {
   };
 }
 
+export interface ShipmentStatusMutation {
+  status: string;
+}
+
 export interface ShipmentsResponse {
   message: string;
   shipments: ShipmentData[];

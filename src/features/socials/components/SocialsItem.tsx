@@ -1,12 +1,11 @@
 import { Box, CardMedia, Typography } from '@mui/material';
 import noLogoImage from '../../../assets/nologo.png';
-import { apiURL, appRoutes } from '../../../utils/constants';
+import { apiURL } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { isDeleteSocialNetwork, isEditing } from '../socialsSlice';
+import { useAppDispatch } from '../../../app/hooks';
 import { deleteSocialNetwork, fetchSocials } from '../socialsThunk';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 interface Props {
   id: string;
@@ -28,22 +27,17 @@ const imgBtnBoxStyle = {
   justifyContent: 'space-between',
 };
 
-const SocialItem: React.FC<Props> = ({
+const SocialsItem: React.FC<Props> = ({
   id,
   name,
   link,
   image,
   editHandler,
 }) => {
-  const isDelete = useAppSelector(isDeleteSocialNetwork);
-  const isEdit = useAppSelector(isEditing);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const deleteHandler = async () => {
     await dispatch(deleteSocialNetwork(id));
     await dispatch(fetchSocials());
-    navigate(appRoutes.socials);
   };
 
   let coverImage = noLogoImage;
@@ -62,33 +56,26 @@ const SocialItem: React.FC<Props> = ({
             image={coverImage}
             alt={link}
           />
-          <Typography variant="subtitle1">{name}</Typography>
+          <Typography>{name}</Typography>
           <Box>
             <LoadingButton
-              disabled={isDelete}
-              loading={isDelete}
               onClick={deleteHandler}
               sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
               color="error"
             >
               <CancelIcon />
             </LoadingButton>
-            <LoadingButton
-              onClick={editHandler}
-              disabled={isEdit}
-              loading={isEdit}
-              variant="contained"
-            >
+            <LoadingButton onClick={editHandler} variant="contained">
               Изменить
             </LoadingButton>
           </Box>
         </Box>
         <Box>
-          <Typography>{link}</Typography>
+          <Typography noWrap>{link}</Typography>
         </Box>
       </Box>
     </>
   );
 };
 
-export default SocialItem;
+export default SocialsItem;

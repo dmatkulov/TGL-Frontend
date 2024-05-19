@@ -4,8 +4,9 @@ import { serverRoute } from '../../utils/constants';
 import {
   ResponseSocials,
   SocialData,
-  Socials,
+  Social,
   UpdateSocialArg,
+  ResponseSocial,
 } from '../../types/types.SocialsNetwork';
 
 export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
@@ -23,7 +24,7 @@ export const fetchSocials = createAsyncThunk<ResponseSocials | undefined>(
   },
 );
 
-export const fetchOneSocial = createAsyncThunk<Socials, string>(
+export const fetchOneSocial = createAsyncThunk<Social, string>(
   'socials/fetchOne',
   async (id) => {
     const response = await axiosApi.get(`${serverRoute.socials}/${id}`);
@@ -31,7 +32,7 @@ export const fetchOneSocial = createAsyncThunk<Socials, string>(
   },
 );
 
-export const createSocials = createAsyncThunk<null, SocialData>(
+export const addSocial = createAsyncThunk<null, SocialData>(
   'albums/albumCreate',
   async (socialsNetwork) => {
     try {
@@ -47,27 +48,31 @@ export const createSocials = createAsyncThunk<null, SocialData>(
       const response = await axiosApi.post(serverRoute.socials, formData);
       return response.data;
     } catch (e) {
-      console.log('Try to create new Social Network ', e);
+      console.log('Caught on try - ADD SOCIAL - ', e);
       throw e;
     }
   },
 );
 
-export const updateSocial = createAsyncThunk<void, UpdateSocialArg>(
+export const updateSocial = createAsyncThunk<ResponseSocial, UpdateSocialArg>(
   'socials/update',
   async ({ socialId, socialMutation }) => {
     const formData = new FormData();
     const keys = Object.keys(socialMutation) as (keyof SocialData)[];
     keys.forEach((key) => {
       const value = socialMutation[key];
-
       if (value) {
         formData.append(key, value);
       }
     });
-    return axiosApi.patch(`${serverRoute.socials}/${socialId}`, formData);
+    const response = await axiosApi.patch<ResponseSocial>(
+      `${serverRoute.socials}/${socialId}`,
+      formData,
+    );
+    return response.data;
   },
 );
+
 export const deleteSocialNetwork = createAsyncThunk<void, string>(
   'socials/deleteSocialNetwork',
   async (id) => {

@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
-import { Button, Dialog, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  MenuItem,
+  TextField,
+} from '@mui/material';
 
 import { regionsState } from '../../regions/regionsSlice';
 import { fetchRegions } from '../../regions/regionsThunks';
@@ -39,18 +47,21 @@ const UserDialog: React.FC<Props> = ({
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogTitle>Редактирование профиля</DialogTitle>
-        <DialogContent
-          sx={{mt: '20px'}}
-        >
+        <DialogContent sx={{ mt: '20px' }}>
           <form autoComplete="off">
             <Button
-              sx={{'&.MuiButton-root:hover': { background: '#D2122E' },
+              sx={{
+                '&.MuiButton-root:hover': { background: '#D2122E' },
                 color: 'white',
                 background: '#9e1b32',
                 position: 'absolute',
                 top: 0,
-                right: 0}}
-              onClick={handleClose}>X</Button>
+                right: 0,
+              }}
+              onClick={handleClose}
+            >
+              X
+            </Button>
             <Grid container direction="column" spacing={2}>
               <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
                 <TextField
@@ -147,10 +158,10 @@ const UserDialog: React.FC<Props> = ({
                   onChange={inputChangeHandler}
                 >
                   {pups.map((pup) => (
-                      <MenuItem key={pup._id} value={pup._id}>
-                        <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                        {pup.region.name} обл., {pup.address}, {pup.settlement}
-                      </MenuItem>
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
                   ))}
                 </TextField>
               </Grid>
@@ -160,7 +171,8 @@ const UserDialog: React.FC<Props> = ({
                   type="submit"
                   color="primary"
                   variant="contained"
-                  onClick={handleUpdateProfile}>
+                  onClick={handleUpdateProfile}
+                >
                   Редактировать данные
                 </Button>
               </Grid>

@@ -16,6 +16,7 @@ import { Statuses } from '../../../utils/constants';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
 import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
+import DeliveryMenu from './DeliveryMenu';
 
 interface Props {
   shipment: ShipmentData;
@@ -42,9 +43,16 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
   return (
     <Card variant="outlined" sx={{ minWidth: 275, mb: '20px', p: 2 }}>
       <CardContent>
-        <Typography variant="h5" component="div" gutterBottom>
-          Посылка №: {shipment.trackerNumber}
-        </Typography>
+        <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
+          <Typography variant="h5" component="div" gutterBottom>
+            Посылка №: {shipment.trackerNumber}
+          </Typography>
+          {shipment.delivery.status ? (
+            <DeliveryMenu shipment={shipment} />
+          ) : (
+            <></>
+          )}
+        </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <Typography variant="body1">Создал:</Typography>

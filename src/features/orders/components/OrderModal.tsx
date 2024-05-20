@@ -90,13 +90,16 @@ const OrderModal = () => {
     };
 
     dispatch(orderDelivery(deliveryData));
-    console.log(deliveryData);
+    if (user) {
+      dispatch(fetchShipmentsByUser(user?.marketId));
+    }
+    handleClose();
   };
 
   return (
     <>
       <Modal
-        open={open === undefined ? false : open} // эта строка уберает ошибку. Мб есть решение лучше
+        open={open === undefined ? false : open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

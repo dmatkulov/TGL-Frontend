@@ -16,7 +16,19 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
       const response = await axiosApi.get<ShipmentsResponse>(
         serverRoute.shipments,
       );
-      return response.data ?? [];
+      const shipments = response.data ?? [];
+
+      shipments.shipments.sort((a, b) => {
+        if (a.delivery.status && !b.delivery.status) {
+          return -1;
+        } else if (!a.delivery.status && !b.delivery.status) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+      return shipments;
     } catch (e) {
       console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
       throw e;

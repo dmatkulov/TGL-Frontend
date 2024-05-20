@@ -51,7 +51,15 @@ const Shipments = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchShipments());
+    const updateShipments = () => {
+      dispatch(fetchShipments());
+    };
+
+    updateShipments();
+
+    const intervalId = setInterval(updateShipments, 1800000);
+
+    return () => clearInterval(intervalId);
   }, [dispatch]);
 
   if (user?.role === 'manager' && user.region) {

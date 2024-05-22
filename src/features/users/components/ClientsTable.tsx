@@ -47,6 +47,9 @@ const ClientsTable: FC<Props> = ({ children }) => {
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               ПВЗ
             </TableCell>
+            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+              УД
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>

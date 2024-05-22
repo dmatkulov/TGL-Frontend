@@ -1,7 +1,10 @@
 import { FC } from 'react';
 import { TableCell, TableRow } from '@mui/material';
 import { Client } from '../../../types/types.User';
-
+import { LoadingButton } from '@mui/lab';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { isClientDeleting } from '../usersSlice';
+import DeleteIcon from '@mui/icons-material/Delete';
 const ClientsItem: FC<Client> = ({
   address,
   firstName,
@@ -14,6 +17,9 @@ const ClientsItem: FC<Client> = ({
   email,
   marketId,
 }) => {
+  const isDeleting = useAppSelector(isClientDeleting);
+  const dispatch = useAppDispatch();
+  const deleteHandle = () => {};
   return (
     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell align="left">{marketId}</TableCell>
@@ -26,6 +32,13 @@ const ClientsItem: FC<Client> = ({
       <TableCell align="left">{address}</TableCell>
       <TableCell align="left">{phoneNumber}</TableCell>
       <TableCell align="left">{pupID.name}</TableCell>
+      <TableCell align="left">
+        <LoadingButton
+          onCLick={deleteHandle}
+          loading={isDeleting}
+          startIcon={<DeleteIcon color="warning" />}
+        />
+      </TableCell>
     </TableRow>
   );
 };

@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import { TableCell, TableRow } from '@mui/material';
+import { Button, TableCell, TableRow } from '@mui/material';
 import { Client } from '../../../types/types.User';
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { isClientDeleting } from '../usersSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Confirm from '../../../components/UI/Confirm/Confirm';
 const ClientsItem: FC<Client> = ({
   address,
   firstName,
@@ -33,9 +34,9 @@ const ClientsItem: FC<Client> = ({
       <TableCell align="left">{phoneNumber}</TableCell>
       <TableCell align="left">{pupID.name}</TableCell>
       <TableCell align="left">
-        <LoadingButton
-          onCLick={deleteHandle}
-          loading={isDeleting}
+        <Confirm handleOpen={deleteHandle} />
+        <Button
+          onClick={deleteHandle}
           startIcon={<DeleteIcon color="warning" />}
         />
       </TableCell>

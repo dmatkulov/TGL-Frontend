@@ -55,6 +55,7 @@ const Shipments = () => {
 
   const clearFilter = async () => {
     setSearched(false);
+    setState('');
     await dispatch(fetchShipments());
   };
 

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, TableCell, TableRow } from '@mui/material';
 import { Client } from '../../../types/types.User';
 import { LoadingButton } from '@mui/lab';
@@ -20,7 +20,10 @@ const ClientsItem: FC<Client> = ({
 }) => {
   const isDeleting = useAppSelector(isClientDeleting);
   const dispatch = useAppDispatch();
-  const deleteHandle = () => {};
+  const [open, setOpen] = React.useState(false);
+  const deleteHandle = () => {
+    setTrigger(true);
+  };
   return (
     <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
       <TableCell align="left">{marketId}</TableCell>
@@ -34,7 +37,7 @@ const ClientsItem: FC<Client> = ({
       <TableCell align="left">{phoneNumber}</TableCell>
       <TableCell align="left">{pupID.name}</TableCell>
       <TableCell align="left">
-        <Confirm handleOpen={deleteHandle} />
+        <Confirm trigger={trigger} />
         <Button
           onClick={deleteHandle}
           startIcon={<DeleteIcon color="warning" />}

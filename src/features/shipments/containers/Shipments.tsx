@@ -11,10 +11,10 @@ import {
 } from '@mui/material';
 import { selectUser } from '../../users/usersSlice';
 import { selectOneOrder, selectOrdersLoading } from '../../orders/ordersSlice';
-import ShipmentsRowItem from '../components/ShipmentsRowItem';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
+import ShipmentsSearchResult from '../components/ShipmentsSearchResult';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -67,15 +67,6 @@ const Shipments = () => {
   }
 
   let content;
-  let tableData;
-
-  if (searched && order) {
-    tableData = <ShipmentsRowItem shipment={order} />;
-  } else {
-    tableData = filteredShipments.map((shipment) => (
-      <ShipmentsRowItem key={shipment._id} shipment={shipment} />
-    ));
-  }
 
   if (loading) {
     content = (
@@ -83,12 +74,12 @@ const Shipments = () => {
         <CircularProgress size={100} />
       </div>
     );
+  } else if (searched && order) {
+    content = <ShipmentsSearchResult order={order} />;
   } else if (searched && order === null) {
     content = <Typography>Заказ не найден!</Typography>;
   } else {
-    content = (
-      <ShipmentsTable >{tableData}</ShipmentsTable>
-    );
+    content = <ShipmentsTable shipments={filteredShipments} />;
   }
 
   return (

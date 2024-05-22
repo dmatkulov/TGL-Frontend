@@ -67,7 +67,12 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
         </TableCell>
         <TableCell>{shipment.userMarketId}</TableCell>
         <TableCell>
-          <Stack direction="row">
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            justifyContent="space-between"
+          >
             <Checkbox
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setChecked(event.target.checked);
@@ -77,11 +82,14 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
               select
               disabled={!checked || loading}
               size="small"
+              variant="standard"
               required
               name="status"
               id="status"
-              fullWidth
-              style={{ borderRadius: '30px', fontSize: '14px' }}
+              InputProps={{
+                disableUnderline: true,
+              }}
+              style={{ flexGrow: 1, marginRight: 2 }}
               value={state.status}
               onChange={inputChangeHandler}
             >

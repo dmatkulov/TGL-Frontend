@@ -15,8 +15,6 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteUser, fetchClients } from '../usersThunks';
 import { selectUser } from '../usersSlice';
-import { useNavigate } from 'react-router-dom';
-import { appRoutes } from '../../../utils/constants';
 
 const ClientsItem: FC<Client> = ({
   _id,

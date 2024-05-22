@@ -22,17 +22,16 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import dayjs from 'dayjs';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
-import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
 
 interface Props {
   shipment: ShipmentData;
+  onSubmit: (state: ShipmentData) => void;
 }
-const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
+const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
   const [state, setState] = useState(shipment);
   const [checked, setChecked] = useState(false);
-  const dispatch = useAppDispatch();
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
 
@@ -45,9 +44,10 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
     });
   };
 
-  const onSubmit = async () => {
-    await dispatch(updateShipmentStatus(state));
-    await dispatch(fetchShipments());
+  const onFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    void onSubmit(state);
+    setChecked(false);
   };
 
   return (
@@ -74,6 +74,7 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
             justifyContent="space-between"
           >
             <Checkbox
+              checked={checked}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setChecked(event.target.checked);
               }}
@@ -108,7 +109,7 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
                 <IconButton
                   type="submit"
                   disabled={loading || !checked}
-                  onClick={onSubmit}
+                  onClick={onFormSubmit}
                   color="primary"
                 >
                   <AutorenewIcon />

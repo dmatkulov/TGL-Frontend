@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
-import { fetchShipments, searchByTrack } from '../shipmentsThunk';
+import {
+  fetchShipments,
+  searchByTrack,
+  updateShipmentStatus,
+} from '../shipmentsThunk';
 import {
   Button,
   CircularProgress,
@@ -15,6 +19,7 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
 import ShipmentsSearchResult from '../components/ShipmentsSearchResult';
+import { ShipmentData } from '../../../types/types.Shipments';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -43,9 +48,14 @@ const Shipments = () => {
     await dispatch(searchByTrack(state));
   };
 
-  const clearFilter = () => {
+  const updateOneOrderStatus = async (data: ShipmentData) => {
+    await dispatch(updateShipmentStatus(data));
+    await dispatch(searchByTrack(data.trackerNumber.toString()));
+  };
+
+  const clearFilter = async () => {
     setSearched(false);
-    setState('');
+    await dispatch(fetchShipments());
   };
 
   useEffect(() => {
@@ -75,7 +85,9 @@ const Shipments = () => {
       </div>
     );
   } else if (searched && order) {
-    content = <ShipmentsSearchResult order={order} />;
+    content = (
+      <ShipmentsSearchResult onSubmit={updateOneOrderStatus} order={order} />
+    );
   } else if (searched && order === null) {
     content = <Typography>Заказ не найден!</Typography>;
   } else {

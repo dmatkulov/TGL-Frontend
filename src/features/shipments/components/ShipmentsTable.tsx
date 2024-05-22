@@ -13,11 +13,14 @@ import TablePaginationActions from './TablePaginationActions';
 import { ShipmentData } from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
+import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
+import { useAppDispatch } from '../../../app/hooks';
 
 interface Props extends React.PropsWithChildren {
   shipments: ShipmentData[];
 }
 const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -39,6 +42,11 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     setPage(0);
   };
 
+  const onFormSubmit = async (state: ShipmentData) => {
+    await dispatch(updateShipmentStatus(state));
+    await dispatch(fetchShipments());
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -53,7 +61,11 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
               )
             : shipments
           ).map((shipment) => (
-            <ShipmentsRowItem key={shipment._id} shipment={shipment} />
+            <ShipmentsRowItem
+              onSubmit={onFormSubmit}
+              key={shipment._id}
+              shipment={shipment}
+            />
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>

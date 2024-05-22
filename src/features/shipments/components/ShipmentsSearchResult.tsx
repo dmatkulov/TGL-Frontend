@@ -12,8 +12,9 @@ import { ShipmentData } from '../../../types/types.Shipments';
 
 interface Props {
   order: ShipmentData;
+  onSubmit: (state: ShipmentData) => void;
 }
-const ShipmentsSearchResult: React.FC<Props> = ({ order }) => {
+const ShipmentsSearchResult: React.FC<Props> = ({ order, onSubmit }) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -21,7 +22,11 @@ const ShipmentsSearchResult: React.FC<Props> = ({ order }) => {
           <ShipmentsTableHead />
         </TableHead>
         <TableBody>
-          <ShipmentsRowItem key={order._id} shipment={order} />
+          <ShipmentsRowItem
+            onSubmit={onSubmit}
+            key={order._id}
+            shipment={order}
+          />
         </TableBody>
       </Table>
     </TableContainer>

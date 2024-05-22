@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ShipmentData } from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
-  Button,
   Checkbox,
   Chip,
   Collapse,
@@ -16,15 +15,17 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import EditIcon from '@mui/icons-material/Edit';
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 import dayjs from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
 import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
+
 interface Props {
   shipment: ShipmentData;
 }
@@ -77,7 +78,6 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
               disabled={!checked || loading}
               size="small"
               required
-              // variant="standard"
               name="status"
               id="status"
               fullWidth
@@ -95,15 +95,18 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
                 </MenuItem>
               ))}
             </TextField>
-            <Button
-              variant="contained"
-              type="submit"
-              disabled={loading || !checked}
-              onClick={onSubmit}
-              color="primary"
-            >
-              <EditIcon fontSize="small" />
-            </Button>
+            <Tooltip title="Изменить статус">
+              <span>
+                <IconButton
+                  type="submit"
+                  disabled={loading || !checked}
+                  onClick={onSubmit}
+                  color="primary"
+                >
+                  <AutorenewIcon />
+                </IconButton>
+              </span>
+            </Tooltip>
           </Stack>
         </TableCell>
         <TableCell>

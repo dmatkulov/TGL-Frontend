@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { ShipmentData } from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
+  Button,
+  Checkbox,
   Chip,
   Collapse,
   Grid,
   IconButton,
   MenuItem,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -17,14 +20,19 @@ import {
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import EditIcon from '@mui/icons-material/Edit';
 import dayjs from 'dayjs';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { addShipmentGetLoad } from '../shipmentsSlice';
+import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
 interface Props {
   shipment: ShipmentData;
 }
 const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
   const [state, setState] = useState(shipment);
-  // const dispatch = useAppDispatch();
-  // const loading = useAppSelector(addShipmentGetLoad);
+  const [checked, setChecked] = useState(false);
+  const dispatch = useAppDispatch();
+  const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
 
   const [open, setOpen] = React.useState(false);
@@ -36,10 +44,10 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
     });
   };
 
-  // const onSubmit = async () => {
-  //   await dispatch(updateShipmentStatus(state));
-  //   await dispatch(fetchShipments());
-  // };
+  const onSubmit = async () => {
+    await dispatch(updateShipmentStatus(state));
+    await dispatch(fetchShipments());
+  };
 
   return (
     <>
@@ -58,28 +66,45 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment }) => {
         </TableCell>
         <TableCell>{shipment.userMarketId}</TableCell>
         <TableCell>
-          <TextField
-            select
-            size="small"
-            required
-            variant="standard"
-            name="status"
-            id="status"
-            fullWidth
-            style={{ borderRadius: '30px', fontSize: '14px' }}
-            value={state.status}
-            onChange={inputChangeHandler}
-          >
-            {statuses.map((status) => (
-              <MenuItem
-                key={status}
-                value={status}
-                style={{ fontSize: '14px' }}
-              >
-                {status}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Stack direction="row">
+            <Checkbox
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setChecked(event.target.checked);
+              }}
+            />
+            <TextField
+              select
+              disabled={!checked || loading}
+              size="small"
+              required
+              // variant="standard"
+              name="status"
+              id="status"
+              fullWidth
+              style={{ borderRadius: '30px', fontSize: '14px' }}
+              value={state.status}
+              onChange={inputChangeHandler}
+            >
+              {statuses.map((status) => (
+                <MenuItem
+                  key={status}
+                  value={status}
+                  style={{ fontSize: '14px' }}
+                >
+                  {status}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Button
+              variant="contained"
+              type="submit"
+              disabled={loading || !checked}
+              onClick={onSubmit}
+              color="primary"
+            >
+              <EditIcon fontSize="small" />
+            </Button>
+          </Stack>
         </TableCell>
         <TableCell>
           {shipment.isPaid ? (

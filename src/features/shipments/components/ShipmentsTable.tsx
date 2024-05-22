@@ -8,7 +8,7 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import TablePaginationActions from './TablePaginationActions';
 import { ShipmentData } from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
@@ -18,8 +18,8 @@ interface Props extends React.PropsWithChildren {
   shipments: ShipmentData[];
 }
 const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(7);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
@@ -28,7 +28,7 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
   ) => {
-    console.log(event);
+    event?.preventDefault();
     setPage(newPage);
   };
 
@@ -65,8 +65,9 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
           <TableRow>
             <TablePagination
               style={{ width: '100%' }}
-              rowsPerPageOptions={[5, 10, 25, { label: 'Все', value: -1 }]}
+              rowsPerPageOptions={[5, 10, 20]}
               colSpan={6}
+              labelRowsPerPage="Рядов на странице"
               count={shipments.length}
               rowsPerPage={rowsPerPage}
               page={page}

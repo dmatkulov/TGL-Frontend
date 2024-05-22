@@ -127,7 +127,7 @@ const Staff: React.FC = () => {
                 Фамилия
               </TableCell>
               <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-                Адрес
+                Регион
               </TableCell>
               <TableCell align="left" sx={{ fontWeight: 'bold' }}>
                 Номер телефона

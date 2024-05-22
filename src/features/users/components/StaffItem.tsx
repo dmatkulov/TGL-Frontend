@@ -34,7 +34,7 @@ const StaffItem: React.FC<Props> = ({ user, onSubmit }) => {
         </TableCell>
         <TableCell align="left">{user.firstName}</TableCell>
         <TableCell align="left">{user.lastName}</TableCell>
-        <TableCell align="left">{user.address}</TableCell>
+        <TableCell align="left">{user.region.name}</TableCell>
         <TableCell align="left">{user.phoneNumber}</TableCell>
         {userRole?.role === 'super' ? (
           <TableCell align="left">

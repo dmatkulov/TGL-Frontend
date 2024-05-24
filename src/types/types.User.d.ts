@@ -68,7 +68,7 @@ export interface Staff {
 }
 
 export interface Client {
-  _id?: string;
+  _id: string;
   marketId: string;
   email: string;
   pupID: Pup;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Button,
   Dialog,
@@ -52,15 +52,16 @@ const UserDialog: React.FC<Props> = ({
     dispatch(fetchRegions());
   }, [dispatch]);
 
+  const fetchPupsByRegion = useCallback(async (region: string) => {
+    await dispatch(fetchPups(region));
+  }, [dispatch]);
+
   useEffect(() => {
     if (state.region) {
-      fetchPupsByRegion(state.region);
+      void fetchPupsByRegion(state.region);
     }
-  }, [state.region]);
+  }, [fetchPupsByRegion, state.region]);
 
-  const fetchPupsByRegion = async (region: string) => {
-    await dispatch(fetchPups(region));
-  };
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -210,8 +211,7 @@ const UserDialog: React.FC<Props> = ({
                 >
                   {pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                     </MenuItem>
                   ))}
                 </TextField>

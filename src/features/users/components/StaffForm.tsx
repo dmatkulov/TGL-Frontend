@@ -271,7 +271,8 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 />
               </Grid>
             )}
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className="custom-tel-container">
+              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
               <PhoneInput
                 country="kg"
                 masks={{ kg: '(...) ..-..-..' }}
@@ -280,7 +281,6 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 defaultErrorMessage={getError('phoneNumber')}
-                specialLabel="Номер телефона*"
                 disableDropdown
                 inputStyle={{
                   width: '100%',
@@ -288,6 +288,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                   color: getError('phoneNumber') && '#d32f2f',
                 }}
                 inputProps={{
+                  id: 'phoneNumber',
                   name: 'phoneNumber',
                   required: true,
                 }}
@@ -442,8 +443,7 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
                 {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                     </MenuItem>
                   ))
                 ) : (

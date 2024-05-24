@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups, selectPupsLoading } from '../pupsSlice';
 import { createPup, fetchPups } from '../pupsThunks';
@@ -11,7 +11,14 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from '@mui/material';
 import 'react-phone-input-2/lib/material.css';
@@ -53,13 +60,47 @@ const PupList = () => {
     handleClose();
   };
 
+  let tableContent: React.ReactNode = <CircularProgress />;
+
+  if (!loading) {
+    tableContent = (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow sx={{ textTransform: 'uppercase' }}>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Номер ПВЗ
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Адрес
+              </TableCell>
+              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                Номер телефона
+              </TableCell>
+              {user?.role === 'super' && (
+                <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                  Изменить
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {pups.map((item) => (
+              <PupItem key={item._id} pupItem={item} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
   return (
     <>
       <Stack>
         {user?.role === 'super' && (
           <Grid item sx={{ marginBottom: 3 }}>
             <Button variant="contained" onClick={handleClickOpen}>
-              Добавить склад
+              Добавить ПВЗ
             </Button>
           </Grid>
         )}
@@ -68,7 +109,7 @@ const PupList = () => {
             <CircularProgress size={100} />
           </Box>
         ) : (
-          pups.map((pup) => <PupItem key={pup._id} pupItem={pup} />)
+          <Grid mt={2}>{tableContent}</Grid>
         )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>

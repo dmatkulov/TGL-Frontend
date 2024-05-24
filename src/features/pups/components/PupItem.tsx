@@ -1,23 +1,16 @@
 import { Pup, PupMutation } from '../../../types/types.Pup';
 import {
-  Box,
   Button,
-  Card,
-  CardContent,
   Dialog,
   DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  IconButton,
-  Typography,
+  TableCell,
+  TableRow,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { deletePup, editPup, fetchPups } from '../pupsThunks';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import PupForm from './PupForm';
 import { selectUser } from '../../users/usersSlice';
-import CloseIcon from '@mui/icons-material/Close';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { LoadingButton } from '@mui/lab';
 import { isDeletePup } from '../pupsSlice';
@@ -80,99 +73,52 @@ const PupItem: React.FC<Props> = ({ pupItem }) => {
         deleteHandler={deleteHandler}
         closeModal={closeWarningModalWindow}
       />
-
-      <Grid m={1}>
-        <Card>
-          <CardContent>
-            <Grid
-              container
-              justifyContent="space-between"
-              alignItems="center"
-              mb={2}
-            >
-              <Grid item>
-                <Typography variant="h5" component="div">
-                  {pupItem.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} sm={5}>
-                <Box
-                  display="flex"
-                  gap={2}
-                  sx={{
-                    justifyContent: {
-                      xs: 'space-between',
-                      sm: 'flex-end',
-                    },
-                  }}
-                >
-                  {user && user?.role === 'super' && (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="secondary"
-                      onClick={toggleOpen}
-                    >
-                      Редактировать
-                    </Button>
-                  )}
-                  {user && user?.role === 'super' && (
-                    <LoadingButton
-                      disabled={isDelete}
-                      loading={isDelete}
-                      onClick={openWarningModalWindow}
-                      sx={{
-                        minWidth: '29px',
-                        padding: '3px',
-                        borderRadius: '50%',
-                      }}
-                      color="error"
-                    >
-                      <CancelIcon />
-                    </LoadingButton>
-                  )}
-                </Box>
-              </Grid>
-            </Grid>
-            <Divider />
-            <Typography variant="body2" color="text.secondary">
-              <b>Адрес:</b> {pupItem.region.name} {pupItem.settlement}{' '}
-              {pupItem.address}
-            </Typography>
-            <Divider />
-            <Typography variant="body2" color="text.secondary">
-              <b>Тел:</b> +{pupItem.phoneNumber}
-            </Typography>
-          </CardContent>
-        </Card>
-        <Dialog open={open} onClose={handleClose} maxWidth="lg">
-          <DialogTitle>
-            <Typography>Добавить ПВЗ:</Typography>
-            <IconButton
-              onClick={handleClose}
+      <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+        <TableCell align="left">{pupItem.name}</TableCell>
+        <TableCell align="left">{pupItem.address}</TableCell>
+        <TableCell align="left">+{pupItem.phoneNumber}</TableCell>
+        {user?.role === 'super' ? (
+          <TableCell align="left">
+            <Button
+              variant="contained"
+              onClick={toggleOpen}
               sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
+                fontSize: '11px',
               }}
             >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent
-            sx={{
-              mt: '20px',
-            }}
-          >
-            <PupForm
-              onSubmit={submitFormHandler}
-              initialPupState={pupMutation}
-              isEdit
-            />
-          </DialogContent>
-        </Dialog>
-      </Grid>
+              Редактировать
+            </Button>
+            <LoadingButton
+              disabled={isDelete}
+              loading={isDelete}
+              onClick={openWarningModalWindow}
+              sx={{
+                minWidth: '29px',
+                padding: '3px',
+                borderRadius: '50%',
+              }}
+              color="error"
+            >
+              <CancelIcon />
+            </LoadingButton>
+          </TableCell>
+        ) : (
+          <></>
+        )}
+      </TableRow>
+      <Dialog open={open} onClose={handleClose} maxWidth="lg">
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          <PupForm
+            onSubmit={submitFormHandler}
+            initialPupState={pupMutation}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

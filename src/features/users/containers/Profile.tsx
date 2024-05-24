@@ -21,7 +21,7 @@ const Profile = () => {
     region: user?.region?._id,
     settlement: user?.settlement,
     address: user?.address,
-    pupID: user?.pupID._id,
+    pupID: user?.pupID ? user?.pupID._id : null,
   });
 
   const isAdmin = user?.role === 'super' || user?.role === 'admin';
@@ -39,6 +39,7 @@ const Profile = () => {
       return { ...prevState, [name]: value };
     });
   };
+
   return (
     <>
       <Grid container spacing={2} flexWrap="nowrap">
@@ -63,10 +64,20 @@ const Profile = () => {
                   Ваш адрес: {user?.region.name} область, {user?.settlement}{' '}
                   {user?.address}
                 </Typography>
-                <Typography variant="subtitle1">
-                  Ваш {user?.pupID.name} находится по адресу:{' '}
-                  {user?.pupID.address}
-                </Typography>
+                {!user?.pupID ? (
+                  <Typography
+                    color={'red'}
+                    sx={{ fontWeight: 600 }}
+                    variant="subtitle1"
+                  >
+                    Нет ПВЗ
+                  </Typography>
+                ) : (
+                  <Typography variant="subtitle1">
+                    Ваш {user?.pupID.name} находится по адресу:{' '}
+                    {user?.pupID.address}
+                  </Typography>
+                )}
               </>
             )}
           </Grid>

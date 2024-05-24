@@ -58,7 +58,13 @@ const OrdersRowItem: FC<Shipment> = ({
         <TableCell component="th" scope="row">
           {trackerNumber}
         </TableCell>
-        <TableCell align="left">{pupId.address}</TableCell>
+        <TableCell align="left">
+          {pupId ? (
+            pupId.address
+          ) : (
+            <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
+          )}
+        </TableCell>
         <TableCell align="left">{price.som} СОМ</TableCell>
         <TableCell align="left">{status}</TableCell>
         <TableCell align="left">

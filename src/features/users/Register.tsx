@@ -370,6 +370,39 @@ const Register: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                required
+                fullWidth
+                select
+                name="pupID"
+                label="ПВЗ"
+                type="text"
+                value={state.pupID}
+                autoComplete="new-pupID"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('pupID'))}
+                helperText={getFieldError('pupID')}
+              >
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
+                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
                 fullWidth
                 name="settlement"
                 label="Населенный пункт"
@@ -406,38 +439,7 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                select
-                name="pupID"
-                label="ПВЗ"
-                type="text"
-                value={state.pupID}
-                autoComplete="new-pupID"
-                onChange={inputChangeHandler}
-                error={Boolean(getFieldError('pupID'))}
-                helperText={getFieldError('pupID')}
-              >
-                {pups.length > 0 && (
-                  <MenuItem value="" disabled>
-                    Выберите ближайший ПВЗ
-                  </MenuItem>
-                )}
-                {pups.length > 0 ? (
-                  pups.map((pup) => (
-                    <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    Сначала выберите регион
-                  </MenuItem>
-                )}
-              </TextField>
-            </Grid>
+
             <Grid
               container
               item

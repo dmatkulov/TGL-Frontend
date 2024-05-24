@@ -17,12 +17,14 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
 import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
 import DeliveryMenu from './DeliveryMenu';
+import {selectUser} from '../../users/usersSlice';
 
 interface Props {
   shipment: ShipmentData;
 }
 
 const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
+  const user = useAppSelector(selectUser);
   const [state, setState] = useState(shipment);
   const dispatch = useAppDispatch();
   const loading = useAppSelector(addShipmentGetLoad);
@@ -41,7 +43,7 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ minWidth: 275, mb: '20px', p: 2 }}>
+    <Card variant="outlined" sx={{ minWidth: 275, mt: '20px', mb: '20px', p: 2 }}>
       <CardContent>
         <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
           <Typography variant="h5" component="div" gutterBottom>
@@ -55,7 +57,9 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
-            <Typography variant="body1">Создал:</Typography>
+            {user?.role !== 'client' && (
+              <Typography variant="body1">Создал:</Typography>
+            )}
             <Typography variant="body2" color="text.secondary">
               {shipment.userId.firstName} {shipment.userId.lastName}
             </Typography>
@@ -97,39 +101,41 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Grid container>
-                <Grid item xs={12} sm={9}>
-                  <FormControl fullWidth variant="outlined">
-                    <TextField
-                      select
-                      required
-                      name="status"
-                      id="status"
-                      value={state.status}
-                      label="Статус"
-                      onChange={inputChangeHandler}
+              {user?.role !== 'client' && (
+                <Grid container>
+                  <Grid item xs={12} sm={9}>
+                    <FormControl fullWidth variant="outlined">
+                      <TextField
+                        select
+                        required
+                        name="status"
+                        id="status"
+                        value={state.status}
+                        label="Статус"
+                        onChange={inputChangeHandler}
+                      >
+                        {statuses.map((status) => (
+                          <MenuItem key={status} value={status}>
+                            {status}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                      <FormHelperText>Редактировать статус:</FormHelperText>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={3}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{ ml: 2 }}
+                      disabled={loading}
+                      onClick={onSubmit}
                     >
-                      {statuses.map((status) => (
-                        <MenuItem key={status} value={status}>
-                          {status}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    <FormHelperText>Редактировать статус:</FormHelperText>
-                  </FormControl>
+                      Редактировать
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{ ml: 2 }}
-                    disabled={loading}
-                    onClick={onSubmit}
-                  >
-                    Редактировать
-                  </Button>
-                </Grid>
-              </Grid>
+              )}
             </Grid>
           </Grid>
         </Grid>

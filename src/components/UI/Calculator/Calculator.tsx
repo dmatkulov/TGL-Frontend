@@ -23,8 +23,8 @@ const Calculator = () => {
   });
 
   const [priceCalculate, setPriceCalculate] = useState({
-    weight: 0,
-    price: 0,
+    weight: '',
+    price: '',
   });
 
   const [weight, setWeight] = useState('');
@@ -43,6 +43,11 @@ const Calculator = () => {
       setDimensions((prevState) => ({
         ...prevState,
         [name]: value,
+      }));
+    } else {
+      setDimensions((prevState) => ({
+        ...prevState,
+        [name]: '',
       }));
     }
   };
@@ -63,6 +68,8 @@ const Calculator = () => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue) && parsedValue >= 0) {
       setWeight(value);
+    } else {
+      setWeight('');
     }
   };
 
@@ -120,7 +127,7 @@ const Calculator = () => {
   let getPrice;
 
   const calculatePrice = () => {
-    return priceCalculate.weight * priceCalculate.price;
+    return parseInt(priceCalculate.weight) * parseInt(priceCalculate.price);
   };
 
   if (calculatePrice() > 0) {

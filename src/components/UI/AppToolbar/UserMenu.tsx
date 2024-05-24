@@ -30,8 +30,8 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   const handleClose = () => setAnchorEl(null);
 
   const handleLogOut = async () => {
-    await dispatch(logout());
     navigate(appRoutes.login);
+    await dispatch(logout());
   };
 
   return (

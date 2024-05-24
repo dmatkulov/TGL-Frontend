@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
-import { fetchShipments, searchByTrack } from '../shipmentsThunk';
-import ShipmentsCard from '../components/ShipmentsCard';
 import {
-  Box,
+  fetchShipments,
+  searchByTrack,
+  updateShipmentStatus,
+} from '../shipmentsThunk';
+import {
   Button,
   CircularProgress,
+  Grid,
   TextField,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import { selectUser } from '../../users/usersSlice';
 import { selectOneOrder, selectOrdersLoading } from '../../orders/ordersSlice';
+import { LoadingButton } from '@mui/lab';
+import SearchIcon from '@mui/icons-material/Search';
+import ShipmentsTable from '../components/ShipmentsTable';
+import ShipmentsSearchResult from '../components/ShipmentsSearchResult';
+import { ShipmentData } from '../../../types/types.Shipments';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -22,8 +29,6 @@ const styleBoxSpinner = {
 
 const Shipments = () => {
   const dispatch = useAppDispatch();
-  const isSmallScreen = useMediaQuery('(max-width:1000px)');
-  const isExtraSmallScreen = useMediaQuery('(max-width:480px)');
   const shipments = useAppSelector(selectShipments);
   const user = useAppSelector(selectUser);
   const order = useAppSelector(selectOneOrder);
@@ -32,8 +37,6 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
-
-  let content;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
@@ -45,9 +48,15 @@ const Shipments = () => {
     await dispatch(searchByTrack(state));
   };
 
-  const clearFilter = () => {
+  const updateOneOrderStatus = async (data: ShipmentData) => {
+    await dispatch(updateShipmentStatus(data));
+    await dispatch(searchByTrack(data.trackerNumber.toString()));
+  };
+
+  const clearFilter = async () => {
     setSearched(false);
     setState('');
+    await dispatch(fetchShipments());
   };
 
   useEffect(() => {
@@ -68,67 +77,73 @@ const Shipments = () => {
     );
   }
 
-  if (searched && order) {
-    content = <ShipmentsCard shipment={order} />;
+  let content;
+
+  if (loading) {
+    content = (
+      <div style={styleBoxSpinner}>
+        <CircularProgress size={100} />
+      </div>
+    );
+  } else if (searched && order) {
+    content = (
+      <ShipmentsSearchResult onSubmit={updateOneOrderStatus} order={order} />
+    );
   } else if (searched && order === null) {
     content = <Typography>Заказ не найден!</Typography>;
   } else {
-    content = filteredShipments.map((shipment) => (
-      <ShipmentsCard key={shipment._id} shipment={shipment} />
-    ));
+    content = <ShipmentsTable shipments={filteredShipments} />;
   }
 
   return (
     <>
-      {loading ? (
-        <Box sx={styleBoxSpinner}>
-          <CircularProgress size={100} />
-        </Box>
-      ) : (
-        <>
-          <Box component="form" onSubmit={searchOrder}>
-            <TextField
-              required
-              name="search"
-              label="поиск по трек номеру"
-              sx={{
-                width: isExtraSmallScreen
-                  ? '175px'
-                  : isSmallScreen
-                    ? '320px'
-                    : '500px',
-                mt: 1,
-                mb: 2,
-              }}
-              value={state}
-              onChange={handleChange}
-            />
-            <Button
-              type="submit"
-              sx={{ ml: 2, mt: 2 }}
-              variant="contained"
-              disabled={loadingOneOrder}
-            >
-              {loadingOneOrder ? <CircularProgress size={25} /> : 'Поиск'}
-            </Button>
-            <Button
-              type="button"
-              sx={{ ml: 2, mt: 2 }}
-              variant="contained"
-              disabled={loadingOneOrder}
-              color="error"
-              onClick={clearFilter}
-            >
-              {loadingOneOrder ? (
-                <CircularProgress size={25} />
-              ) : (
-                'Сбросить фильтр'
-              )}
-            </Button>
-          </Box>
-          {content}
-        </>
-      )}
+      <Grid
+        container
+        display="flex"
+        flexWrap="wrap"
+        component="form"
+        onSubmit={searchOrder}
+        spacing={2}
+        justifyContent="space-between"
+        mb={4}
+      >
+        <Grid item xs={12} md={6}>
+          <TextField
+            required
+            name="search"
+            label="поиск по трек номеру"
+            size="small"
+            sx={{
+              width: '100%',
+            }}
+            value={state}
+            onChange={handleChange}
+          />
+        </Grid>
+        <Grid item xs={12} md={6} display="flex" gap={1} alignItems="center">
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            disabled={loadingOneOrder}
+            loading={loadingOneOrder}
+            loadingPosition="start"
+            startIcon={<SearchIcon />}
+          >
+            Поиск
+          </LoadingButton>
+          <Button
+            type="button"
+            variant="contained"
+            disabled={loadingOneOrder || !searched}
+            color="error"
+            onClick={clearFilter}
+          >
+            Сбросить фильтр
+          </Button>
+        </Grid>
+      </Grid>
+
+      {content}
     </>
   );
 };

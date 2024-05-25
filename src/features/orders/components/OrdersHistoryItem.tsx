@@ -20,7 +20,7 @@ const OrdersHistoryItem: FC<ShipmentThatDone> = ({
             <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
           )}
         </TableCell>
-        <TableCell align="left">{price.som} СОМ</TableCell>
+        <TableCell align="left">{price.usd} USD</TableCell>
       </TableRow>
     </>
   );

@@ -9,6 +9,7 @@ import { persistor, store } from './app/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme';
+import './index.css'
 
 addInterceptors(store);
 

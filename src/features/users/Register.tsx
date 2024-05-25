@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -11,25 +11,26 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {LoadingButton} from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
 import {
   selectRegisterError,
-  selectRegisterLoading, selectUser,
+  selectRegisterLoading,
   setRegisterError,
 } from './usersSlice';
-import {register} from './usersThunks';
-import {appRoutes} from '../../utils/constants';
-import {selectPups} from '../pups/pupsSlice';
-import {fetchPups} from '../pups/pupsThunks';
-import {regionsState} from '../regions/regionsSlice';
-import {fetchRegions} from '../regions/regionsThunks';
-import {RegisterMutation} from '../../types/types.User';
+import { register } from './usersThunks';
+import { appRoutes } from '../../utils/constants';
+import { selectPups } from '../pups/pupsSlice';
+import { fetchPups } from '../pups/pupsThunks';
+import { regionsState } from '../regions/regionsSlice';
+import { fetchRegions } from '../regions/regionsThunks';
+import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
-import {regEx} from '../../utils/constants';
+import { regEx } from '../../utils/constants';
+
 
 const initialState: RegisterMutation = {
   email: '',
@@ -49,7 +50,6 @@ const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const loading = useAppSelector(selectRegisterLoading);
-  const user = useAppSelector(selectUser);
   const pups = useAppSelector(selectPups);
   const regions = useAppSelector(regionsState);
 
@@ -75,14 +75,14 @@ const Register: React.FC = () => {
   };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = event.target;
+    const { name, value } = event.target;
     setState((prevState) => {
       if (name === 'password' && value.length >= 8) {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
 
-      return {...prevState, [name]: value};
+      return { ...prevState, [name]: value };
     });
   };
 
@@ -112,23 +112,14 @@ const Register: React.FC = () => {
       } else if (value.length > 11) {
         setPhoneNumberLabel('');
       }
-      return {...prevState, phoneNumber: value};
+      return { ...prevState, phoneNumber: value };
     });
   };
 
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-    if (
-      user?.role === 'super' ||
-      user?.role === 'admin' ||
-      user?.role === 'manager'
-    ) {
-      navigate(appRoutes.statistics); // переводим сюда чтоб юзер не видел пустую страницу
-    } else {
-      navigate(appRoutes.orders); // переводим сюда чтоб юзер не видел пустую страницу
-    }
-  }, [dispatch, user, navigate]);
+  }, [dispatch]);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
@@ -181,7 +172,7 @@ const Register: React.FC = () => {
         <Box
           component="form"
           onSubmit={submitFormHandler}
-          sx={{mt: 3, width: '100%'}}
+          sx={{ mt: 3, width: '100%' }}
         >
           <Grid container spacing={2} alignItems="start">
             <Grid item xs={12} sm={6}>
@@ -258,7 +249,7 @@ const Register: React.FC = () => {
                         onMouseDown={handleMouseDownPassword}
                         edge="end"
                       >
-                        {showPass ? <VisibilityOff/> : <Visibility/>}
+                        {showPass ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -281,16 +272,16 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className="custom-tel-container">
+              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
               <PhoneInput
                 country="kg"
-                masks={{kg: '(...) ..-..-..'}}
+                masks={{ kg: '(...) ..-..-..' }}
                 onlyCountries={['kg']}
-                containerStyle={{width: '100%'}}
+                containerStyle={{ width: '100%' }}
                 value={state.phoneNumber}
                 countryCodeEditable={false}
                 onChange={handlePhoneChange}
-                specialLabel="Номер телефона*"
                 disableDropdown
                 inputStyle={{
                   width: '100%',
@@ -298,6 +289,7 @@ const Register: React.FC = () => {
                   color: getFieldError('phoneNumber') && '#d32f2f',
                 }}
                 inputProps={{
+                  id: 'phoneNumber',
                   name: 'phoneNumber',
                   required: true,
                 }}
@@ -380,39 +372,6 @@ const Register: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                required
-                fullWidth
-                select
-                name="pupID"
-                label="ПВЗ"
-                type="text"
-                value={state.pupID}
-                autoComplete="new-pupID"
-                onChange={inputChangeHandler}
-                error={Boolean(getFieldError('pupID'))}
-                helperText={getFieldError('pupID')}
-              >
-                {pups.length > 0 && (
-                  <MenuItem value="" disabled>
-                    Выберите ближайший ПВЗ
-                  </MenuItem>
-                )}
-                {pups.length > 0 ? (
-                  pups.map((pup) => (
-                    <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{marginRight: '10px'}}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    Сначала выберите регион
-                  </MenuItem>
-                )}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
                 fullWidth
                 name="settlement"
                 label="Населенный пункт"
@@ -449,7 +408,37 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                name="pupID"
+                label="ПВЗ"
+                type="text"
+                value={state.pupID}
+                autoComplete="new-pupID"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('pupID'))}
+                helperText={getFieldError('pupID')}
+              >
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
+              </TextField>
+            </Grid>
             <Grid
               container
               item
@@ -466,7 +455,7 @@ const Register: React.FC = () => {
                 <LoadingButton
                   type="submit"
                   variant="contained"
-                  sx={{mt: 3, mb: 2, py: 1}}
+                  sx={{ mt: 3, mb: 2, py: 1 }}
                   disableElevation
                   disabled={!isFormValid() || loading}
                   loading={loading}

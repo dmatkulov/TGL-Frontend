@@ -8,9 +8,12 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TablePaginationActions from './TablePaginationActions';
-import { ShipmentData } from '../../../types/types.Shipments';
+import {
+  ShipmentData,
+  ShipmentStatusChangeData,
+} from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
 import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
@@ -23,6 +26,7 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [localState, setLocalState] = useState<ShipmentStatusChangeData[]>([]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
@@ -35,6 +39,10 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     setPage(newPage);
   };
 
+  useEffect(() => {
+    console.log(localState);
+  }, [localState]);
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -45,6 +53,19 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
   const onFormSubmit = async (state: ShipmentData) => {
     await dispatch(updateShipmentStatus(state));
     await dispatch(fetchShipments());
+  };
+
+  const createItem = (_id: string, status: string, isPaid: boolean) => {
+    const item: ShipmentStatusChangeData = {
+      _id: _id,
+      status: status,
+      isPaid: isPaid,
+    };
+    setLocalState((prevState) => [...prevState, item]);
+  };
+
+  const removeItem = (_id: string) => {
+    setLocalState((prevState) => prevState.filter((item) => item._id !== _id));
   };
 
   return (
@@ -65,6 +86,8 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
               onSubmit={onFormSubmit}
               key={shipment._id}
               shipment={shipment}
+              createItem={createItem}
+              removeItem={removeItem}
             />
           ))}
           {emptyRows > 0 && (

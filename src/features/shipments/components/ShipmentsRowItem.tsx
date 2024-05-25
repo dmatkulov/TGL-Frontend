@@ -28,8 +28,15 @@ import { addShipmentGetLoad } from '../shipmentsSlice';
 interface Props {
   shipment: ShipmentData;
   onSubmit: (state: ShipmentData) => void;
+  createItem: (_id: string, status: string, isPaid: boolean) => void;
+  removeItem: (_id: string) => void;
 }
-const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
+const ShipmentsRowItem: React.FC<Props> = ({
+  shipment,
+  onSubmit,
+  createItem,
+  removeItem,
+}) => {
   const [state, setState] = useState(shipment);
   const [checked, setChecked] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
@@ -48,6 +55,18 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
     e.preventDefault();
     void onSubmit(state);
     setChecked(false);
+  };
+
+  const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    console.log('inside check ', checked);
+    if (checked) {
+      console.log('removed');
+      removeItem(state._id);
+      return;
+    }
+    console.log('add');
+    createItem(state._id, state.status, state.isPaid);
   };
 
   return (
@@ -73,12 +92,7 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
             spacing={1}
             justifyContent="space-between"
           >
-            <Checkbox
-              checked={checked}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setChecked(event.target.checked);
-              }}
-            />
+            <Checkbox checked={checked} onChange={onCheck} />
             <TextField
               select
               disabled={!checked || loading}

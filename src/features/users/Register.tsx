@@ -1,44 +1,70 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
+  Box,
+  Container,
   Grid,
+  IconButton,
+  Link,
   MenuItem,
   TextField,
+  Typography,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/material.css';
+import {
+  selectRegisterError,
+  selectRegisterLoading,
+  setRegisterError,
+} from './usersSlice';
+import { register } from './usersThunks';
+import { appRoutes } from '../../utils/constants';
+import { selectPups } from '../pups/pupsSlice';
+import { fetchPups } from '../pups/pupsThunks';
+import { regionsState } from '../regions/regionsSlice';
+import { fetchRegions } from '../regions/regionsThunks';
+import { RegisterMutation } from '../../types/types.User';
+import InputAdornment from '@mui/material/InputAdornment';
+import { regEx } from '../../utils/constants';
 
-import { regionsState } from '../../regions/regionsSlice';
-import { fetchRegions } from '../../regions/regionsThunks';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { ProfileMutation } from '../../../types/types.Profile';
-import { selectPups } from '../../pups/pupsSlice';
-import { fetchPups } from '../../pups/pupsThunks';
-import { update } from '../usersThunks';
-import { regEx } from '../../../utils/constants';
-import { selectRegisterError } from '../usersSlice';
 
-interface Props {
-  state: ProfileMutation;
-  open: boolean;
-  handleClose: () => void;
-  inputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
-}
+const initialState: RegisterMutation = {
+  email: '',
+  password: '',
+  pupID: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
+  phoneNumber: '',
+  region: '',
+  settlement: '',
+  address: '',
+};
 
-const UserDialog: React.FC<Props> = ({
-  state,
-  open,
-  handleClose,
-  inputChangeHandler,
-}) => {
-  const regions = useAppSelector(regionsState);
-  const pups = useAppSelector(selectPups);
+const Register: React.FC = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
+  const loading = useAppSelector(selectRegisterLoading);
+  const pups = useAppSelector(selectPups);
+  const regions = useAppSelector(regionsState);
+
+  const [state, setState] = useState<RegisterMutation>(initialState);
+  const [showPass, setShowPass] = useState(false);
+  const [passLabel, setPassLabel] = useState<string>(
+    'Длина пароля должна быть не менее 8 символов',
+  );
+  const [passIsValid, setPassIsValid] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
 
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+  const [emailLabel, setEmailLabel] = useState<string>('');
 
   const getFieldError = (fieldName: string) => {
     try {
@@ -48,212 +74,409 @@ const UserDialog: React.FC<Props> = ({
     }
   };
 
+  const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setState((prevState) => {
+      if (name === 'password' && value.length >= 8) {
+        setPassIsValid(true);
+        setPassLabel('Надежный пароль');
+      }
+
+      return { ...prevState, [name]: value };
+    });
+  };
+
+  const isFormValid = () => {
+    return (
+      state.email &&
+      state.password &&
+      state.pupID &&
+      state.firstName &&
+      state.lastName &&
+      state.phoneNumber &&
+      state.region
+    );
+  };
+
+  const handleClickShowPassword = () => setShowPass((show) => !show);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setState((prevState) => {
+      if (value.length < 12) {
+        setPhoneNumberLabel('Номер должен быть введен полностью');
+      } else if (value.length > 11) {
+        setPhoneNumberLabel('');
+      }
+      return { ...prevState, phoneNumber: value };
+    });
+  };
+
   useEffect(() => {
+    dispatch(setRegisterError(null));
     dispatch(fetchRegions());
   }, [dispatch]);
 
-  const fetchPupsByRegion = useCallback(async (region: string) => {
+  const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
-  }, [dispatch]);
+  };
 
-  useEffect(() => {
-    if (state.region) {
-      void fetchPupsByRegion(state.region);
-    }
-  }, [fetchPupsByRegion, state.region]);
-
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newFieldErrors: { [key: string]: string } = {};
-    if (!state.firstName) newFieldErrors.firstName = 'Имя обязательно';
-    if (!state.lastName) newFieldErrors.lastName = 'Фамилия обязательна';
-    if (!state.email) {
-      newFieldErrors.email = 'Электронная почта обязательна';
-      setEmailIsValid(false);
-    } else if (!regEx.test(state.email)) {
-      newFieldErrors.email = 'Неверный формат электронной почты';
-      setEmailIsValid(false);
-    }
-    if (!state.region) newFieldErrors.region = 'Регион обязателен';
-    if (!state.pupID) newFieldErrors.pupID = 'ПВЗ обязателен';
-
-    setFieldErrors(newFieldErrors);
-
-    if (Object.keys(newFieldErrors).length > 0) return;
+  const submitFormHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     try {
-      await dispatch(update(state));
-      handleClose();
+      if (state.password.length >= 1 && state.password.length < 8) {
+        setPassLabel('Пароль слишком короткий');
+        setPassIsValid(false);
+        return;
+      }
+
+      if (state.phoneNumber.length < 12) {
+        setPhoneNumberLabel('Пропишите номер полностью');
+        return;
+      }
+
+      if (regEx.test(state.email)) {
+        setEmailIsValid(true);
+      } else if (!regEx.test(state.email) && state.email !== '') {
+        setEmailLabel('Неверный формат электронной почты');
+        setEmailIsValid(false);
+        return;
+      }
+
+      await dispatch(register(state)).unwrap();
+      navigate(appRoutes.profile);
+      setState(initialState);
     } catch (e) {
       console.error(e);
     }
   };
 
   return (
-    <>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogTitle>Редактирование профиля</DialogTitle>
-        <DialogContent sx={{ mt: '20px' }}>
-          <form autoComplete="off">
-            <Button
-              sx={{
-                '&.MuiButton-root:hover': { background: '#D2122E' },
-                color: 'white',
-                background: '#9e1b32',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-              }}
-              onClick={handleClose}
-            >
-              X
-            </Button>
-            <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
-                <TextField
-                  required
-                  id="firstName"
-                  label="Имя"
-                  value={state.firstName}
-                  onChange={inputChangeHandler}
-                  name="firstName"
-                  error={Boolean(
-                    getFieldError('firstName') || fieldErrors.firstName,
-                  )}
-                  helperText={
-                    getFieldError('firstName') || fieldErrors.firstName
-                  }
-                />
-                <TextField
-                  required
-                  id="lastName"
-                  label="Фамилия"
-                  value={state.lastName}
-                  onChange={inputChangeHandler}
-                  name="lastName"
-                  error={Boolean(
-                    getFieldError('lastName') || fieldErrors.lastName,
-                  )}
-                  helperText={getFieldError('lastName') || fieldErrors.lastName}
-                />
-                <TextField
-                  id="middleName"
-                  label="Отчество"
-                  value={state.middleName}
-                  onChange={inputChangeHandler}
-                  name="middleName"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Адрес электронной почты"
-                  value={state.email}
-                  onChange={inputChangeHandler}
-                  error={Boolean(
-                    getFieldError('email') ||
-                      !emailIsValid ||
-                      fieldErrors.email,
-                  )}
-                  helperText={
-                    getFieldError('email')
-                      ? getFieldError('email')
-                      : fieldErrors.email
-                  }
-                  name="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  select
-                  name="region"
-                  label="Регион"
-                  type="text"
-                  value={state.region}
-                  onChange={inputChangeHandler}
-                  error={Boolean(getFieldError('region') || fieldErrors.region)}
-                  helperText={getFieldError('region') || fieldErrors.region}
-                >
-                  <MenuItem value="" disabled>
-                    Выберите регион
-                  </MenuItem>
-                  {regions.length > 0 &&
-                    regions.map((region) => (
-                      <MenuItem
-                        key={region._id}
-                        value={region._id}
-                        onClick={() => fetchPupsByRegion(region._id)}
+    <Container component="main">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Регистрация
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={submitFormHandler}
+          sx={{ mt: 3, width: '100%' }}
+        >
+          <Grid container spacing={2} alignItems="start">
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="lastName"
+                label="Фамилия"
+                type="text"
+                value={state.lastName}
+                autoComplete="new-lastName"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('lastName'))}
+                helperText={getFieldError('lastName')}
+                sx={{
+                  input: {
+                    color:
+                      state.lastName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="firstName"
+                label="Имя"
+                type="text"
+                value={state.firstName}
+                autoComplete="new-firstName"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('firstName'))}
+                helperText={getFieldError('firstName')}
+                sx={{
+                  input: {
+                    color:
+                      state.firstName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="middleName"
+                label="Отчество"
+                type="text"
+                value={state.middleName}
+                autoComplete="new-middleName"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('middleName'))}
+                helperText={getFieldError('middleName')}
+                sx={{
+                  input: {
+                    color:
+                      state.middleName.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="password"
+                label="Пароль"
+                type={showPass ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
                       >
-                        {region.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  select
-                  required
-                  name="pupID"
-                  label="ПВЗ"
-                  type="text"
-                  value={pups.length > 0 ? state.pupID : ''}
-                  autoComplete="new-pupID"
-                  onChange={inputChangeHandler}
-                  error={Boolean(getFieldError('pupID') || fieldErrors.pupID)}
-                  helperText={getFieldError('pupID') || fieldErrors.pupID}
+                        {showPass ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                value={state.password}
+                autoComplete="new-password"
+                onChange={inputChangeHandler}
+                error={Boolean(
+                  getFieldError('password') || passIsValid === false,
+                )}
+                helperText={
+                  getFieldError('password')
+                    ? getFieldError('password')
+                    : passLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: passIsValid ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} className="custom-tel-container">
+              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
+              <PhoneInput
+                country="kg"
+                masks={{ kg: '(...) ..-..-..' }}
+                onlyCountries={['kg']}
+                containerStyle={{ width: '100%' }}
+                value={state.phoneNumber}
+                countryCodeEditable={false}
+                onChange={handlePhoneChange}
+                disableDropdown
+                inputStyle={{
+                  width: '100%',
+                  borderColor: getFieldError('phoneNumber') && '#d32f2f',
+                  color: getFieldError('phoneNumber') && '#d32f2f',
+                }}
+                inputProps={{
+                  id: 'phoneNumber',
+                  name: 'phoneNumber',
+                  required: true,
+                }}
+              />
+              {getFieldError('phoneNumber') ? (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
                 >
-                  {pups.map((pup) => (
+                  {getFieldError('phoneNumber')}
+                </Typography>
+              ) : (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {phoneNumberLabel}
+                </Typography>
+              )}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                label="Email"
+                name="email"
+                type="email"
+                value={state.email}
+                placeholder="email@email.com"
+                autoComplete="new-email"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('email') || !emailIsValid)}
+                helperText={
+                  getFieldError('email') ? getFieldError('email') : emailLabel
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? 'inherit' : '#d32f2f',
+                  },
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                required
+                name="region"
+                label="Регион"
+                type="text"
+                value={state.region}
+                autoComplete="new-region"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('region'))}
+                helperText={getFieldError('region')}
+              >
+                <MenuItem value="" disabled>
+                  Выберите область
+                </MenuItem>
+                {regions.map((region) => (
+                  <MenuItem
+                    key={region._id}
+                    value={region._id}
+                    onClick={() => fetchPupsByRegion(region._id)}
+                  >
+                    {region.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="settlement"
+                label="Населенный пункт"
+                type="text"
+                value={state.settlement}
+                autoComplete="new-settlement"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('settlement'))}
+                helperText={getFieldError('settlement')}
+                sx={{
+                  input: {
+                    color:
+                      state.settlement.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                name="address"
+                label="Адрес"
+                type="text"
+                value={state.address}
+                autoComplete="new-address"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('address'))}
+                helperText={getFieldError('address')}
+                sx={{
+                  input: {
+                    color:
+                      state.address.length > 1 ? 'primary.main' : 'inherit',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                name="pupID"
+                label="ПВЗ"
+                type="text"
+                value={state.pupID}
+                autoComplete="new-pupID"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('pupID'))}
+                helperText={getFieldError('pupID')}
+              >
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
                       {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                     </MenuItem>
-                  ))}
-                </TextField>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
+              </TextField>
+            </Grid>
+            <Grid
+              container
+              item
+              direction="column"
+              justifyContent="center"
+              lg={12}
+            >
+              <Grid item>
+                <Typography variant="body2" fontSize="small">
+                  * Обязательно для заполнения
+                </Typography>
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="settlement"
-                  label="Населенный пункт"
-                  value={state.settlement}
-                  onChange={inputChangeHandler}
-                  name="settlement"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="address"
-                  label="Адрес"
-                  value={state.address}
-                  onChange={inputChangeHandler}
-                  name="address"
-                />
-              </Grid>
-
-              <Grid item xs>
-                <Button
-                  fullWidth
+              <Grid item textAlign="center">
+                <LoadingButton
                   type="submit"
-                  color="primary"
                   variant="contained"
-                  onClick={handleUpdateProfile}
+                  sx={{ mt: 3, mb: 2, py: 1 }}
+                  disableElevation
+                  disabled={!isFormValid() || loading}
+                  loading={loading}
                 >
-                  Редактировать данные
-                </Button>
+                  Зарегистрироваться
+                </LoadingButton>
+              </Grid>
+              <Grid item textAlign="center">
+                <Link
+                  component={RouterLink}
+                  to={appRoutes.login}
+                  variant="body2"
+                >
+                  Уже зарегистрированы? Войти
+                </Link>
               </Grid>
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+          </Grid>
+        </Box>
+      </Box>
+    </Container>
   );
 };
-
-export default UserDialog;
+export default Register;

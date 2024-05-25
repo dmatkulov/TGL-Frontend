@@ -1,21 +1,35 @@
-import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {Link as RouterLink, useNavigate} from 'react-router-dom';
-import {Box, Container, Grid, IconButton, Link, MenuItem, TextField, Typography,} from '@mui/material';
-import {LoadingButton} from '@mui/lab';
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Grid,
+  IconButton,
+  Link,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
-import {selectRegisterError, selectRegisterLoading, setRegisterError,} from './usersSlice';
-import {register} from './usersThunks';
-import {appRoutes, regEx} from '../../utils/constants';
-import {selectPups} from '../pups/pupsSlice';
-import {fetchPups} from '../pups/pupsThunks';
-import {regionsState} from '../regions/regionsSlice';
-import {fetchRegions} from '../regions/regionsThunks';
-import {RegisterMutation} from '../../types/types.User';
+import {
+  selectRegisterError,
+  selectRegisterLoading,
+  setRegisterError,
+} from './usersSlice';
+import { register } from './usersThunks';
+import { appRoutes } from '../../utils/constants';
+import { selectPups } from '../pups/pupsSlice';
+import { fetchPups } from '../pups/pupsThunks';
+import { regionsState } from '../regions/regionsSlice';
+import { fetchRegions } from '../regions/regionsThunks';
+import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
+import { regEx } from '../../utils/constants';
 
 
 const initialState: RegisterMutation = {

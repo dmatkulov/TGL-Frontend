@@ -79,6 +79,7 @@ const Clients = () => {
               <></>
             ) : (
               <ClientsItem
+                _id={singleState._id}
                 marketId={singleState?.marketId}
                 email={singleState?.email}
                 pupID={singleState?.pupID}
@@ -100,6 +101,7 @@ const Clients = () => {
         <ClientsTable>
           {state.map((item) => (
             <ClientsItem
+              _id={item._id}
               key={item._id}
               marketId={item.marketId}
               email={item.email}

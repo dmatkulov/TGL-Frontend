@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Button, Grid, Typography } from '@mui/material';
+import React, {useState} from 'react';
+import {Button, Grid, Typography} from '@mui/material';
 
-import { useAppSelector } from '../../../app/hooks';
-import { selectUser } from '../usersSlice';
+import {useAppSelector} from '../../../app/hooks';
+import {selectUser} from '../usersSlice';
 
 import Warehouses from '../../warehouses/Warehouses';
 import UserDialog from '../components/UserDialog';
-import { ProfileMutation } from '../../../types/types.Profile';
+import {ProfileMutation} from '../../../types/types.Profile';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 const Profile = () => {
@@ -34,11 +34,12 @@ const Profile = () => {
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setState((prevState) => {
-      return { ...prevState, [name]: value };
+      return {...prevState, [name]: value};
     });
   };
+
 
   return (
     <>
@@ -67,7 +68,7 @@ const Profile = () => {
                 {!user?.pupID ? (
                   <Typography
                     color={'red'}
-                    sx={{ fontWeight: 600 }}
+                    sx={{fontWeight: 600}}
                     variant="subtitle1"
                   >
                     Нет ПВЗ
@@ -83,10 +84,10 @@ const Profile = () => {
           </Grid>
           <Grid item>
             <Button
-              startIcon={<BorderColorIcon />}
+              startIcon={<BorderColorIcon/>}
               onClick={handleClickOpen}
               color="secondary"
-              sx={{ textTransform: 'none' }}
+              sx={{textTransform: 'none'}}
             >
               Редактировать профиль
             </Button>
@@ -96,7 +97,7 @@ const Profile = () => {
           <></>
         ) : (
           <Grid item>
-            <Warehouses />
+            <Warehouses/>
           </Grid>
         )}
       </Grid>

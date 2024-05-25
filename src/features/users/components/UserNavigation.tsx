@@ -19,15 +19,15 @@ import HistoryIcon from '@mui/icons-material/History';
 const userLinks: UserNav[] = [
   {
     id: 1,
-    name: 'Трекинг по номеру',
-    navLink: appRoutes.tracking,
-    icon: <PinDropIcon color="primary" />,
-  },
-  {
-    id: 2,
     name: 'Мои заказы',
     navLink: appRoutes.orders,
     icon: <LocalShippingIcon color="primary" />,
+  },
+  {
+    id: 2,
+    name: 'Трекинг по номеру',
+    navLink: appRoutes.tracking,
+    icon: <PinDropIcon color="primary" />,
   },
   {
     id: 3,

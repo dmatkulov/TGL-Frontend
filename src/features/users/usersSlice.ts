@@ -31,6 +31,7 @@ interface UserState {
   getStaffDataLoading: boolean;
   isClientsLoading: boolean;
   isSingleClientLoading: boolean;
+  isClientDeleting: boolean;
 }
 
 const initialState: UserState = {
@@ -49,6 +50,7 @@ const initialState: UserState = {
   getStaffDataLoading: false,
   isClientsLoading: false,
   isSingleClientLoading: false,
+  isClientDeleting: false,
 };
 
 export const usersSlice = createSlice({
@@ -227,4 +229,6 @@ export const singleClientState = (state: RootState) => state.users.client;
 export const isClientsLoading = (state: RootState) =>
   state.users.isClientsLoading;
 export const isSingleClientLoading = (state: RootState) =>
+  state.users.isClientsLoading;
+export const isClientDeleting = (state: RootState) =>
   state.users.isClientsLoading;

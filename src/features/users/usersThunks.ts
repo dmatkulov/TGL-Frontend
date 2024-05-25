@@ -203,7 +203,6 @@ export const fetchSingleClient = createAsyncThunk<
   string
 >('users/fetchSingleClient', async (arg) => {
   try {
-    console.log(arg);
     const response = await axiosApi.get<ClientResponse>(
       serverRoute.clients + '?marketId=' + arg,
     );
@@ -212,3 +211,14 @@ export const fetchSingleClient = createAsyncThunk<
     console.log('Caught on try - FETCH SINGLE CLIENT - ', e);
   }
 });
+
+export const deleteUser = createAsyncThunk<void, string>(
+  'users/delete',
+  async (arg) => {
+    try {
+      await axiosApi.delete(serverRoute.users + '/' + arg);
+    } catch (e) {
+      console.log('Caught on try - DELETE USER - ', e);
+    }
+  },
+);

@@ -12,21 +12,22 @@ import React, { useEffect, useState } from 'react';
 import TablePaginationActions from './TablePaginationActions';
 import {
   ShipmentData,
-  ShipmentStatusChangeData,
+  ShipmentStatusData,
 } from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
-import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
-import { useAppDispatch } from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectShipments } from '../shipmentsSlice';
 
 interface Props extends React.PropsWithChildren {
   shipments: ShipmentData[];
 }
 const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
   const dispatch = useAppDispatch();
+  const state = useAppSelector(selectShipments);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [localState, setLocalState] = useState<ShipmentStatusChangeData[]>([]);
+  const [localState, setLocalState] = useState<ShipmentStatusData[]>([]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
@@ -50,13 +51,14 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     setPage(0);
   };
 
-  const onFormSubmit = async (state: ShipmentData) => {
-    await dispatch(updateShipmentStatus(state));
-    await dispatch(fetchShipments());
+  const onFormSubmit = () => {
+    console.log('QWE', localState);
+    // await dispatch(updateShipmentStatus(state));
+    // await dispatch(fetchShipments());
   };
 
   const createItem = (_id: string, status: string, isPaid: boolean) => {
-    const item: ShipmentStatusChangeData = {
+    const item: ShipmentStatusData = {
       _id: _id,
       status: status,
       isPaid: isPaid,
@@ -68,6 +70,29 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     setLocalState((prevState) => prevState.filter((item) => item._id !== _id));
   };
 
+  const changeHandler = (_id: string, status: string, isPaid: boolean) => {
+    setLocalState((prevState) =>
+      prevState.map((item) =>
+        item._id === _id
+          ? {
+              ...item,
+              status,
+              isPaid,
+            }
+          : item,
+      ),
+    );
+  };
+
+  const multiplePaidToggle = () => {
+    setLocalState((prevState) =>
+      prevState.map((item) => ({
+        ...item,
+        isPaid: !item.isPaid,
+      })),
+    );
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -76,18 +101,17 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? shipments.slice(
-                page * rowsPerPage,
-                page * rowsPerPage + rowsPerPage,
-              )
-            : shipments
+            ? state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : state
           ).map((shipment) => (
             <ShipmentsRowItem
               onSubmit={onFormSubmit}
               key={shipment._id}
-              shipment={shipment}
+              shipment={shipments}
               createItem={createItem}
               removeItem={removeItem}
+              changeHandler={changeHandler}
+              multiplePaidToggle={multiplePaidToggle}
             />
           ))}
           {emptyRows > 0 && (

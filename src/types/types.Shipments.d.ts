@@ -35,7 +35,7 @@ export interface ShipmentData {
   datetime: string;
 }
 
-export interface ShipmentStatusChangeData {
+export interface ShipmentStatusData {
   _id: string;
   status: string;
   isPaid: boolean;

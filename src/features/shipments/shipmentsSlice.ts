@@ -31,7 +31,15 @@ const initialState: shipmentsState = {
 export const shipmentsSlice = createSlice({
   name: 'shipments',
   initialState,
-  reducers: {},
+  reducers: {
+    changePaidStatus: (state, { payload }) => {
+      state.shipments.forEach((item) => {
+        if (item._id === payload) {
+          item.isPaid = !item.isPaid;
+        }
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchShipments.pending, (state) => {
@@ -104,6 +112,7 @@ export const shipmentsSlice = createSlice({
 });
 
 export const shipmentsReducer = shipmentsSlice.reducer;
+export const { changePaidStatus } = shipmentsSlice.actions;
 export const selectShipments = (state: RootState) => state.shipments.shipments;
 export const selectShipmentsLoading = (state: RootState) =>
   state.shipments.shipmentsLoading;

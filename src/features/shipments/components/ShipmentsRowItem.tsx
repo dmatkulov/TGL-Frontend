@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShipmentData } from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
+  Button,
   Checkbox,
-  Chip,
   Collapse,
   Grid,
   IconButton,
@@ -23,22 +23,28 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import dayjs from 'dayjs';
 import { useAppSelector } from '../../../app/hooks';
-import { addShipmentGetLoad } from '../shipmentsSlice';
+import { addShipmentGetLoad, changePaidStatus } from '../shipmentsSlice';
 
 interface Props {
   shipment: ShipmentData;
-  onSubmit: (state: ShipmentData) => void;
+  onSubmit: () => void;
   createItem: (_id: string, status: string, isPaid: boolean) => void;
   removeItem: (_id: string) => void;
+  changeHandler: (_id: string, status: string, isPaid: boolean) => void;
+  multiplePaidToggle: () => void;
 }
 const ShipmentsRowItem: React.FC<Props> = ({
   shipment,
   onSubmit,
   createItem,
   removeItem,
+  changeHandler,
+  multiplePaidToggle,
 }) => {
   const [state, setState] = useState(shipment);
   const [checked, setChecked] = useState(false);
+  const [paidToggle, setPaidToggle] = useState(false);
+  const [statusToggle, setStatusToggle] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
 
@@ -49,25 +55,58 @@ const ShipmentsRowItem: React.FC<Props> = ({
     setState((prevState) => {
       return { ...prevState, [name]: value };
     });
+    changeHandler(state._id, state.status, state.isPaid);
   };
 
   const onFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    void onSubmit(state);
+    void onSubmit();
     setChecked(false);
   };
 
   const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
-    console.log('inside check ', checked);
     if (checked) {
-      console.log('removed');
       removeItem(state._id);
       return;
     }
-    console.log('add');
     createItem(state._id, state.status, state.isPaid);
   };
+
+  const multipleChangeHandler = () => {
+    setState((prevState) => {
+      return { ...prevState, isPaid: !prevState.isPaid };
+    });
+    setPaidToggle(true);
+  };
+
+  const directStatusChange = () => {
+    setState((prevState) => {
+      return { ...prevState, isPaid: !prevState.isPaid };
+    });
+    console.log('direct status cahnge');
+  };
+
+  useEffect(() => {
+    if (checked && paidToggle) {
+      multiplePaidToggle();
+      changePaidStatus(state._id);
+    }
+  }, [checked, multiplePaidToggle, paidToggle, state._id]);
+
+  useEffect(() => {
+    if (paidToggle) {
+      changeHandler(state._id, state.status, state.isPaid);
+      setPaidToggle(false);
+    }
+  }, [changeHandler, state._id, state.isPaid, state.status, paidToggle]);
+
+  useEffect(() => {
+    if (statusToggle) {
+      changeHandler(state._id, state.status, state.isPaid);
+      setStatusToggle(false);
+    }
+  }, [changeHandler, state._id, state.isPaid, state.status, statusToggle]);
 
   return (
     <>
@@ -95,7 +134,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
             <Checkbox checked={checked} onChange={onCheck} />
             <TextField
               select
-              disabled={!checked || loading}
+              disabled={loading}
               size="small"
               variant="standard"
               required
@@ -133,11 +172,13 @@ const ShipmentsRowItem: React.FC<Props> = ({
           </Stack>
         </TableCell>
         <TableCell>
-          {shipment.isPaid ? (
-            <Chip size="small" label="Оплачено" color="success" />
-          ) : (
-            <Chip size="small" label="Не оплачено" color="error" />
-          )}
+          <Button
+            onClick={checked ? multipleChangeHandler : directStatusChange}
+            variant="contained"
+            color={state.isPaid ? 'success' : 'error'}
+          >
+            {state.isPaid ? 'Оплачено' : 'Не оплачено'}
+          </Button>
         </TableCell>
       </TableRow>
       <TableRow>

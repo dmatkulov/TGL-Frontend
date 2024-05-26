@@ -95,7 +95,7 @@ const adminLinks: UserNav[] = [
 
 interface ScrollTopProps {
   children: React.ReactElement;
-  window?: () => Window;
+  window?: Window;
 }
 
 const AdminNavigation = () => {
@@ -105,27 +105,32 @@ const AdminNavigation = () => {
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
+  const handleScrollTopClick = () => {
+    window?.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
   const toggleDrawer = (open: boolean) => () => {
     setIsDrawerOpen(open);
   };
   function ScrollTop(props: ScrollTopProps) {
     const { children, window } = props;
     const trigger = useScrollTrigger({
-      target: window ? window() : undefined,
+      target: window || undefined,
       disableHysteresis: true,
       threshold: 100,
     });
 
-    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-      const anchor = ((event.target as HTMLDivElement).ownerDocument || document).querySelector('#back-to-top-anchor');
-
-      if (anchor) {
-        anchor.scrollIntoView({
+    const handleClick = () => {
+      if (window) {
+        window.scrollTo({
+          top: 0,
           behavior: 'smooth',
-          block: 'center',
         });
       }
     };
+
 
     return (
       <Fade in={trigger}>
@@ -186,13 +191,12 @@ const AdminNavigation = () => {
         </>
       ) : (
         <>
-          <Container sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
+          <Container sx={{overflowY: 'auto', maxHeight: '60vh' }}>
             <Box sx={{
               bgcolor: 'background.paper',
               borderColor: 'grey.400',
               borderRadius: '16px',
               borderWidth: '1px',
-              overflowY: 'auto',
               maxHeight: 'calc(100vh - 64px - 20px)',
               }}
             >
@@ -217,13 +221,13 @@ const AdminNavigation = () => {
               </nav>
             </Box>
           </Container>
-          <ScrollTop>
-            <Fab size="small" aria-label="scroll back to top">
-              <KeyboardArrowUpIcon />
-            </Fab>
-          </ScrollTop>
         </>
       )}
+      <ScrollTop>
+        <Fab size="small" aria-label="scroll back to top" onClick={handleScrollTopClick}>
+          <KeyboardArrowUpIcon />
+        </Fab>
+      </ScrollTop>
     </>
   );
 };

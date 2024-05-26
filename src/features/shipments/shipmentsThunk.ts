@@ -4,6 +4,7 @@ import {
   ShipmentMutation,
   ShipmentsResponse,
   oneShipmentResponse,
+  ShipmentStatusData,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
@@ -119,7 +120,7 @@ export const fetchShipmentsHistoryByUser = createAsyncThunk<
 export const updateShipmentStatus = createAsyncThunk<
   ShipmentsResponse,
   ShipmentData
->('companyAddresses/edit', async (ShipmentData) => {
+>('shipments/edit', async (ShipmentData) => {
   try {
     const response = await axiosApi.put(
       serverRoute.shipments + '/' + ShipmentData._id,
@@ -128,5 +129,21 @@ export const updateShipmentStatus = createAsyncThunk<
     return response.data;
   } catch (e) {
     console.log('Caught on try - UPLOAD NEW ADDRESS ', e);
+  }
+});
+
+export const changeSingleShipmentStatus = createAsyncThunk<
+  ShipmentsResponse,
+  ShipmentStatusData
+>('shipments/singleStatusUpdate', async (arg) => {
+  try {
+    const response = await axiosApi.patch(
+      serverRoute.shipments + `/${arg._id}/` + 'changeStatus',
+      arg,
+    );
+    console.log('thun ', arg);
+    return response.data;
+  } catch (e) {
+    console.log('Caught on try - CHANGE SINGLE SHIPMENT ', e);
   }
 });

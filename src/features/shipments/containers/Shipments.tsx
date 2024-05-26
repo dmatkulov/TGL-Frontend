@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
+import { selectShipmentsLoading } from '../shipmentsSlice';
 import {
   fetchShipments,
   searchByTrack,
   updateShipmentStatus,
+  // updateShipmentStatus,
 } from '../shipmentsThunk';
 import {
   Button,
@@ -13,7 +14,6 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { selectUser } from '../../users/usersSlice';
 import { selectOneOrder, selectOrdersLoading } from '../../orders/ordersSlice';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
@@ -29,12 +29,12 @@ const styleBoxSpinner = {
 
 const Shipments = () => {
   const dispatch = useAppDispatch();
-  const shipments = useAppSelector(selectShipments);
-  const user = useAppSelector(selectUser);
+  // const shipments = useAppSelector(selectShipments);
+  // const user = useAppSelector(selectUser);
   const order = useAppSelector(selectOneOrder);
   const loading = useAppSelector(selectShipmentsLoading);
   const loadingOneOrder = useAppSelector(selectOrdersLoading);
-  let filteredShipments = [...shipments];
+  // let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
 
@@ -71,11 +71,11 @@ const Shipments = () => {
     return () => clearInterval(intervalId);
   }, [dispatch]);
 
-  if (user?.role === 'manager' && user.region) {
-    filteredShipments = shipments.filter(
-      (shipment) => shipment.pupId.region === user.region._id,
-    );
-  }
+  // if (user?.role === 'manager' && user.region) {
+  //   filteredShipments = shipments.filter(
+  //     (shipment) => shipment.pupId.region === user.region._id,
+  //   );
+  // }
 
   let content;
 
@@ -92,7 +92,7 @@ const Shipments = () => {
   } else if (searched && order === null) {
     content = <Typography>Заказ не найден!</Typography>;
   } else {
-    content = <ShipmentsTable shipments={filteredShipments} />;
+    content = <ShipmentsTable />;
   }
 
   return (

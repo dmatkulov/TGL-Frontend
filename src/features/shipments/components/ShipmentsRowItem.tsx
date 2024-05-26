@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ShipmentData } from '../../../types/types.Shipments';
+import {
+  ShipmentData,
+  ShipmentStatusData,
+} from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
   Button,
@@ -22,8 +25,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import dayjs from 'dayjs';
-import { useAppSelector } from '../../../app/hooks';
-import { addShipmentGetLoad, changePaidStatus } from '../shipmentsSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { addShipmentGetLoad, multiplePaidChange } from '../shipmentsSlice';
+import { changeSingleShipmentStatus, fetchShipments } from '../shipmentsThunk';
 
 interface Props {
   shipment: ShipmentData;
@@ -33,6 +37,13 @@ interface Props {
   changeHandler: (_id: string, status: string, isPaid: boolean) => void;
   multiplePaidToggle: () => void;
 }
+
+const initialState: ShipmentStatusData = {
+  _id: '',
+  status: '',
+  isPaid: false,
+};
+
 const ShipmentsRowItem: React.FC<Props> = ({
   shipment,
   onSubmit,
@@ -41,7 +52,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
   changeHandler,
   multiplePaidToggle,
 }) => {
-  const [state, setState] = useState(shipment);
+  const dispatch = useAppDispatch();
+  const [localState, setLocalState] =
+    useState<ShipmentStatusData>(initialState);
   const [checked, setChecked] = useState(false);
   const [paidToggle, setPaidToggle] = useState(false);
   const [statusToggle, setStatusToggle] = useState(false);
@@ -50,12 +63,14 @@ const ShipmentsRowItem: React.FC<Props> = ({
 
   const [open, setOpen] = React.useState(false);
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setState((prevState) => {
+    setLocalState((prevState) => {
       return { ...prevState, [name]: value };
     });
-    changeHandler(state._id, state.status, state.isPaid);
+    setStatusToggle(true);
+
+    // changeHandler(localState._id, localState.status, localState.isPaid);
   };
 
   const onFormSubmit = async (e: React.FormEvent) => {
@@ -67,46 +82,74 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
     if (checked) {
-      removeItem(state._id);
+      removeItem(shipment._id);
       return;
     }
-    createItem(state._id, state.status, state.isPaid);
+    createItem(shipment._id, shipment.status, shipment.isPaid);
   };
 
   const multipleChangeHandler = () => {
-    setState((prevState) => {
+    setLocalState((prevState) => {
       return { ...prevState, isPaid: !prevState.isPaid };
     });
     setPaidToggle(true);
+    multiplePaidToggle();
   };
 
   const directStatusChange = () => {
-    setState((prevState) => {
+    setLocalState((prevState) => {
       return { ...prevState, isPaid: !prevState.isPaid };
     });
-    console.log('direct status cahnge');
+    console.log('direct status cahnge', localState.isPaid);
   };
 
   useEffect(() => {
-    if (checked && paidToggle) {
-      multiplePaidToggle();
-      changePaidStatus(state._id);
-    }
-  }, [checked, multiplePaidToggle, paidToggle, state._id]);
+    setLocalState((prevState) => ({
+      ...prevState,
+      _id: shipment._id,
+      status: shipment.status,
+      isPaid: shipment.isPaid,
+    }));
+  }, [shipment._id, shipment.isPaid, shipment.status]);
 
-  useEffect(() => {
-    if (paidToggle) {
-      changeHandler(state._id, state.status, state.isPaid);
-      setPaidToggle(false);
-    }
-  }, [changeHandler, state._id, state.isPaid, state.status, paidToggle]);
+  // useEffect(() => {
+  //   if (checked && paidToggle) {
+  //     multiplePaidToggle();
+  //   }
+  // }, [checked, multiplePaidToggle, paidToggle, localState._id]);
 
+  // useEffect(() => {
+  //   if (paidToggle) {
+  //     changeHandler(localState._id, localState.status, localState.isPaid);
+  //     setPaidToggle(false);
+  //   }
+  // }, [
+  //   changeHandler,
+  //   localState._id,
+  //   localState.isPaid,
+  //   localState.status,
+  //   paidToggle,
+  // ]);
+  //
   useEffect(() => {
-    if (statusToggle) {
-      changeHandler(state._id, state.status, state.isPaid);
+    if (statusToggle && checked) {
+      changeHandler(localState._id, localState.status, localState.isPaid);
       setStatusToggle(false);
     }
-  }, [changeHandler, state._id, state.isPaid, state.status, statusToggle]);
+    if (statusToggle) {
+      dispatch(changeSingleShipmentStatus(localState));
+      setStatusToggle(false);
+    }
+  }, [
+    changeHandler,
+    checked,
+    dispatch,
+    localState,
+    localState._id,
+    localState.isPaid,
+    localState.status,
+    statusToggle,
+  ]);
 
   return (
     <>
@@ -144,7 +187,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
                 disableUnderline: true,
               }}
               style={{ flexGrow: 1, marginRight: 2 }}
-              value={state.status}
+              value={localState.status}
               onChange={inputChangeHandler}
             >
               {statuses.map((status) => (
@@ -175,9 +218,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
           <Button
             onClick={checked ? multipleChangeHandler : directStatusChange}
             variant="contained"
-            color={state.isPaid ? 'success' : 'error'}
+            color={localState.isPaid ? 'success' : 'error'}
           >
-            {state.isPaid ? 'Оплачено' : 'Не оплачено'}
+            {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
           </Button>
         </TableCell>
       </TableRow>

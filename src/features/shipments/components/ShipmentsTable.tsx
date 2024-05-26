@@ -10,27 +10,21 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import TablePaginationActions from './TablePaginationActions';
-import {
-  ShipmentData,
-  ShipmentStatusData,
-} from '../../../types/types.Shipments';
+import { ShipmentStatusData } from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectShipments } from '../shipmentsSlice';
+import { multiplePaidChange, selectShipments } from '../shipmentsSlice';
 
-interface Props extends React.PropsWithChildren {
-  shipments: ShipmentData[];
-}
-const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
+const ShipmentsTable = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector(selectShipments);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [localState, setLocalState] = useState<ShipmentStatusData[]>([]);
+  const [statusState, setStatusState] = useState<ShipmentStatusData[]>([]);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - state.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -40,9 +34,14 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
     setPage(newPage);
   };
 
+  // useEffect(() => {
+  //   dispatch(fetchShipments());
+  // }, [dispatch]);
+  //
+
   useEffect(() => {
-    console.log(localState);
-  }, [localState]);
+    console.log(statusState);
+  }, [statusState]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -52,7 +51,7 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
   };
 
   const onFormSubmit = () => {
-    console.log('QWE', localState);
+    console.log('QWE', statusState);
     // await dispatch(updateShipmentStatus(state));
     // await dispatch(fetchShipments());
   };
@@ -63,15 +62,15 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
       status: status,
       isPaid: isPaid,
     };
-    setLocalState((prevState) => [...prevState, item]);
+    setStatusState((prevState) => [...prevState, item]);
   };
 
   const removeItem = (_id: string) => {
-    setLocalState((prevState) => prevState.filter((item) => item._id !== _id));
+    setStatusState((prevState) => prevState.filter((item) => item._id !== _id));
   };
 
   const changeHandler = (_id: string, status: string, isPaid: boolean) => {
-    setLocalState((prevState) =>
+    setStatusState((prevState) =>
       prevState.map((item) =>
         item._id === _id
           ? {
@@ -85,7 +84,7 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
   };
 
   const multiplePaidToggle = () => {
-    setLocalState((prevState) =>
+    setStatusState((prevState) =>
       prevState.map((item) => ({
         ...item,
         isPaid: !item.isPaid,
@@ -105,9 +104,9 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
             : state
           ).map((shipment) => (
             <ShipmentsRowItem
+              shipment={shipment}
               onSubmit={onFormSubmit}
               key={shipment._id}
-              shipment={shipments}
               createItem={createItem}
               removeItem={removeItem}
               changeHandler={changeHandler}
@@ -127,7 +126,7 @@ const ShipmentsTable: React.FC<Props> = ({ shipments }) => {
               rowsPerPageOptions={[5, 10, 20]}
               colSpan={6}
               labelRowsPerPage="Рядов на странице"
-              count={shipments.length}
+              count={state.length}
               rowsPerPage={rowsPerPage}
               page={page}
               slotProps={{

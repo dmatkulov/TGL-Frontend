@@ -15,6 +15,7 @@ import PinDropIcon from '@mui/icons-material/PinDrop';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HistoryIcon from '@mui/icons-material/History';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const userLinks: UserNav[] = [
   {
@@ -40,6 +41,12 @@ const userLinks: UserNav[] = [
     name: 'История заказов',
     navLink: appRoutes.history,
     icon: <HistoryIcon color="primary" />,
+  },
+  {
+    id: 5,
+    name: 'Информация',
+    navLink: appRoutes.information,
+    icon: <AssignmentIcon color="primary" />,
   },
 ];
 

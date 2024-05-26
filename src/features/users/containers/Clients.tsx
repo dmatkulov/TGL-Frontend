@@ -5,7 +5,7 @@ import {
   isSingleClientLoading,
   singleClientState,
 } from '../usersSlice';
-import { Box, CircularProgress, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, TextField } from '@mui/material';
 import ClientsItem from '../components/ClientsItem';
 import React, { useEffect, useState } from 'react';
 import { fetchClients, fetchSingleClient } from '../usersThunks';
@@ -23,7 +23,7 @@ const Clients = () => {
   const state = useAppSelector(clientsState);
   const singleState = useAppSelector(singleClientState);
   const isLoading = useAppSelector(isClientsLoading);
-  const isEmpty = singleState === null;
+  const [searched, setSearched] = useState<boolean>(false);
   const isSingleLoading = useAppSelector(isSingleClientLoading);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Clients = () => {
     e.preventDefault();
     if (isInputValid(marketId)) {
       await dispatch(fetchSingleClient(marketId));
-      setMarketId('');
+      setSearched(true);
     }
   };
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,58 +44,76 @@ const Clients = () => {
     });
   };
 
+  const clearFilter = async () => {
+    setMarketId('');
+    setSearched(false);
+    await dispatch(fetchClients());
+  };
+
   return (
     <>
-      <Box mb={2} pb={2} borderBottom="1px solid grey">
-        <Box
-          display="flex"
-          alignItems="center"
-          component="form"
-          onSubmit={submitHandler}
+      <Box
+        display="flex"
+        alignItems="center"
+        component="form"
+        gap={2}
+        onSubmit={submitHandler}
+        mb={4}
+        pb={2}
+      >
+        <TextField
+          type="number"
+          size="small"
+          onChange={inputChangeHandler}
+          value={marketId}
+          id="marketId"
+          name="marketId"
+          label="ID"
+          sx={{ marginRight: '8px' }}
+        />
+        <LoadingButton
+          variant="contained"
+          loading={isSingleLoading}
+          disabled={isSingleLoading || !isInputValid(marketId)}
+          type="submit"
         >
-          <TextField
-            type="number"
-            size="small"
-            onChange={inputChangeHandler}
-            value={marketId}
-            id="marketId"
-            name="marketId"
-            label="ID"
-            sx={{ marginRight: '8px' }}
-          />
-          <LoadingButton
-            variant="contained"
-            loading={isSingleLoading}
-            disabled={isSingleLoading || !isInputValid(marketId)}
-            type="submit"
-          >
-            Поиск
-          </LoadingButton>
-        </Box>
-        {isSingleLoading ? (
-          <CircularProgress />
-        ) : (
-          <ClientsTable>
-            {isEmpty ? (
-              <></>
-            ) : (
-              <ClientsItem
-                _id={singleState._id}
-                marketId={singleState?.marketId}
-                email={singleState?.email}
-                pupID={singleState?.pupID}
-                firstName={singleState?.firstName}
-                lastName={singleState?.lastName}
-                middleName={singleState?.middleName}
-                phoneNumber={singleState?.phoneNumber}
-                region={singleState?.region}
-                settlement={singleState?.settlement}
-                address={singleState?.address}
-              />
-            )}
-          </ClientsTable>
-        )}
+          Поиск
+        </LoadingButton>
+        <Button
+          type="button"
+          variant="contained"
+          disabled={isSingleLoading || !isInputValid(marketId)}
+          color="error"
+          onClick={clearFilter}
+        >
+          Сбросить фильтр
+        </Button>
       </Box>
+
+      {isSingleLoading ? (
+        <CircularProgress />
+      ) : singleState && searched ? (
+        <Box mb={4}>
+          <ClientsTable>
+            <ClientsItem
+              _id={singleState._id}
+              marketId={singleState?.marketId}
+              email={singleState?.email}
+              pupID={singleState?.pupID}
+              firstName={singleState?.firstName}
+              lastName={singleState?.lastName}
+              middleName={singleState?.middleName}
+              phoneNumber={singleState?.phoneNumber}
+              region={singleState?.region}
+              settlement={singleState?.settlement}
+              address={singleState?.address}
+            />
+          </ClientsTable>
+        </Box>
+      ) : (
+        <></>
+      )}
+
       {isLoading ? (
         <CircularProgress />
       ) : (

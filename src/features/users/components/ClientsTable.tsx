@@ -36,6 +36,7 @@ const ClientsTable: FC<Props> = ({ children }) => {
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               Номер
             </TableCell>
+            <TableCell align="center" />
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>

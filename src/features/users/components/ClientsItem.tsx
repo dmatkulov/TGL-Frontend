@@ -73,6 +73,45 @@ const ClientsItem: FC<Client> = ({
         <TableCell align="left">{middleName}</TableCell>
         <TableCell align="left">{email}</TableCell>
         <TableCell align="left">{phoneNumber}</TableCell>
+        <TableCell>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Подтвердите удаление
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Вы уверены, что хотите удалить пользователя {firstName}{' '}
+                {lastName}? Все заказы клиента будут удалены.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" onClick={handleClose}>
+                Нет
+              </Button>
+              <LoadingButton
+                variant="contained"
+                color="error"
+                onClick={handleAgree}
+                autoFocus
+              >
+                Да
+              </LoadingButton>
+            </DialogActions>
+          </Dialog>
+          <Button
+            onClick={handleClickOpen}
+            disabled={isAdmin}
+            color="warning"
+            startIcon={<DeleteIcon />}
+          >
+            Удалить
+          </Button>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell
@@ -96,63 +135,37 @@ const ClientsItem: FC<Client> = ({
                   <TableCell sx={{ width: '40px' }} />
                   <TableCell style={{ fontWeight: 'bolder' }}>Адрес</TableCell>
                   <TableCell style={{ fontWeight: 'bolder' }}>ПВЗ</TableCell>
-                  <TableCell style={{ fontWeight: 'bolder' }}></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
-                  <TableCell sx={{ width: '40px', borderBottom: 'none' }} />
+                  <TableCell
+                    sx={{
+                      width: '40px',
+                      borderBottom: 'none',
+                      paddingTop: '15px',
+                      paddingBottom: '15px',
+                    }}
+                  />
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ borderBottom: 'none' }}
+                    style={{
+                      borderBottom: 'none',
+                      paddingTop: '15px',
+                      paddingBottom: '15px',
+                    }}
                   >
                     {region.name} обл., г. {settlement}, ул. {address}
                   </TableCell>
-                  <TableCell style={{ borderBottom: 'none' }}>
-                    {`${pupID.name} ${pupID.region.name} обл., ${pupID.address}, ${pupID.settlement}`}
-                  </TableCell>
                   <TableCell
-                    style={{ verticalAlign: 'top', borderBottom: 'none' }}
+                    style={{
+                      borderBottom: 'none',
+                      paddingTop: '15px',
+                      paddingBottom: '15px',
+                    }}
                   >
-                    <Dialog
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="alert-dialog-title"
-                      aria-describedby="alert-dialog-description"
-                    >
-                      <DialogTitle id="alert-dialog-title">
-                        Подтвердите удаление
-                      </DialogTitle>
-                      <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                          Вы уверены, что хотите удалить пользователя{' '}
-                          {firstName} {lastName}? Все заказы клиента будут
-                          удалены.
-                        </DialogContentText>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button variant="contained" onClick={handleClose}>
-                          Нет
-                        </Button>
-                        <LoadingButton
-                          variant="contained"
-                          color="error"
-                          onClick={handleAgree}
-                          autoFocus
-                        >
-                          Да
-                        </LoadingButton>
-                      </DialogActions>
-                    </Dialog>
-                    <Button
-                      onClick={handleClickOpen}
-                      disabled={isAdmin}
-                      color="warning"
-                      startIcon={<DeleteIcon />}
-                    >
-                      Удалить
-                    </Button>
+                    {`${pupID.name} ${pupID.region.name} обл., ${pupID.address}, ${pupID.settlement}`}
                   </TableCell>
                 </TableRow>
               </TableBody>

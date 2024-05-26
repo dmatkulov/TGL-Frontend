@@ -26,6 +26,7 @@ import PriceLists from '../features/priceLists/PriceLists';
 import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
 import Clients from '../features/users/containers/Clients';
+import Information from '../features/users/components/Information';
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
           {
             path: appRoutes.history,
             element: <OrdersHistory />,
+          },
+          {
+            path: appRoutes.information,
+            element: <Information />,
           },
         ],
       },

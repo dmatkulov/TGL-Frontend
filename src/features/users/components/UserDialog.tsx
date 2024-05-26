@@ -99,7 +99,7 @@ const UserDialog: React.FC<Props> = ({
           <form autoComplete="off">
             <Button
               sx={{
-                '&.MuiButton-root:hover': { background: '#D2122E' },
+                '&.MuiButton-root:hover': { background: '#c6001c' },
                 color: 'white',
                 background: '#9e1b32',
                 position: 'absolute',

@@ -132,8 +132,15 @@ const ClientsItem: FC<Client> = ({
                         </DialogContentText>
                       </DialogContent>
                       <DialogActions>
-                        <Button onClick={handleClose}>Нет</Button>
-                        <LoadingButton onClick={handleAgree} autoFocus>
+                        <Button variant="contained" onClick={handleClose}>
+                          Нет
+                        </Button>
+                        <LoadingButton
+                          variant="contained"
+                          color="error"
+                          onClick={handleAgree}
+                          autoFocus
+                        >
                           Да
                         </LoadingButton>
                       </DialogActions>

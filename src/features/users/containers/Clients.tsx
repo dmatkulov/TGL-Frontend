@@ -5,7 +5,13 @@ import {
   isSingleClientLoading,
   singleClientState,
 } from '../usersSlice';
-import { Box, Button, CircularProgress, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
 import ClientsItem from '../components/ClientsItem';
 import React, { useEffect, useState } from 'react';
 import { fetchClients, fetchSingleClient } from '../usersThunks';
@@ -79,21 +85,24 @@ const Clients = () => {
         >
           Поиск
         </LoadingButton>
-        <Button
-          type="button"
-          variant="contained"
-          disabled={isSingleLoading || !isInputValid(marketId)}
-          color="error"
-          onClick={clearFilter}
-        >
-          Сбросить фильтр
-        </Button>
+        {searched && (
+          <Button
+            type="button"
+            variant="contained"
+            disabled={isSingleLoading || !isInputValid(marketId)}
+            color="error"
+            onClick={clearFilter}
+          >
+            Сбросить фильтр
+          </Button>
+        )}
       </Box>
 
       {isSingleLoading ? (
         <CircularProgress />
       ) : singleState && searched ? (
-        <Box mb={4}>
+        <Box mb={4} pb={3} borderBottom="1px solid grey">
+          <Typography gutterBottom>Результат поиска</Typography>
           <ClientsTable>
             <ClientsItem
               _id={singleState._id}

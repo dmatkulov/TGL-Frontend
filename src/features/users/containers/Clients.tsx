@@ -55,13 +55,14 @@ const Clients = () => {
         >
           <TextField
             type="number"
+            size="small"
             onChange={inputChangeHandler}
             value={marketId}
             id="marketId"
             name="marketId"
             label="ID"
             sx={{ marginRight: '8px' }}
-          ></TextField>
+          />
           <LoadingButton
             variant="contained"
             loading={isSingleLoading}

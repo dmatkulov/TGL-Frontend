@@ -1,15 +1,15 @@
 import {
-  Box,
+  Box, Container, Drawer, Fab, IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery,
+  useMediaQuery, useScrollTrigger,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState} from 'react';
 import { UserNav } from '../../../types/types.User';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import StoreIcon from '@mui/icons-material/Store';
@@ -21,6 +21,9 @@ import HomeIcon from '@mui/icons-material/Home';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import GroupsIcon from '@mui/icons-material/Groups';
+import Fade from '@mui/material/Fade';
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const adminLinks: UserNav[] = [
   {
     id: 1,
@@ -90,54 +93,137 @@ const adminLinks: UserNav[] = [
   },
 ];
 
+interface ScrollTopProps {
+  children: React.ReactElement;
+  window?: () => Window;
+}
+
 const AdminNavigation = () => {
-  const isSmallScreen = useMediaQuery('(max-width:760px)');
+  const isSmallScreen = useMediaQuery('(max-width:850px)');
 
   const navigate = useNavigate();
   const [selectedLink, setSelectedLink] = useState<number | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const scrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+  const toggleDrawer = (open: boolean) => () => {
+    setIsDrawerOpen(open);
   };
+  function ScrollTop(props: ScrollTopProps) {
+    const { children, window } = props;
+    const trigger = useScrollTrigger({
+      target: window ? window() : undefined,
+      disableHysteresis: true,
+      threshold: 100,
+    });
+
+    const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+      const anchor = ((event.target as HTMLDivElement).ownerDocument || document).querySelector('#back-to-top-anchor');
+
+      if (anchor) {
+        anchor.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    };
+
+    return (
+      <Fade in={trigger}>
+        <Box
+          onClick={handleClick}
+          role="presentation"
+          sx={{ position: 'fixed', bottom: 16, right: 16 }}
+        >
+          {children}
+        </Box>
+      </Fade>
+    );
+  }
 
   return (
     <>
-      <Box sx={{ bgcolor: 'background.paper' }}>
-        <nav>
-          <List
-            sx={{
-              display: isSmallScreen ? 'flex' : '',
-              flexWrap: isSmallScreen ? 'wrap' : '',
-            }}
+      {isSmallScreen ? (
+        <>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={toggleDrawer(true)}
           >
-            {adminLinks.map((link) => (
-              <ListItem key={link.id} disableGutters>
-                <ListItemButton
-                  selected={selectedLink === link.id}
-                  onClick={() => {
-                    setSelectedLink(link.id);
-                    navigate(link.navLink);
-                    scrollTop();
-                  }}
-                  sx={{ borderRadius: 2 }}
-                >
-                  <ListItemIcon>{link.icon}</ListItemIcon>
-                  <ListItemText
-                    primary={link.name}
-                    primaryTypographyProps={{
-                      fontSize: 20,
-                      color: selectedLink === link.id ? 'primary' : 'inherit',
+            <MenuIcon />
+          </IconButton>
+          <Drawer
+            anchor="left"
+            open={isDrawerOpen}
+            onClose={toggleDrawer(false)}
+          >
+            <Box
+              sx={{
+                width: 250,
+                flexShrink: 0,
+              }}
+            >
+              <List>
+                {adminLinks.map((link) => (
+                  <ListItem
+                    key={link.id}
+                    disableGutters
+                    onClick={() => {
+                      setSelectedLink(link.id);
+                      navigate(link.navLink);
                     }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </nav>
-      </Box>
+                    sx={{ cursor: 'pointer' }}
+                  >
+                    <ListItemButton selected={selectedLink === link.id}>
+                      <ListItemIcon>{link.icon}</ListItemIcon>
+                      <ListItemText primary={link.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Drawer>
+        </>
+      ) : (
+        <>
+          <Container sx={{ overflowY: 'auto', maxHeight: 'calc(100vh - 64px)' }}>
+            <Box sx={{
+              bgcolor: 'background.paper',
+              borderColor: 'grey.400',
+              borderRadius: '16px',
+              borderWidth: '1px',
+              overflowY: 'auto',
+              maxHeight: 'calc(100vh - 64px - 20px)',
+              }}
+            >
+              <nav>
+                <List>
+                  {adminLinks.map((link) => (
+                    <ListItem key={link.id} disableGutters>
+                      <ListItemButton
+                        selected={selectedLink === link.id}
+                        onClick={() => {
+                          setSelectedLink(link.id);
+                          navigate(link.navLink);
+                        }}
+                        sx={{ borderRadius: 2 }}
+                      >
+                        <ListItemIcon>{link.icon}</ListItemIcon>
+                        <ListItemText primary={link.name} />
+                      </ListItemButton>
+                    </ListItem>
+                  ))}
+                </List>
+              </nav>
+            </Box>
+          </Container>
+          <ScrollTop>
+            <Fab size="small" aria-label="scroll back to top">
+              <KeyboardArrowUpIcon />
+            </Fab>
+          </ScrollTop>
+        </>
+      )}
     </>
   );
 };

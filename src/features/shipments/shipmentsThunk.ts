@@ -132,13 +132,13 @@ export const updateShipmentStatus = createAsyncThunk<
   }
 });
 
-export const changeSingleShipmentStatus = createAsyncThunk<
+export const changeShipmentsStatus = createAsyncThunk<
   ShipmentsResponse,
-  ShipmentStatusData
+  ShipmentStatusData[]
 >('shipments/singleStatusUpdate', async (arg) => {
   try {
     const response = await axiosApi.patch(
-      serverRoute.shipments + `/${arg._id}/` + 'changeStatus',
+      serverRoute.shipments + '/changeStatus',
       arg,
     );
     console.log('thun ', arg);

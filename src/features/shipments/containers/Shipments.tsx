@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectShipmentsLoading } from '../shipmentsSlice';
+import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
 import {
   fetchShipments,
   searchByTrack,
   updateShipmentStatus,
-  // updateShipmentStatus,
 } from '../shipmentsThunk';
 import {
   Button,
@@ -20,6 +19,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
 import ShipmentsSearchResult from '../components/ShipmentsSearchResult';
 import { ShipmentData } from '../../../types/types.Shipments';
+import { selectUser } from '../../users/usersSlice';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -29,12 +29,12 @@ const styleBoxSpinner = {
 
 const Shipments = () => {
   const dispatch = useAppDispatch();
-  // const shipments = useAppSelector(selectShipments);
-  // const user = useAppSelector(selectUser);
+  const shipments = useAppSelector(selectShipments);
+  const user = useAppSelector(selectUser);
   const order = useAppSelector(selectOneOrder);
   const loading = useAppSelector(selectShipmentsLoading);
   const loadingOneOrder = useAppSelector(selectOrdersLoading);
-  // let filteredShipments = [...shipments];
+  let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
 
@@ -59,6 +59,10 @@ const Shipments = () => {
     await dispatch(fetchShipments());
   };
 
+  const refetchData = () => {
+    dispatch(fetchShipments());
+  };
+
   useEffect(() => {
     const updateShipments = () => {
       dispatch(fetchShipments());
@@ -71,11 +75,11 @@ const Shipments = () => {
     return () => clearInterval(intervalId);
   }, [dispatch]);
 
-  // if (user?.role === 'manager' && user.region) {
-  //   filteredShipments = shipments.filter(
-  //     (shipment) => shipment.pupId.region === user.region._id,
-  //   );
-  // }
+  if (user?.role === 'manager' && user.region) {
+    filteredShipments = shipments.filter(
+      (shipment) => shipment.pupId.region === user.region._id,
+    );
+  }
 
   let content;
 
@@ -92,7 +96,9 @@ const Shipments = () => {
   } else if (searched && order === null) {
     content = <Typography>Заказ не найден!</Typography>;
   } else {
-    content = <ShipmentsTable />;
+    content = (
+      <ShipmentsTable onDataSend={refetchData} state={filteredShipments} />
+    );
   }
 
   return (

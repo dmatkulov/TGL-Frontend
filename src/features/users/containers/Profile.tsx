@@ -1,30 +1,24 @@
-import React, {useState} from 'react';
-import {Button, Grid, Typography} from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Grid, Typography } from '@mui/material';
 
-import {useAppSelector} from '../../../app/hooks';
-import {selectUser} from '../usersSlice';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectUser } from '../usersSlice';
 
 import UserDialog from '../components/UserDialog';
-import {ProfileMutation} from '../../../types/types.Profile';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { IUser } from '../../../types/types.User';
+import { getOneUser, update } from '../usersThunks';
 
-const Profile = () => {
+const Profile: React.FC = () => {
   const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
-
-  const [state, setState] = useState<ProfileMutation>({
-    email: user?.email,
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    middleName: user?.middleName,
-    region: user?.region?._id,
-    settlement: user?.settlement,
-    address: user?.address,
-    pupID: user?.pupID ? user?.pupID._id : null,
-  });
+  const dispatch = useAppDispatch();
 
   const isAdmin = user?.role === 'super' || user?.role === 'admin';
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
+    if (user !== null) {
+      await dispatch(getOneUser(user._id)).unwrap();
+    }
     setOpen(true);
   };
 
@@ -32,13 +26,9 @@ const Profile = () => {
     setOpen(false);
   };
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-    setState((prevState) => {
-      return {...prevState, [name]: value};
-    });
+  const onFormSubmit = async (userMutation: IUser) => {
+    dispatch(update(userMutation));
   };
-
 
   return (
     <>
@@ -67,7 +57,7 @@ const Profile = () => {
                 {!user?.pupID ? (
                   <Typography
                     color={'red'}
-                    sx={{fontWeight: 600}}
+                    sx={{ fontWeight: 600 }}
                     variant="subtitle1"
                   >
                     Нет ПВЗ
@@ -83,22 +73,17 @@ const Profile = () => {
           </Grid>
           <Grid item>
             <Button
-              startIcon={<BorderColorIcon/>}
+              startIcon={<BorderColorIcon />}
               onClick={handleClickOpen}
               color="secondary"
-              sx={{textTransform: 'none'}}
+              sx={{ textTransform: 'none' }}
             >
               Редактировать профиль
             </Button>
           </Grid>
         </Grid>
       </Grid>
-      <UserDialog
-        state={state}
-        open={open}
-        handleClose={handleClose}
-        inputChangeHandler={inputChangeHandler}
-      />
+      <UserDialog onSubmit={onFormSubmit} open={open} onClose={handleClose} />
     </>
   );
 };

@@ -5,13 +5,14 @@ import { serverRoute } from '../../utils/constants';
 import { isAxiosError } from 'axios';
 import { RootState } from '../../app/store';
 import { unsetUser } from './usersSlice';
-import { ProfileMutation } from '../../types/types.Profile';
 import {
   ClientResponse,
   ClientsResponse,
   IStaff,
   IStaffResponse,
   IStaffResponseData,
+  IUser,
+  IUserResponse,
   LoginLastSessionMutation,
   LoginMutation,
   RegisterMutation,
@@ -39,7 +40,7 @@ export const register = createAsyncThunk<
 
 export const update = createAsyncThunk<
   RegisterResponse,
-  ProfileMutation,
+  IUser,
   {
     rejectValue: ValidationError;
   }
@@ -58,6 +59,14 @@ export const update = createAsyncThunk<
     throw e;
   }
 });
+
+export const getOneUser = createAsyncThunk<IUserResponse, string>(
+  'users/getUser',
+  async (id) => {
+    const userResponse = await axiosApi.get<IUserResponse>('/users/' + id);
+    return userResponse.data;
+  },
+);
 
 export const createStaff = createAsyncThunk<null, IStaff>(
   'users/staff',

@@ -4,6 +4,7 @@ import {
   createStaff,
   fetchClients,
   fetchSingleClient,
+  getOneUser,
   getStaff,
   getStaffData,
   login,
@@ -18,6 +19,7 @@ import { Client, Staff, User } from '../../types/types.User';
 interface UserState {
   user: User | null;
   lastUser: User | null;
+  oneUser?: User | null;
   staffData: Staff[];
   clients: Client[];
   client: Client | null;
@@ -29,6 +31,7 @@ interface UserState {
   logOutLoading: boolean;
   getStaffLoading: boolean;
   getStaffDataLoading: boolean;
+  getOneUserLoading: boolean;
   isClientsLoading: boolean;
   isSingleClientLoading: boolean;
   isClientDeleting: boolean;
@@ -37,6 +40,7 @@ interface UserState {
 const initialState: UserState = {
   user: null,
   lastUser: null,
+  oneUser: null,
   staffData: [],
   clients: [],
   client: null,
@@ -47,6 +51,7 @@ const initialState: UserState = {
   loginError: null,
   logOutLoading: false,
   getStaffLoading: false,
+  getOneUserLoading: false,
   getStaffDataLoading: false,
   isClientsLoading: false,
   isSingleClientLoading: false,
@@ -136,6 +141,20 @@ export const usersSlice = createSlice({
       });
 
     builder
+      .addCase(getOneUser.pending, (state) => {
+        state.getOneUserLoading = true;
+      })
+      .addCase(getOneUser.fulfilled, (state, { payload }) => {
+        state.getOneUserLoading = false;
+        if (payload) {
+          state.oneUser = payload.user;
+        }
+      })
+      .addCase(getOneUser.rejected, (state) => {
+        state.getOneUserLoading = false;
+      });
+
+    builder
       .addCase(login.pending, (state) => {
         state.loginLoading = true;
         state.loginError = null;
@@ -206,6 +225,7 @@ export const usersSlice = createSlice({
 
 export const usersReducer = usersSlice.reducer;
 export const selectUser = (state: RootState) => state.users.user;
+export const selectOneUser = (state: RootState) => state.users.oneUser;
 export const selectLastUser = (state: RootState) => state.users.lastUser;
 export const selectStaff = (state: RootState) => state.users.staff;
 export const selectStaffData = (state: RootState) => state.users.staffData;
@@ -217,6 +237,8 @@ export const selectLoginLoading = (state: RootState) =>
   state.users.loginLoading;
 export const selectGetStaffLoading = (state: RootState) =>
   state.users.getStaffLoading;
+export const selectGetOneUserLoading = (state: RootState) =>
+  state.users.getOneUserLoading;
 export const selectGetStaffDataLoading = (state: RootState) =>
   state.users.getStaffDataLoading;
 export const selectLoginError = (state: RootState) => state.users.loginError;

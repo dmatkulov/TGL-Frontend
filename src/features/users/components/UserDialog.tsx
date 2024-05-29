@@ -1,258 +1,377 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Dialog,
   DialogContent,
-  DialogTitle,
   Grid,
   MenuItem,
   TextField,
+  Typography,
 } from '@mui/material';
-
-import { regionsState } from '../../regions/regionsSlice';
-import { fetchRegions } from '../../regions/regionsThunks';
+import LoadingButton from '@mui/lab/LoadingButton';
+import PhoneInput from 'react-phone-input-2';
+import { IUser } from '../../../types/types.User';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { ProfileMutation } from '../../../types/types.Profile';
+import { regionsState } from '../../regions/regionsSlice';
 import { selectPups } from '../../pups/pupsSlice';
+import {
+  selectOneUser,
+  selectRegisterError,
+  selectRegisterLoading,
+  setRegisterError,
+} from '../usersSlice';
+import { fetchRegions } from '../../regions/regionsThunks';
 import { fetchPups } from '../../pups/pupsThunks';
-import { update } from '../usersThunks';
-import { regEx } from '../../../utils/constants';
-import { selectRegisterError } from '../usersSlice';
 
 interface Props {
-  state: ProfileMutation;
+  onSubmit: (data: IUser) => void;
   open: boolean;
-  handleClose: () => void;
-  inputChangeHandler: React.ChangeEventHandler<HTMLInputElement>;
+  onClose: () => void;
 }
 
-const UserDialog: React.FC<Props> = ({
-  state,
-  open,
-  handleClose,
-  inputChangeHandler,
-}) => {
+const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
   const regions = useAppSelector(regionsState);
   const pups = useAppSelector(selectPups);
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
-
+  const loading = useAppSelector(selectRegisterLoading);
+  const oneUser = useAppSelector(selectOneUser);
+  const [formData, setFormData] = useState<IUser>({
+    email: '',
+    pupID: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    phoneNumber: '',
+    region: '',
+    settlement: '',
+    address: '',
+  });
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
-  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+  const [emailError, setEmailError] = useState<string>('');
+  const [phoneError, setPhoneError] = useState<string>('');
 
-  const getFieldError = (fieldName: string) => {
+  useEffect(() => {
+    setFormData({
+      email: oneUser?.email || '',
+      pupID: oneUser?.pupID ? oneUser?.pupID._id : '',
+      firstName: oneUser?.firstName || '',
+      middleName: oneUser?.middleName || '',
+      lastName: oneUser?.lastName || '',
+      phoneNumber: oneUser?.phoneNumber || '',
+      region: oneUser?._id || '',
+      settlement: oneUser?.settlement || '',
+      address: oneUser?.address || '',
+    });
+  }, [oneUser]);
+
+  const getErrorMessage = (field: string) => {
     try {
-      return error?.errors[fieldName].message;
+      return error?.errors[field].message;
     } catch {
       return undefined;
     }
   };
 
+  const isFormValid = () => {
+    return (
+      formData.email &&
+      formData.pupID &&
+      formData.firstName &&
+      formData.lastName &&
+      formData.phoneNumber &&
+      formData.region &&
+      formData.settlement &&
+      formData.address
+    );
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handlePhoneChange = (value: string) => {
+    setFormData((prevState) => {
+      if (value.length < 12) {
+        setPhoneError('Номер должен быть введен полностью');
+      } else {
+        setPhoneError('');
+      }
+      return { ...prevState, phoneNumber: value };
+    });
+  };
+
   useEffect(() => {
+    dispatch(setRegisterError(null));
     dispatch(fetchRegions());
   }, [dispatch]);
 
-  const fetchPupsByRegion = useCallback(async (region: string) => {
+  const handleRegionChange = async (region: string) => {
     await dispatch(fetchPups(region));
-  }, [dispatch]);
+  };
 
-  useEffect(() => {
-    if (state.region) {
-      void fetchPupsByRegion(state.region);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (formData.phoneNumber && formData.phoneNumber.length < 12) {
+      setPhoneError('Пропишите номер полностью');
+      return;
     }
-  }, [fetchPupsByRegion, state.region]);
 
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const newFieldErrors: { [key: string]: string } = {};
-    if (!state.firstName) newFieldErrors.firstName = 'Имя обязательно';
-    if (!state.lastName) newFieldErrors.lastName = 'Фамилия обязательна';
-    if (!state.email) {
-      newFieldErrors.email = 'Электронная почта обязательна';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (formData.email && emailRegex.test(formData.email)) {
+      setEmailIsValid(true);
+    } else {
+      setEmailError('Неверный формат электронной почты');
       setEmailIsValid(false);
-    } else if (!regEx.test(state.email)) {
-      newFieldErrors.email = 'Неверный формат электронной почты';
-      setEmailIsValid(false);
+      return;
     }
-    if (!state.region) newFieldErrors.region = 'Регион обязателен';
-    if (!state.pupID) newFieldErrors.pupID = 'ПВЗ обязателен';
 
-    setFieldErrors(newFieldErrors);
-
-    if (Object.keys(newFieldErrors).length > 0) return;
-
-    try {
-      await dispatch(update(state));
-      handleClose();
-    } catch (e) {
-      console.error(e);
-    }
+    onSubmit(formData);
+    setFormData({
+      email: '',
+      pupID: '',
+      firstName: '',
+      middleName: '',
+      lastName: '',
+      phoneNumber: '',
+      region: '',
+      settlement: '',
+      address: '',
+    });
   };
 
   return (
-    <>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogTitle>Редактирование профиля</DialogTitle>
-        <DialogContent sx={{ mt: '20px' }}>
-          <form autoComplete="off">
-            <Button
-              sx={{
-                '&.MuiButton-root:hover': { background: '#c6001c' },
-                color: 'white',
-                background: '#9e1b32',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-              }}
-              onClick={handleClose}
-            >
-              X
-            </Button>
-            <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
-                <TextField
-                  required
-                  id="firstName"
-                  label="Имя"
-                  value={state.firstName}
-                  onChange={inputChangeHandler}
-                  name="firstName"
-                  error={Boolean(
-                    getFieldError('firstName') || fieldErrors.firstName,
-                  )}
-                  helperText={
-                    getFieldError('firstName') || fieldErrors.firstName
-                  }
-                />
-                <TextField
-                  required
-                  id="lastName"
-                  label="Фамилия"
-                  value={state.lastName}
-                  onChange={inputChangeHandler}
-                  name="lastName"
-                  error={Boolean(
-                    getFieldError('lastName') || fieldErrors.lastName,
-                  )}
-                  helperText={getFieldError('lastName') || fieldErrors.lastName}
-                />
-                <TextField
-                  id="middleName"
-                  label="Отчество"
-                  value={state.middleName}
-                  onChange={inputChangeHandler}
-                  name="middleName"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Адрес электронной почты"
-                  value={state.email}
-                  onChange={inputChangeHandler}
-                  error={Boolean(
-                    getFieldError('email') ||
-                      !emailIsValid ||
-                      fieldErrors.email,
-                  )}
-                  helperText={
-                    getFieldError('email')
-                      ? getFieldError('email')
-                      : fieldErrors.email
-                  }
-                  name="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  select
-                  name="region"
-                  label="Регион"
-                  type="text"
-                  value={state.region}
-                  onChange={inputChangeHandler}
-                  error={Boolean(getFieldError('region') || fieldErrors.region)}
-                  helperText={getFieldError('region') || fieldErrors.region}
+    <Dialog open={open} onClose={onClose} maxWidth="lg">
+      <DialogContent sx={{ mt: '20px' }}>
+        <form autoComplete="off" onSubmit={handleSubmit}>
+          <Button
+            sx={{
+              '&.MuiButton-root:hover': { background: '#c6001c' },
+              color: 'white',
+              background: '#9e1b32',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+            }}
+            onClick={onClose}
+          >
+            X
+          </Button>
+          <Grid container direction="column" spacing={2}>
+            <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
+              <TextField
+                fullWidth
+                required
+                name="firstName"
+                label="Имя"
+                type="text"
+                value={formData.firstName}
+                autoComplete="new-firstName"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('firstName'))}
+                helperText={getErrorMessage('firstName')}
+              />
+              <TextField
+                fullWidth
+                required
+                name="lastName"
+                label="Фамилия"
+                type="text"
+                value={formData.lastName}
+                autoComplete="new-lastName"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('lastName'))}
+                helperText={getErrorMessage('lastName')}
+              />
+              <TextField
+                fullWidth
+                name="middleName"
+                label="Отчество"
+                type="text"
+                value={formData.middleName}
+                autoComplete="new-middleName"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('middleName'))}
+                helperText={getErrorMessage('middleName')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} className="custom-tel-container">
+              <label htmlFor="phoneNumber" className="custom-tel-label">
+                Номер телефона*
+              </label>
+              <PhoneInput
+                country="kg"
+                masks={{ kg: '(...) ..-..-..' }}
+                onlyCountries={['kg']}
+                containerStyle={{ width: '100%' }}
+                value={formData.phoneNumber}
+                onChange={handlePhoneChange}
+                defaultErrorMessage={getErrorMessage('phoneNumber')}
+                disableDropdown
+                inputStyle={{
+                  width: '100%',
+                  borderColor: getErrorMessage('phoneNumber') && '#d32f2f',
+                  color: getErrorMessage('phoneNumber') && '#d32f2f',
+                }}
+                inputProps={{
+                  id: 'phoneNumber',
+                  name: 'phoneNumber',
+                  required: true,
+                }}
+              />
+              {getErrorMessage('phoneNumber') ? (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
                 >
+                  {getErrorMessage('phoneNumber')}
+                </Typography>
+              ) : (
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    ml: '14px',
+                    mt: '4px',
+                    color: '#d32f2f',
+                  }}
+                >
+                  {phoneError}
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                label="Email"
+                name="email"
+                type="text"
+                value={formData.email}
+                autoComplete="new-email"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('email') || !emailIsValid)}
+                helperText={
+                  getErrorMessage('email')
+                    ? getErrorMessage('email')
+                    : emailError
+                }
+                sx={{
+                  '.MuiFormHelperText-root': {
+                    color: emailIsValid ? 'inherit' : '#d32f2f',
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                required
+                name="region"
+                label="Регион"
+                type="text"
+                value={regions.length > 0 ? formData.region : ''}
+                autoComplete="new-region"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('region'))}
+                helperText={getErrorMessage('region')}
+              >
+                <MenuItem value="" disabled>
+                  Выберите область
+                </MenuItem>
+                {regions.length > 0 &&
+                  regions.map((region) => (
+                    <MenuItem
+                      key={region._id}
+                      value={region._id}
+                      onClick={() => handleRegionChange(region._id)}
+                    >
+                      {region.name}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                required
+                name="pupID"
+                label="ПВЗ"
+                type="text"
+                value={pups.length > 0 ? formData.pupID : ''}
+                autoComplete="new-pupID"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('pupID'))}
+                helperText={getErrorMessage('pupID')}
+              >
+                {pups.length > 0 && (
                   <MenuItem value="" disabled>
-                    Выберите регион
+                    Выберите ближайший ПВЗ
                   </MenuItem>
-                  {regions.length > 0 &&
-                    regions.map((region) => (
-                      <MenuItem
-                        key={region._id}
-                        value={region._id}
-                        onClick={() => fetchPupsByRegion(region._id)}
-                      >
-                        {region.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  select
-                  required
-                  name="pupID"
-                  label="ПВЗ"
-                  type="text"
-                  value={pups.length > 0 ? state.pupID : ''}
-                  autoComplete="new-pupID"
-                  onChange={inputChangeHandler}
-                  error={Boolean(getFieldError('pupID') || fieldErrors.pupID)}
-                  helperText={getFieldError('pupID') || fieldErrors.pupID}
-                >
-                  {pups.map((pup) => (
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
                       {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                     </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="settlement"
-                  label="Населенный пункт"
-                  value={state.settlement}
-                  onChange={inputChangeHandler}
-                  name="settlement"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="address"
-                  label="Адрес"
-                  value={state.address}
-                  onChange={inputChangeHandler}
-                  name="address"
-                />
-              </Grid>
-
-              <Grid item xs>
-                <Button
-                  fullWidth
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                  onClick={handleUpdateProfile}
-                >
-                  Редактировать данные
-                </Button>
-              </Grid>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
+              </TextField>
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="settlement"
+                label="Населенный пункт"
+                type="text"
+                value={formData.settlement}
+                autoComplete="new-settlement"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('settlement'))}
+                helperText={getErrorMessage('settlement')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                required
+                name="address"
+                label="Адрес"
+                type="text"
+                value={formData.address}
+                autoComplete="new-address"
+                onChange={handleInputChange}
+                error={Boolean(getErrorMessage('address'))}
+                helperText={getErrorMessage('address')}
+              />
+            </Grid>
+            <Grid item xs>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                sx={{ mt: 3, mb: 2, py: 1 }}
+                disableElevation
+                disabled={!isFormValid() || loading}
+                loading={loading}
+              >
+                Обновить
+              </LoadingButton>
+            </Grid>
+          </Grid>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

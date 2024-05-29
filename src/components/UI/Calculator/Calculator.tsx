@@ -2,7 +2,8 @@ import {
   Alert,
   Button,
   CardMedia,
-  Grid, Paper,
+  Grid,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -57,7 +58,7 @@ const Calculator = () => {
 
     setPriceCalculate((prevState) => ({
       ...prevState,
-        [name]: value,
+      [name]: value,
     }));
   };
 
@@ -106,19 +107,19 @@ const Calculator = () => {
     if (result > parseInt(weight)) {
       answer = (
         <Typography>
-          Груз размером {dimensions.length} * {dimensions.width} * {' '}
+          Груз размером {dimensions.length} * {dimensions.width} *{' '}
           {dimensions.height} (см) и весом {weight} кг будет доставляться по
-          объемному весу, равному {result.toFixed(2)} кг. Объем груза равен {volume.toFixed(2)} м³.
-          Плотность груза равна {density.toFixed(2)}
+          объемному весу, равному {result.toFixed(2)} кг. Объем груза равен{' '}
+          {volume.toFixed(2)} м³. Плотность груза равна {density.toFixed(2)}
         </Typography>
       );
     } else {
       answer = (
         <Typography>
-          Груз размером {dimensions.length} * {dimensions.width} * {' '}
+          Груз размером {dimensions.length} * {dimensions.width} *{' '}
           {dimensions.height} (см) и весом {weight} кг будет доставляться по
-          физическому весу! Объем груза равен {volume.toFixed(2)} м³.
-          Плотность груза равна {density.toFixed(2)}
+          физическому весу! Объем груза равен {volume.toFixed(2)} м³. Плотность
+          груза равна {density.toFixed(2)}
         </Typography>
       );
     }
@@ -131,20 +132,12 @@ const Calculator = () => {
   };
 
   if (calculatePrice() > 0) {
-    getPrice = (
-      <Typography>
-        Общая стоимость {calculatePrice()}$
-      </Typography>
-    )
+    getPrice = <Typography>Общая стоимость {calculatePrice()}$</Typography>;
   }
 
-  const createData = (
-    name: string,
-    express: string,
-    standard: string,
-  ) => {
+  const createData = (name: string, express: string, standard: string) => {
     return { name, express, standard };
-  }
+  };
 
   const householdGoods = [
     createData('Скорость', '7-13 дней', '12-18 дней'),
@@ -286,7 +279,7 @@ const Calculator = () => {
             onChange={inputChangeResult}
           />
         </Grid>
-        { getPrice }
+        {getPrice}
       </Grid>
 
       <Grid container spacing={3} mt={3}>

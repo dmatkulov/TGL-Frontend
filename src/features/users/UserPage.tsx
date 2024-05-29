@@ -1,11 +1,11 @@
-import {Grid, useMediaQuery} from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import UserNavigation from './components/UserNavigation';
-import {Outlet, useNavigate} from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Profile from './containers/Profile';
-import {useAppSelector} from '../../app/hooks';
-import {selectUser} from './usersSlice';
-import {appRoutes} from '../../utils/constants';
-import {useEffect} from 'react';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from './usersSlice';
+import { appRoutes } from '../../utils/constants';
+import { useEffect } from 'react';
 
 const UserPage = () => {
   const isSmallScreen = useMediaQuery('(max-width:760px)');
@@ -33,15 +33,15 @@ const UserPage = () => {
           px={3}
           mb={5}
           pb={4}
-          sx={{borderBottom: '1px solid #5F9EA0'}}
+          sx={{ borderBottom: '1px solid #5F9EA0' }}
         >
-          <Profile/>
+          <Profile />
         </Grid>
         <Grid item xs={3} pr={2}>
-          <UserNavigation/>
+          <UserNavigation />
         </Grid>
         <Grid item xs={9} px={3} pt={2}>
-          <Outlet/>
+          <Outlet />
         </Grid>
       </Grid>
     </>

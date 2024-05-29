@@ -28,9 +28,10 @@ import { useAppDispatch } from '../../../app/hooks';
 interface Props {
   onDataSend: () => void;
   state: ShipmentData[];
+  searchResult?: ShipmentData | null;
 }
 
-const ShipmentsTable: FC<Props> = ({ onDataSend, state }) => {
+const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -136,6 +137,42 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state }) => {
     setCurrentStatus('Оплачено');
   };
 
+  const renderMultiple = (
+    rowsPerPage > 0
+      ? state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : state
+  ).map((shipment) => (
+    <ShipmentsRowItem
+      shipment={shipment}
+      key={shipment._id}
+      createItem={createItem}
+      removeItem={removeItem}
+      changeHandler={changeHandler}
+    />
+  ));
+
+  let renderSingle;
+
+  if (searchResult) {
+    renderSingle = (
+      <ShipmentsRowItem
+        shipment={searchResult}
+        key={searchResult._id}
+        createItem={createItem}
+        removeItem={removeItem}
+        changeHandler={changeHandler}
+      />
+    );
+  } else if (searchResult === null) {
+    renderSingle = (
+      <TableRow>
+        <TableCell>
+          <Typography>Заказ не найден!</Typography>
+        </TableCell>
+      </TableRow>
+    );
+  }
+
   return (
     <>
       <Box display="flex" alignItems="center" flexWrap="wrap" mb={2}>
@@ -203,21 +240,8 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state }) => {
             <ShipmentsTableHead />
           </TableHead>
           <TableBody>
-            {(rowsPerPage > 0
-              ? state.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage,
-                )
-              : state
-            ).map((shipment) => (
-              <ShipmentsRowItem
-                shipment={shipment}
-                key={shipment._id}
-                createItem={createItem}
-                removeItem={removeItem}
-                changeHandler={changeHandler}
-              />
-            ))}
+            {searchResult !== undefined ? renderSingle : renderMultiple}
+            {/*{renderMultiple}*/}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />

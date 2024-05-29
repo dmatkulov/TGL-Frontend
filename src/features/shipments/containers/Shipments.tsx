@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
-import {
-  fetchShipments,
-  searchByTrack,
-  updateShipmentStatus,
-} from '../shipmentsThunk';
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { fetchShipments, searchByTrack } from '../shipmentsThunk';
+import { Button, CircularProgress, Grid, TextField } from '@mui/material';
 import { selectOneOrder, selectOrdersLoading } from '../../orders/ordersSlice';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
-import ShipmentsSearchResult from '../components/ShipmentsSearchResult';
-import { ShipmentData } from '../../../types/types.Shipments';
 import { selectUser } from '../../users/usersSlice';
 
 const styleBoxSpinner = {
@@ -48,11 +36,6 @@ const Shipments = () => {
     await dispatch(searchByTrack(state));
   };
 
-  const updateOneOrderStatus = async (data: ShipmentData) => {
-    await dispatch(updateShipmentStatus(data));
-    await dispatch(searchByTrack(data.trackerNumber.toString()));
-  };
-
   const clearFilter = async () => {
     setSearched(false);
     setState('');
@@ -60,6 +43,10 @@ const Shipments = () => {
   };
 
   const refetchData = () => {
+    if (searched) {
+      dispatch(searchByTrack(state));
+      return;
+    }
     dispatch(fetchShipments());
   };
 
@@ -89,12 +76,14 @@ const Shipments = () => {
         <CircularProgress size={100} />
       </div>
     );
-  } else if (searched && order) {
+  } else if (searched) {
     content = (
-      <ShipmentsSearchResult onSubmit={updateOneOrderStatus} order={order} />
+      <ShipmentsTable
+        onDataSend={refetchData}
+        state={filteredShipments}
+        searchResult={order}
+      />
     );
-  } else if (searched && order === null) {
-    content = <Typography>Заказ не найден!</Typography>;
   } else {
     content = (
       <ShipmentsTable onDataSend={refetchData} state={filteredShipments} />

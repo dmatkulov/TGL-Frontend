@@ -59,7 +59,7 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
       middleName: oneUser?.middleName || '',
       lastName: oneUser?.lastName || '',
       phoneNumber: oneUser?.phoneNumber || '',
-      region: oneUser?._id || '',
+      region: oneUser?.region._id,
       settlement: oneUser?.settlement || '',
       address: oneUser?.address || '',
     });
@@ -128,6 +128,7 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
     }
 
     onSubmit(formData);
+    onClose();
     setFormData({
       email: '',
       pupID: '',
@@ -158,215 +159,216 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
           >
             X
           </Button>
-          <Grid container direction="column" spacing={2}>
-            <Grid item xs={12} container gap={'10px'} sx={{ mt: 1 }}>
-              <TextField
-                fullWidth
-                required
-                name="firstName"
-                label="Имя"
-                type="text"
-                value={formData.firstName}
-                autoComplete="new-firstName"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('firstName'))}
-                helperText={getErrorMessage('firstName')}
-              />
-              <TextField
-                fullWidth
-                required
-                name="lastName"
-                label="Фамилия"
-                type="text"
-                value={formData.lastName}
-                autoComplete="new-lastName"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('lastName'))}
-                helperText={getErrorMessage('lastName')}
-              />
-              <TextField
-                fullWidth
-                name="middleName"
-                label="Отчество"
-                type="text"
-                value={formData.middleName}
-                autoComplete="new-middleName"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('middleName'))}
-                helperText={getErrorMessage('middleName')}
-              />
+          <Grid container spacing={2}>
+            <Grid item xs={12} container spacing={2}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  required
+                  name="firstName"
+                  label="Имя"
+                  type="text"
+                  value={formData.firstName}
+                  autoComplete="new-firstName"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('firstName'))}
+                  helperText={getErrorMessage('firstName')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  required
+                  name="lastName"
+                  label="Фамилия"
+                  type="text"
+                  value={formData.lastName}
+                  autoComplete="new-lastName"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('lastName'))}
+                  helperText={getErrorMessage('lastName')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  name="middleName"
+                  label="Отчество"
+                  type="text"
+                  value={formData.middleName}
+                  autoComplete="new-middleName"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('middleName'))}
+                  helperText={getErrorMessage('middleName')}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} className="custom-tel-container">
-              <label htmlFor="phoneNumber" className="custom-tel-label">
-                Номер телефона*
-              </label>
-              <PhoneInput
-                country="kg"
-                masks={{ kg: '(...) ..-..-..' }}
-                onlyCountries={['kg']}
-                containerStyle={{ width: '100%' }}
-                value={formData.phoneNumber}
-                onChange={handlePhoneChange}
-                defaultErrorMessage={getErrorMessage('phoneNumber')}
-                disableDropdown
-                inputStyle={{
-                  width: '100%',
-                  borderColor: getErrorMessage('phoneNumber') && '#d32f2f',
-                  color: getErrorMessage('phoneNumber') && '#d32f2f',
-                }}
-                inputProps={{
-                  id: 'phoneNumber',
-                  name: 'phoneNumber',
-                  required: true,
-                }}
-              />
-              {getErrorMessage('phoneNumber') ? (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
+            <Grid item xs={12} container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <PhoneInput
+                  country="kg"
+                  masks={{ kg: '(...) ..-..-..' }}
+                  onlyCountries={['kg']}
+                  containerStyle={{ width: '100%' }}
+                  value={formData.phoneNumber}
+                  onChange={handlePhoneChange}
+                  defaultErrorMessage={getErrorMessage('phoneNumber')}
+                  disableDropdown
+                  inputStyle={{
+                    width: '100%',
+                    borderColor: getErrorMessage('phoneNumber') && '#d32f2f',
+                    color: getErrorMessage('phoneNumber') && '#d32f2f',
                   }}
-                >
-                  {getErrorMessage('phoneNumber')}
-                </Typography>
-              ) : (
-                <Typography
-                  sx={{
-                    fontSize: '12px',
-                    ml: '14px',
-                    mt: '4px',
-                    color: '#d32f2f',
+                  inputProps={{
+                    id: 'phoneNumber',
+                    name: 'phoneNumber',
+                    required: true,
                   }}
-                >
-                  {phoneError}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                required
-                label="Email"
-                name="email"
-                type="text"
-                value={formData.email}
-                autoComplete="new-email"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('email') || !emailIsValid)}
-                helperText={
-                  getErrorMessage('email')
-                    ? getErrorMessage('email')
-                    : emailError
-                }
-                sx={{
-                  '.MuiFormHelperText-root': {
-                    color: emailIsValid ? 'inherit' : '#d32f2f',
-                  },
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                select
-                required
-                name="region"
-                label="Регион"
-                type="text"
-                value={regions.length > 0 ? formData.region : ''}
-                autoComplete="new-region"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('region'))}
-                helperText={getErrorMessage('region')}
-              >
-                <MenuItem value="" disabled>
-                  Выберите область
-                </MenuItem>
-                {regions.length > 0 &&
-                  regions.map((region) => (
-                    <MenuItem
-                      key={region._id}
-                      value={region._id}
-                      onClick={() => handleRegionChange(region._id)}
-                    >
-                      {region.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                select
-                required
-                name="pupID"
-                label="ПВЗ"
-                type="text"
-                value={pups.length > 0 ? formData.pupID : ''}
-                autoComplete="new-pupID"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('pupID'))}
-                helperText={getErrorMessage('pupID')}
-              >
-                {pups.length > 0 && (
-                  <MenuItem value="" disabled>
-                    Выберите ближайший ПВЗ
-                  </MenuItem>
-                )}
-                {pups.length > 0 ? (
-                  pups.map((pup) => (
-                    <MenuItem key={pup._id} value={pup._id}>
-                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
-                    </MenuItem>
-                  ))
+                />
+                {getErrorMessage('phoneNumber') ? (
+                  <Typography
+                    sx={{ fontSize: '12px', mt: '4px', color: '#d32f2f' }}
+                  >
+                    {getErrorMessage('phoneNumber')}
+                  </Typography>
                 ) : (
-                  <MenuItem value="" disabled>
-                    Сначала выберите регион
-                  </MenuItem>
+                  <Typography
+                    sx={{ fontSize: '12px', mt: '4px', color: '#d32f2f' }}
+                  >
+                    {phoneError}
+                  </Typography>
                 )}
-              </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Email"
+                  name="email"
+                  type="text"
+                  value={formData.email}
+                  autoComplete="new-email"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('email') || !emailIsValid)}
+                  helperText={
+                    getErrorMessage('email')
+                      ? getErrorMessage('email')
+                      : emailError
+                  }
+                  sx={{
+                    '.MuiFormHelperText-root': {
+                      color: emailIsValid ? 'inherit' : '#d32f2f',
+                    },
+                  }}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                required
-                name="settlement"
-                label="Населенный пункт"
-                type="text"
-                value={formData.settlement}
-                autoComplete="new-settlement"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('settlement'))}
-                helperText={getErrorMessage('settlement')}
-              />
+            <Grid item xs={12} container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  required
+                  name="region"
+                  label="Регион"
+                  type="text"
+                  value={regions.length > 0 ? formData.region : ''}
+                  autoComplete="new-region"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('region'))}
+                  helperText={getErrorMessage('region')}
+                >
+                  <MenuItem value="" disabled>
+                    Выберите область
+                  </MenuItem>
+                  {regions.length > 0 &&
+                    regions.map((region) => (
+                      <MenuItem
+                        key={region._id}
+                        value={region._id}
+                        onClick={() => handleRegionChange(region._id)}
+                      >
+                        {region.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  select
+                  required
+                  name="pupID"
+                  label="ПВЗ"
+                  type="text"
+                  value={pups.length > 0 ? formData.pupID : ''}
+                  autoComplete="new-pupID"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('pupID'))}
+                  helperText={getErrorMessage('pupID')}
+                >
+                  {pups.length > 0 && (
+                    <MenuItem value="" disabled>
+                      Выберите ближайший ПВЗ
+                    </MenuItem>
+                  )}
+                  {pups.length > 0 ? (
+                    pups.map((pup) => (
+                      <MenuItem key={pup._id} value={pup._id}>
+                        {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    <MenuItem value="" disabled>
+                      Сначала выберите регион
+                    </MenuItem>
+                  )}
+                </TextField>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                required
-                name="address"
-                label="Адрес"
-                type="text"
-                value={formData.address}
-                autoComplete="new-address"
-                onChange={handleInputChange}
-                error={Boolean(getErrorMessage('address'))}
-                helperText={getErrorMessage('address')}
-              />
+            <Grid item xs={12} container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  required
+                  name="settlement"
+                  label="Населенный пункт"
+                  type="text"
+                  value={formData.settlement}
+                  autoComplete="new-settlement"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('settlement'))}
+                  helperText={getErrorMessage('settlement')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  required
+                  name="address"
+                  label="Адрес"
+                  type="text"
+                  value={formData.address}
+                  autoComplete="new-address"
+                  onChange={handleInputChange}
+                  error={Boolean(getErrorMessage('address'))}
+                  helperText={getErrorMessage('address')}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, mb: 2, py: 1 }}
-                disableElevation
-                disabled={!isFormValid() || loading}
-                loading={loading}
-              >
-                Обновить
-              </LoadingButton>
+            <Grid item xs={12} container justifyContent="center">
+              <Grid item>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2, py: 1 }}
+                  disableElevation
+                  disabled={!isFormValid() || loading}
+                  loading={loading}
+                >
+                  Обновить
+                </LoadingButton>
+              </Grid>
             </Grid>
           </Grid>
         </form>

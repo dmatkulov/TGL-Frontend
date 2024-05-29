@@ -8,7 +8,7 @@ import {
 import {
   Box,
   Button,
-  CircularProgress,
+  CircularProgress, TablePagination,
   TextField,
   Typography,
 } from '@mui/material';
@@ -17,6 +17,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchClients, fetchSingleClient } from '../usersThunks';
 import ClientsTable from '../components/ClientsTable';
 import { LoadingButton } from '@mui/lab';
+import TablePaginationActions from '../../shipments/components/TablePaginationActions';
 
 const isInputValid = (marketIdString: string) => {
   const regex = /^\d{5}$/;
@@ -31,6 +32,8 @@ const Clients = () => {
   const isLoading = useAppSelector(isClientsLoading);
   const [searched, setSearched] = useState<boolean>(false);
   const isSingleLoading = useAppSelector(isSingleClientLoading);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   useEffect(() => {
     dispatch(fetchClients());
@@ -55,6 +58,23 @@ const Clients = () => {
     setSearched(false);
     await dispatch(fetchClients());
   };
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    event?.preventDefault();
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedClients = state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <>
@@ -127,7 +147,7 @@ const Clients = () => {
         <CircularProgress />
       ) : (
         <ClientsTable>
-          {state.map((item) => (
+          {paginatedClients.map((item) => (
             <ClientsItem
               _id={item._id}
               key={item._id}
@@ -145,6 +165,18 @@ const Clients = () => {
           ))}
         </ClientsTable>
       )}
+      <TablePagination
+        component="div"
+        sx={{ ml: "auto" }}
+        rowsPerPageOptions={[5, 10, 15, 20]}
+        labelRowsPerPage="На странице"
+        count={state.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        ActionsComponent={TablePaginationActions}
+      />
     </>
   );
 };

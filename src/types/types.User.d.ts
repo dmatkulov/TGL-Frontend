@@ -103,9 +103,26 @@ export interface IStaff {
   role: string;
 }
 
+export interface IUser {
+  email: string | undefined;
+  pupID: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  middleName: string | undefined;
+  phoneNumber: string | undefined;
+  region: string | undefined;
+  settlement: string | undefined;
+  address: string | undefined;
+}
+
 export interface IStaffResponse {
   message: string;
   user: Staff;
+}
+
+export interface IUserResponse {
+  message: string;
+  user: User;
 }
 
 export interface IStaffResponseData {

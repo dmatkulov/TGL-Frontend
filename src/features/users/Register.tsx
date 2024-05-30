@@ -19,19 +19,16 @@ import 'react-phone-input-2/lib/material.css';
 import {
   selectRegisterError,
   selectRegisterLoading,
-  selectUser,
   setRegisterError,
 } from './usersSlice';
 import { register } from './usersThunks';
-import { appRoutes } from '../../utils/constants';
+import { appRoutes, regEx } from '../../utils/constants';
 import { selectPups } from '../pups/pupsSlice';
 import { fetchPups } from '../pups/pupsThunks';
 import { regionsState } from '../regions/regionsSlice';
 import { fetchRegions } from '../regions/regionsThunks';
 import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
-import { regEx } from '../../utils/constants';
-
 
 const initialState: RegisterMutation = {
   email: '',
@@ -274,7 +271,9 @@ const Register: React.FC = () => {
               />
             </Grid>
             <Grid item xs={12} sm={6} className="custom-tel-container">
-              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
+              <label htmlFor="phoneNumber" className="custom-tel-label">
+                Номер телефона*
+              </label>
               <PhoneInput
                 country="kg"
                 masks={{ kg: '(...) ..-..-..' }}

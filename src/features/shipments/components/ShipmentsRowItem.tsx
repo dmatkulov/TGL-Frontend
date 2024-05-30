@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { ShipmentData } from '../../../types/types.Shipments';
+import React, { useEffect, useState } from 'react';
+import {
+  ShipmentData,
+  ShipmentStatusData,
+} from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
+  Button,
   Checkbox,
-  Chip,
   Collapse,
   Grid,
   IconButton,
@@ -15,40 +18,105 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import AutorenewIcon from '@mui/icons-material/Autorenew';
 import dayjs from 'dayjs';
 import { useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
 
 interface Props {
   shipment: ShipmentData;
-  onSubmit: (state: ShipmentData) => void;
+  createItem: (_id: string, status: string, isPaid: boolean) => void;
+  removeItem: (_id: string) => void;
+  changeHandler: (_id: string, status: string, isPaid: boolean) => void;
 }
-const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
-  const [state, setState] = useState(shipment);
+
+const initialState: ShipmentStatusData = {
+  _id: '',
+  status: '',
+  isPaid: false,
+};
+
+const ShipmentsRowItem: React.FC<Props> = ({
+  shipment,
+  createItem,
+  removeItem,
+  changeHandler,
+}) => {
+  const [localState, setLocalState] =
+    useState<ShipmentStatusData>(initialState);
   const [checked, setChecked] = useState(false);
+  const [paidToggle, setPaidToggle] = useState(false);
+  const [statusToggle, setStatusToggle] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
 
   const [open, setOpen] = React.useState(false);
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setState((prevState) => {
+    setLocalState((prevState) => {
       return { ...prevState, [name]: value };
     });
+    setStatusToggle(true);
   };
 
-  const onFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    void onSubmit(state);
-    setChecked(false);
+  const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    if (checked) {
+      removeItem(shipment._id);
+      return;
+    }
+    createItem(shipment._id, shipment.status, shipment.isPaid);
   };
+
+  const paidStatusChangeHandler = () => {
+    if (checked) {
+      setLocalState((prevState) => {
+        return { ...prevState, isPaid: !prevState.isPaid };
+      });
+      setPaidToggle(true);
+    }
+  };
+
+  useEffect(() => {
+    setLocalState((prevState) => ({
+      ...prevState,
+      _id: shipment._id,
+      status: shipment.status,
+      isPaid: shipment.isPaid,
+    }));
+  }, [shipment._id, shipment.isPaid, shipment.status]);
+
+  useEffect(() => {
+    if (checked && paidToggle) {
+      changeHandler(localState._id, localState.status, localState.isPaid);
+      setPaidToggle(false);
+    }
+  }, [
+    changeHandler,
+    checked,
+    localState._id,
+    localState.isPaid,
+    localState.status,
+    paidToggle,
+  ]);
+
+  useEffect(() => {
+    if (statusToggle && checked) {
+      changeHandler(localState._id, localState.status, localState.isPaid);
+      setStatusToggle(false);
+    }
+  }, [
+    changeHandler,
+    checked,
+    localState._id,
+    localState.isPaid,
+    localState.status,
+    statusToggle,
+  ]);
 
   return (
     <>
@@ -73,15 +141,10 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
             spacing={1}
             justifyContent="space-between"
           >
-            <Checkbox
-              checked={checked}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                setChecked(event.target.checked);
-              }}
-            />
+            <Checkbox checked={checked} onChange={onCheck} />
             <TextField
               select
-              disabled={!checked || loading}
+              disabled={loading || !checked}
               size="small"
               variant="standard"
               required
@@ -91,7 +154,7 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
                 disableUnderline: true,
               }}
               style={{ flexGrow: 1, marginRight: 2 }}
-              value={state.status}
+              value={localState.status}
               onChange={inputChangeHandler}
             >
               {statuses.map((status) => (
@@ -104,26 +167,16 @@ const ShipmentsRowItem: React.FC<Props> = ({ shipment, onSubmit }) => {
                 </MenuItem>
               ))}
             </TextField>
-            <Tooltip title="Изменить статус">
-              <span>
-                <IconButton
-                  type="submit"
-                  disabled={loading || !checked}
-                  onClick={onFormSubmit}
-                  color="primary"
-                >
-                  <AutorenewIcon />
-                </IconButton>
-              </span>
-            </Tooltip>
           </Stack>
         </TableCell>
         <TableCell>
-          {shipment.isPaid ? (
-            <Chip size="small" label="Оплачено" color="success" />
-          ) : (
-            <Chip size="small" label="Не оплачено" color="error" />
-          )}
+          <Button
+            onClick={paidStatusChangeHandler}
+            variant="contained"
+            color={localState.isPaid ? 'success' : 'error'}
+          >
+            {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
+          </Button>
         </TableCell>
       </TableRow>
       <TableRow>

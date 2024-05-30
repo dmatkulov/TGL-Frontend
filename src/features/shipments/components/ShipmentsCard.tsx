@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { addShipmentGetLoad } from '../shipmentsSlice';
 import { fetchShipments, updateShipmentStatus } from '../shipmentsThunk';
 import DeliveryMenu from './DeliveryMenu';
-import {selectUser} from '../../users/usersSlice';
+import { selectUser } from '../../users/usersSlice';
 
 interface Props {
   shipment: ShipmentData;
@@ -43,7 +43,10 @@ const ShipmentsCard: React.FC<Props> = ({ shipment }) => {
   };
 
   return (
-    <Card variant="outlined" sx={{ minWidth: 275, mt: '20px', mb: '20px', p: 2 }}>
+    <Card
+      variant="outlined"
+      sx={{ minWidth: 275, mt: '20px', mb: '20px', p: 2 }}
+    >
       <CardContent>
         <Grid container justifyContent="space-between" sx={{ marginBottom: 2 }}>
           <Typography variant="h5" component="div" gutterBottom>

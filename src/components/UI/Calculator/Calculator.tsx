@@ -11,12 +11,15 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
 import box from '..//..//../assets/box.png';
 
 const Calculator = () => {
+  const smallScreen = useMediaQuery('(max-width:810px)');
+  const extraSmallScreen = useMediaQuery('(max-width:630px)');
+
   const [dimensions, setDimensions] = useState({
     length: '',
     width: '',
@@ -197,7 +200,7 @@ const Calculator = () => {
         <b>Длина(см) х Ширина(см) х Высота(см)/6000 = объемный вес(кг)</b>
       </Typography>
       <Grid container justifyContent="start" direction="row">
-        <Grid item xs={4} m={5}>
+        <Grid item xs={extraSmallScreen ? 12 : 4} m={5}>
           <Grid item xs={12} m={2}>
             <TextField
               required
@@ -206,6 +209,7 @@ const Calculator = () => {
               value={dimensions.length}
               label="Длина в см"
               onChange={inputChangeHandler}
+              fullWidth
             />
           </Grid>
           <Grid item xs={12} m={2}>
@@ -216,6 +220,7 @@ const Calculator = () => {
               value={dimensions.width}
               label="Ширина в см"
               onChange={inputChangeHandler}
+              fullWidth
             />
           </Grid>
           <Grid item xs={12} m={2}>
@@ -226,6 +231,7 @@ const Calculator = () => {
               value={dimensions.height}
               label="Высота в см"
               onChange={inputChangeHandler}
+              fullWidth
             />
           </Grid>
           <Grid item xs={12} m={2}>
@@ -236,12 +242,13 @@ const Calculator = () => {
               value={weight}
               label="Вес в кг"
               onChange={handleWeightChange}
+              fullWidth
             />
           </Grid>
         </Grid>
         <Grid>
           <CardMedia
-            sx={{ width: 300 }}
+            sx={{ width: 300, display: extraSmallScreen ? 'none' : 'block' }}
             component="img"
             alt="Изображение"
             image={box}
@@ -253,7 +260,7 @@ const Calculator = () => {
           Рассчитать
         </Button>
       </Grid>
-      <Grid container marginLeft={7} mt={3} alignItems="center">
+      <Grid container marginLeft={2} mt={3} alignItems="center">
         {answer}
       </Grid>
 
@@ -283,7 +290,7 @@ const Calculator = () => {
       </Grid>
 
       <Grid container spacing={3} mt={3}>
-        <Grid item xs={6}>
+        <Grid item xs={ smallScreen ? 12 : 6 }>
           <TableContainer component={Paper}>
             <Typography variant="h6">Хозтовар</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
@@ -312,7 +319,7 @@ const Calculator = () => {
           </TableContainer>
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item xs={ smallScreen ? 12 : 6 }>
           <TableContainer component={Paper}>
             <Typography variant="h6">Одежда</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">

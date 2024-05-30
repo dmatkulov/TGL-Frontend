@@ -17,6 +17,7 @@ const ClientsTable: FC<Props> = ({ children }) => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow sx={{ textTransform: 'uppercase' }}>
+            <TableCell sx={{ width: '40px' }} />
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               ID
             </TableCell>
@@ -33,23 +34,9 @@ const ClientsTable: FC<Props> = ({ children }) => {
               Почта
             </TableCell>
             <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Область
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Нас. пункт
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              Адрес
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
               Номер
             </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              ПВЗ
-            </TableCell>
-            <TableCell align="left" sx={{ fontWeight: 'bold' }}>
-              УД
-            </TableCell>
+            <TableCell align="center" />
           </TableRow>
         </TableHead>
         <TableBody>{children}</TableBody>

@@ -15,19 +15,20 @@ import PinDropIcon from '@mui/icons-material/PinDrop';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HistoryIcon from '@mui/icons-material/History';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 const userLinks: UserNav[] = [
   {
     id: 1,
-    name: 'Трекинг по номеру',
-    navLink: appRoutes.tracking,
-    icon: <PinDropIcon color="primary" />,
-  },
-  {
-    id: 2,
     name: 'Мои заказы',
     navLink: appRoutes.orders,
     icon: <LocalShippingIcon color="primary" />,
+  },
+  {
+    id: 2,
+    name: 'Трекинг по номеру',
+    navLink: appRoutes.tracking,
+    icon: <PinDropIcon color="primary" />,
   },
   {
     id: 3,
@@ -40,6 +41,12 @@ const userLinks: UserNav[] = [
     name: 'История заказов',
     navLink: appRoutes.history,
     icon: <HistoryIcon color="primary" />,
+  },
+  {
+    id: 5,
+    name: 'Информация',
+    navLink: appRoutes.information,
+    icon: <AssignmentIcon color="primary" />,
   },
 ];
 

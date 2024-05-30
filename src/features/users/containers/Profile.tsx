@@ -4,7 +4,6 @@ import { Button, Grid, Typography } from '@mui/material';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
 
-import Warehouses from '../../warehouses/Warehouses';
 import UserDialog from '../components/UserDialog';
 import { ProfileMutation } from '../../../types/types.Profile';
 import BorderColorIcon from '@mui/icons-material/BorderColor';

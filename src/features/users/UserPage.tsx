@@ -14,14 +14,17 @@ const UserPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user) {
+      navigate(appRoutes.register);
+    }
     if (
       user?.role === 'super' ||
       user?.role === 'admin' ||
       user?.role === 'manager'
     ) {
-      navigate(appRoutes.statistics); // переводим сюда чтоб юзер не видел пустую страницу
+      navigate(appRoutes.statistics);
     } else {
-      navigate(appRoutes.orders); // переводим сюда чтоб юзер не видел пустую страницу
+      navigate(appRoutes.address);
     }
   }, [navigate, user]);
   return (

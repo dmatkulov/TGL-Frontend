@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
-import { regEx } from '../../utils/constants';
+import { appRoutes, regEx } from '../../utils/constants';
 
 import { login, loginByLastSession } from './usersThunks';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -25,7 +25,6 @@ import {
   LoginLastSessionMutation,
   LoginMutation,
 } from '../../types/types.User';
-import { appRoutes } from '../../utils/constants';
 import InputAdornment from '@mui/material/InputAdornment';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -59,10 +58,6 @@ const Login: React.FC = () => {
       return { ...prevState, [name]: value };
     });
   };
-
-  useEffect(() => {
-    dispatch(setLoginError(null));
-  }, [dispatch]);
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -98,6 +93,10 @@ const Login: React.FC = () => {
       console.error(e);
     }
   };
+
+  useEffect(() => {
+    dispatch(setLoginError(null));
+  }, [dispatch]);
 
   return (
     <Container component="main" maxWidth="lg">

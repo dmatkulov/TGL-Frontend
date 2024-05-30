@@ -1,10 +1,18 @@
 import { Grid, useMediaQuery } from '@mui/material';
 import Profile from './containers/Profile';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import AdminNavigation from './components/AdminNavigation';
+import { useAppSelector } from '../../app/hooks';
+import { selectUser } from './usersSlice';
+import { appRoutes } from '../../utils/constants';
 
 const AdminPage = () => {
   const isSmallScreen = useMediaQuery('(max-width:760px)');
+  const user = useAppSelector(selectUser);
+
+  if (user && user.role === 'client') {
+    return <Navigate to={appRoutes.login} />;
+  }
 
   return (
     <>

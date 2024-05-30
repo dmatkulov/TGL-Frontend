@@ -32,6 +32,7 @@ import { RegisterMutation } from '../../types/types.User';
 import InputAdornment from '@mui/material/InputAdornment';
 import { regEx } from '../../utils/constants';
 
+
 const initialState: RegisterMutation = {
   email: '',
   password: '',
@@ -50,7 +51,6 @@ const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const loading = useAppSelector(selectRegisterLoading);
-  const user = useAppSelector(selectUser);
   const pups = useAppSelector(selectPups);
   const regions = useAppSelector(regionsState);
 
@@ -120,16 +120,7 @@ const Register: React.FC = () => {
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-    if (
-      user?.role === 'super' ||
-      user?.role === 'admin' ||
-      user?.role === 'manager'
-    ) {
-      navigate(appRoutes.statistics); // переводим сюда чтоб юзер не видел пустую страницу
-    } else {
-      navigate(appRoutes.orders); // переводим сюда чтоб юзер не видел пустую страницу
-    }
-  }, [dispatch, user, navigate]);
+  }, [dispatch]);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
@@ -282,7 +273,8 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} className="custom-tel-container">
+              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
               <PhoneInput
                 country="kg"
                 masks={{ kg: '(...) ..-..-..' }}
@@ -291,7 +283,6 @@ const Register: React.FC = () => {
                 value={state.phoneNumber}
                 countryCodeEditable={false}
                 onChange={handlePhoneChange}
-                specialLabel="Номер телефона*"
                 disableDropdown
                 inputStyle={{
                   width: '100%',
@@ -299,6 +290,7 @@ const Register: React.FC = () => {
                   color: getFieldError('phoneNumber') && '#d32f2f',
                 }}
                 inputProps={{
+                  id: 'phoneNumber',
                   name: 'phoneNumber',
                   required: true,
                 }}
@@ -450,7 +442,37 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                select
+                name="pupID"
+                label="ПВЗ"
+                type="text"
+                value={state.pupID}
+                autoComplete="new-pupID"
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('pupID'))}
+                helperText={getFieldError('pupID')}
+              >
+                {pups.length > 0 && (
+                  <MenuItem value="" disabled>
+                    Выберите ближайший ПВЗ
+                  </MenuItem>
+                )}
+                {pups.length > 0 ? (
+                  pups.map((pup) => (
+                    <MenuItem key={pup._id} value={pup._id}>
+                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="" disabled>
+                    Сначала выберите регион
+                  </MenuItem>
+                )}
+              </TextField>
+            </Grid>
             <Grid
               container
               item

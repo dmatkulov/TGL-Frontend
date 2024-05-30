@@ -38,6 +38,7 @@ export const appRoutes = {
   orders: '/profile/orders',
   address: '/profile/address',
   history: '/profile/history',
+  information: '/profile/information',
   profileAdmin: '/admin-profile',
   statistics: '/admin-profile/statistics',
   pups: '/admin-profile/pups',

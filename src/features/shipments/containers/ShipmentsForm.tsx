@@ -120,8 +120,8 @@ const ShipmentsForm = () => {
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container spacing={2} direction={{xs: 'column', md:'row'}}>
+          <Grid item xs={4} md={12}>
             <TextField
               fullWidth
               required
@@ -141,7 +141,7 @@ const ShipmentsForm = () => {
               autoFocus
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={4} md={12}>
             <TextField
               fullWidth
               required
@@ -251,7 +251,6 @@ const ShipmentsForm = () => {
                 ))}
             </TextField>
           </Grid>
-
           <Grid item xs={3}>
             <TextField
               fullWidth

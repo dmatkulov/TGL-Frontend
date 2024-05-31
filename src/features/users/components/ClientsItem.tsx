@@ -38,7 +38,6 @@ const ClientsItem: FC<Client> = ({
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const isAdmin = user?.role === 'admin';
   const [open, setOpen] = React.useState(false);
   const [isCollapse, setIsCollapse] = useState(false);
 
@@ -106,7 +105,6 @@ const ClientsItem: FC<Client> = ({
           {user && (user.role === 'super' || user.role === 'admin') && (
             <Button
               onClick={handleClickOpen}
-              disabled={isAdmin}
               color="warning"
               startIcon={<DeleteIcon />}
             >

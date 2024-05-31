@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { bannedState, isBannedLoading } from './bannedSlice';
-import { CircularProgress, List, ListItem, Typography } from '@mui/material';
+import { Alert, CircularProgress, List, Typography } from '@mui/material';
 import BannedItem from './BannedItem';
 import { useEffect } from 'react';
 import { fetchBanned } from './bannedThunks';
@@ -26,12 +26,17 @@ const Banned = () => {
           </Typography>
         ))
       : (content = (
-          <List dense={true} sx={{ border: '1px solid red' }}>
-            <ListItem>test</ListItem>
-            {state.map((item) => (
-              <BannedItem key={item._id} banned={item} />
-            ))}
-          </List>
+          <>
+            <Alert severity="info" sx={{ marginTop: '8px' }}>
+              Товары и категории товаров частично или полностью запрещенные к
+              ввозу на территорию КР
+            </Alert>
+            <List dense={true}>
+              {state.map((item) => (
+                <BannedItem key={item._id} banned={item} />
+              ))}
+            </List>
+          </>
         ));
 
   return content;

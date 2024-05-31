@@ -27,6 +27,7 @@ import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
 import Clients from '../features/users/containers/Clients';
 import Information from '../features/users/components/Information';
+import Banned from '../features/banned/Banned';
 
 export const router = createBrowserRouter([
   {
@@ -160,6 +161,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <PriceListsForm />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: appRoutes.adminBanned,
+            element: (
+              <ProtectedRoute>
+                <Banned />
               </ProtectedRoute>
             ),
           },

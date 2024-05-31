@@ -1,15 +1,20 @@
 import {
-  Box, Container, Drawer, Fab, IconButton,
+  Box,
+  Container,
+  Drawer,
+  Fab,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  useMediaQuery, useScrollTrigger,
+  useMediaQuery,
+  useScrollTrigger,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
-import { useState} from 'react';
+import { useState } from 'react';
 import { UserNav } from '../../../types/types.User';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import StoreIcon from '@mui/icons-material/Store';
@@ -24,6 +29,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import Fade from '@mui/material/Fade';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { Block } from '@mui/icons-material';
 const adminLinks: UserNav[] = [
   {
     id: 1,
@@ -91,6 +97,12 @@ const adminLinks: UserNav[] = [
     navLink: appRoutes.adminClients,
     icon: <GroupsIcon color="primary" />,
   },
+  {
+    id: 11,
+    name: 'Запрет',
+    navLink: appRoutes.adminBanned,
+    icon: <Block color="primary" />,
+  },
 ];
 
 interface ScrollTopProps {
@@ -130,7 +142,6 @@ const AdminNavigation = () => {
         });
       }
     };
-
 
     return (
       <Fade in={trigger}>
@@ -191,14 +202,15 @@ const AdminNavigation = () => {
         </>
       ) : (
         <>
-          <Container sx={{overflowY: 'auto', maxHeight: '60vh' }}>
-            <Box sx={{
-              bgcolor: 'background.paper',
-              borderColor: 'grey.400',
-              borderRadius: '16px',
-              borderWidth: '1px',
-              maxHeight: 'calc(100vh - 64px - 20px)',
-            }}
+          <Container sx={{ overflowY: 'auto', maxHeight: '60vh' }}>
+            <Box
+              sx={{
+                bgcolor: 'background.paper',
+                borderColor: 'grey.400',
+                borderRadius: '16px',
+                borderWidth: '1px',
+                maxHeight: 'calc(100vh - 64px - 20px)',
+              }}
             >
               <nav>
                 <List>
@@ -224,7 +236,11 @@ const AdminNavigation = () => {
         </>
       )}
       <ScrollTop>
-        <Fab size="small" aria-label="scroll back to top" onClick={handleScrollTopClick}>
+        <Fab
+          size="small"
+          aria-label="scroll back to top"
+          onClick={handleScrollTopClick}
+        >
           <KeyboardArrowUpIcon />
         </Fab>
       </ScrollTop>

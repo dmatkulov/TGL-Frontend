@@ -60,6 +60,7 @@ export const appRoutes = {
   socialsAdd: '/admin-profile/social-new',
   socialsEdit: '/admin-profile/social/:id',
   adminClients: '/admin-profile/clients',
+  adminBanned: '/admin-profile/banned',
 };
 
 export const Statuses = [

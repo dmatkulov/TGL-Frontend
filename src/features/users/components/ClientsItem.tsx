@@ -103,14 +103,16 @@ const ClientsItem: FC<Client> = ({
               </LoadingButton>
             </DialogActions>
           </Dialog>
-          <Button
-            onClick={handleClickOpen}
-            disabled={isAdmin}
-            color="warning"
-            startIcon={<DeleteIcon />}
-          >
-            Удалить
-          </Button>
+          {user && (user.role === 'super' || user.role === 'admin') && (
+            <Button
+              onClick={handleClickOpen}
+              disabled={isAdmin}
+              color="warning"
+              startIcon={<DeleteIcon />}
+            >
+              Удалить
+            </Button>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>

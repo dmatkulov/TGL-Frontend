@@ -226,9 +226,9 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3} sx={{ marginRight: 5 }}>
+          <Grid item xs={3}>
             <TextField
-              sx={{ width: 200 }}
+              fullWidth
               required
               select
               name="status"
@@ -254,7 +254,7 @@ const ShipmentsForm = () => {
 
           <Grid item xs={3}>
             <TextField
-              sx={{ width: 200 }}
+              fullWidth
               disabled={loadingPups}
               select
               name="pupId"

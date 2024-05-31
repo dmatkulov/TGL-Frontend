@@ -30,9 +30,16 @@ const initialState: ShipmentMutation = {
   },
 };
 
+const isInputValid = (marketIdString: string) => {
+  const regex = /^\d{5}$/;
+  return regex.test(marketIdString);
+};
+
 const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
   const [state, setState] = useState<ShipmentMutation>(initialState);
+  const [marketIdValid, setMarketIdValid] = useState<boolean>(false);
+  const [userMarketIdLabel, setUserMarketIdLabel] = useState<string>('');
 
   const pups = useAppSelector(selectPups);
   const loadingPups = useAppSelector(selectPupsLoading);
@@ -50,11 +57,18 @@ const ShipmentsForm = () => {
     'status',
   ];
 
+
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     if (parseFloat(value) <= 0) {
       return;
+    }
+
+    if (isInputValid(state.userMarketId)) {
+      setMarketIdValid(true);
+      setUserMarketIdLabel('Не корректный номер')
     }
 
     if (valueFields.includes(name)) {
@@ -117,6 +131,8 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.userMarketId}
               autoComplete="new-userMarketId"
+              error={marketIdValid}
+              helperText={userMarketIdLabel}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="end">№</InputAdornment>

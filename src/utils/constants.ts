@@ -12,6 +12,7 @@ export const serverRoute = {
   staff: '/users/staff',
   clients: '/users/clients',
   socials: '/socials',
+  banned: '/banned-categories',
 };
 
 export const Roles = [

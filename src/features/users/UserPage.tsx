@@ -1,7 +1,6 @@
 import { Grid, useMediaQuery } from '@mui/material';
 import UserNavigation from './components/UserNavigation';
 import { Outlet, useNavigate } from 'react-router-dom';
-import Profile from './containers/Profile';
 import { useAppSelector } from '../../app/hooks';
 import { selectUser } from './usersSlice';
 import { appRoutes } from '../../utils/constants';
@@ -24,22 +23,12 @@ const UserPage = () => {
     ) {
       navigate(appRoutes.statistics);
     } else {
-      navigate(appRoutes.address);
+      navigate(appRoutes.information);
     }
   }, [navigate, user]);
   return (
     <>
       <Grid container direction={isSmallScreen ? 'column' : 'row'}>
-        <Grid
-          item
-          xs={12}
-          px={3}
-          mb={5}
-          pb={4}
-          sx={{ borderBottom: '1px solid #5F9EA0' }}
-        >
-          <Profile />
-        </Grid>
         <Grid item xs={3} pr={2}>
           <UserNavigation />
         </Grid>

@@ -20,41 +20,49 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 const userLinks: UserNav[] = [
   {
     id: 1,
+    name: 'Информация',
+    navLink: appRoutes.information,
+    icon: <AssignmentIcon color="primary" />,
+  },
+  {
+    id: 2,
+    name: 'Мой профиль',
+    navLink: appRoutes.myProfile,
+    icon: <AssignmentIcon color="primary" />,
+  },
+  {
+    id: 3,
     name: 'Мои заказы',
     navLink: appRoutes.orders,
     icon: <LocalShippingIcon color="primary" />,
   },
   {
-    id: 2,
+    id: 4,
     name: 'Трекинг по номеру',
     navLink: appRoutes.tracking,
     icon: <PinDropIcon color="primary" />,
   },
   {
-    id: 3,
+    id: 5,
     name: 'Адреса складов',
     navLink: appRoutes.address,
     icon: <WarehouseIcon color="primary" />,
   },
   {
-    id: 4,
+    id: 6,
     name: 'История заказов',
     navLink: appRoutes.history,
     icon: <HistoryIcon color="primary" />,
   },
-  {
-    id: 5,
-    name: 'Информация',
-    navLink: appRoutes.information,
-    icon: <AssignmentIcon color="primary" />,
-  },
+
 ];
 
 const UserNavigation = () => {
   const isSmallScreen = useMediaQuery('(max-width:760px)');
 
   const navigate = useNavigate();
-  const [selectedLink, setSelectedLink] = useState<number | null>(null);
+  const [_selectedLink, setSelectedLink] = useState<number | null>(null);
+  const activePath = location.pathname;
 
   return (
     <>
@@ -69,7 +77,7 @@ const UserNavigation = () => {
             {userLinks.map((link) => (
               <ListItem key={link.id} disableGutters>
                 <ListItemButton
-                  selected={selectedLink === link.id}
+                  selected={activePath === link.navLink}
                   onClick={() => {
                     setSelectedLink(link.id);
                     navigate(link.navLink);
@@ -81,7 +89,7 @@ const UserNavigation = () => {
                     primary={link.name}
                     primaryTypographyProps={{
                       fontSize: 20,
-                      color: selectedLink === link.id ? 'primary' : 'inherit',
+                      color: activePath === link.navLink ? 'primary' : 'inherit',
                     }}
                   />
                 </ListItemButton>

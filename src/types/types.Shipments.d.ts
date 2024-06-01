@@ -79,6 +79,7 @@ export interface ShipmentThatDone {
     som: number;
   };
   trackerNumber: number;
+  datetime: string;
 }
 
 export interface ShipmentMutation {

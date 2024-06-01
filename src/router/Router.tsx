@@ -27,6 +27,7 @@ import PriceListsForm from '../features/priceLists/components/PriceListForm';
 import Socials from '../features/socials/Socials';
 import Clients from '../features/users/containers/Clients';
 import Information from '../features/users/components/Information';
+import Profile from '../features/users/containers/Profile';
 
 export const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
           {
             path: appRoutes.information,
             element: <Information />,
+          },
+          {
+            path: appRoutes.myProfile,
+            element: <Profile />,
           },
         ],
       },
@@ -162,6 +167,10 @@ export const router = createBrowserRouter([
                 <PriceListsForm />
               </ProtectedRoute>
             ),
+          },
+          {
+            path: appRoutes.myAdminProfile,
+            element: <Profile />,
           },
         ],
       },

@@ -27,66 +27,72 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const adminLinks: UserNav[] = [
   {
     id: 1,
+    name: 'Мой профиль',
+    navLink: appRoutes.myAdminProfile,
+    icon: <AnalyticsIcon color="primary" />,
+  },
+  {
+    id: 2,
     name: 'Статистика',
     navLink: appRoutes.statistics,
     icon: <AnalyticsIcon color="primary" />,
   },
   {
-    id: 2,
+    id: 3,
     name: 'ПВЗ',
     navLink: appRoutes.pups,
     icon: <StoreIcon color="primary" />,
   },
   {
-    id: 3,
+    id: 4,
     name: 'Сотрудники',
     navLink: appRoutes.staff,
     icon: <PeopleIcon color="primary" />,
   },
   {
-    id: 4,
+    id: 5,
     name: 'Заказы клиентов',
     navLink: appRoutes.shipments,
     icon: <LocalGroceryStoreIcon color="primary" />,
   },
   {
-    id: 5,
+    id: 6,
     name: 'Создать заказ',
     navLink: appRoutes.shipmentForm,
     icon: <FeedIcon color="primary" />,
   },
   {
-    id: 6,
+    id: 7,
     name: 'Склад в Китае',
     navLink: appRoutes.adminWarehouses,
     icon: <WarehouseIcon color="primary" />,
   },
   {
-    id: 7,
+    id: 8,
     name: 'Физический адрес',
     navLink: appRoutes.adminCompanyAddress,
     icon: <HomeIcon color="primary" />,
   },
   {
-    id: 8,
+    id: 9,
     name: 'Цена',
     navLink: appRoutes.price,
     icon: <CurrencyExchangeIcon color="primary" />,
   },
   {
-    id: 9,
-    name: 'Прайс',
+    id: 10,
+    name: 'Прайс-лист',
     navLink: appRoutes.priceLists,
     icon: <CurrencyExchangeIcon color="primary" />,
   },
   {
-    id: 10,
+    id: 11,
     name: 'Социальные сети',
     navLink: appRoutes.socials,
     icon: <RecommendIcon color="primary" />,
   },
   {
-    id: 11,
+    id: 12,
     name: 'Клиенты',
     navLink: appRoutes.adminClients,
     icon: <GroupsIcon color="primary" />,
@@ -102,9 +108,9 @@ const AdminNavigation = () => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
 
   const navigate = useNavigate();
-  const [selectedLink, setSelectedLink] = useState<number | null>(null);
+  const [_selectedLink, setSelectedLink] = useState<number | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const activePath = location.pathname;
   const handleScrollTopClick = () => {
     window?.scrollTo({
       top: 0,
@@ -179,9 +185,15 @@ const AdminNavigation = () => {
                     }}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <ListItemButton selected={selectedLink === link.id}>
+                    <ListItemButton selected={activePath === link.navLink}>
                       <ListItemIcon>{link.icon}</ListItemIcon>
-                      <ListItemText primary={link.name} />
+                      <ListItemText
+                        primary={link.name}
+                        primaryTypographyProps={{
+                          fontSize: 16,
+                          color: activePath === link.navLink ? 'primary' : 'inherit',
+                        }}
+                      />
                     </ListItemButton>
                   </ListItem>
                 ))}
@@ -205,7 +217,7 @@ const AdminNavigation = () => {
                   {adminLinks.map((link) => (
                     <ListItem key={link.id} disableGutters>
                       <ListItemButton
-                        selected={selectedLink === link.id}
+                        selected={activePath === link.navLink}
                         onClick={() => {
                           setSelectedLink(link.id);
                           navigate(link.navLink);
@@ -213,7 +225,13 @@ const AdminNavigation = () => {
                         sx={{ borderRadius: 2 }}
                       >
                         <ListItemIcon>{link.icon}</ListItemIcon>
-                        <ListItemText primary={link.name} />
+                        <ListItemText
+                          primary={link.name}
+                          primaryTypographyProps={{
+                            fontSize: 16,
+                            color: activePath === link.navLink ? 'primary' : 'inherit',
+                          }}
+                        />
                       </ListItemButton>
                     </ListItem>
                   ))}

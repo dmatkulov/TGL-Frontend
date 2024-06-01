@@ -30,9 +30,16 @@ const initialState: ShipmentMutation = {
   },
 };
 
+const isInputValid = (marketIdString: string) => {
+  const regex = /^\d{5}$/;
+  return regex.test(marketIdString);
+};
+
 const ShipmentsForm = () => {
   const dispatch = useAppDispatch();
   const [state, setState] = useState<ShipmentMutation>(initialState);
+  const [marketIdValid, setMarketIdValid] = useState<boolean>(false);
+  const [userMarketIdLabel, setUserMarketIdLabel] = useState<string>('');
 
   const pups = useAppSelector(selectPups);
   const loadingPups = useAppSelector(selectPupsLoading);
@@ -50,11 +57,18 @@ const ShipmentsForm = () => {
     'status',
   ];
 
+
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
     if (parseFloat(value) <= 0) {
       return;
+    }
+
+    if (isInputValid(state.userMarketId)) {
+      setMarketIdValid(true);
+      setUserMarketIdLabel('Не корректный номер')
     }
 
     if (valueFields.includes(name)) {
@@ -106,8 +120,8 @@ const ShipmentsForm = () => {
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container spacing={2} direction={{xs: 'column', md:'row'}}>
+          <Grid item xs={4} md={12}>
             <TextField
               fullWidth
               required
@@ -117,6 +131,8 @@ const ShipmentsForm = () => {
               onChange={handleChange}
               value={state.userMarketId}
               autoComplete="new-userMarketId"
+              error={marketIdValid}
+              helperText={userMarketIdLabel}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="end">№</InputAdornment>
@@ -125,7 +141,7 @@ const ShipmentsForm = () => {
               autoFocus
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={4} md={12}>
             <TextField
               fullWidth
               required
@@ -210,9 +226,9 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3} sx={{ marginRight: 5 }}>
+          <Grid item xs={3}>
             <TextField
-              sx={{ width: 200 }}
+              fullWidth
               required
               select
               name="status"
@@ -235,10 +251,9 @@ const ShipmentsForm = () => {
                 ))}
             </TextField>
           </Grid>
-
           <Grid item xs={3}>
             <TextField
-              sx={{ width: 200 }}
+              fullWidth
               disabled={loadingPups}
               select
               name="pupId"

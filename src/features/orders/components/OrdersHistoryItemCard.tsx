@@ -1,6 +1,6 @@
-import {Card, CardContent, Typography} from '@mui/material';
-import {ShipmentThatDone} from '../../../types/types.Shipments';
-import {FC} from 'react';
+import { Card, CardContent, Typography } from '@mui/material';
+import { ShipmentThatDone } from '../../../types/types.Shipments';
+import { FC } from 'react';
 
 const OrdersHistoryItemCard: FC<ShipmentThatDone> = ({
   pupId,
@@ -21,18 +21,17 @@ const OrdersHistoryItemCard: FC<ShipmentThatDone> = ({
             }}
             gutterBottom
           >
-            Трекинговый номер: { trackerNumber }
+            Трекинговый номер: {trackerNumber}
           </Typography>
           <Typography>
-            Адрес ПВЗ: {pupId ? (
-            pupId.address
-          ) : (
-            <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
-          )}
+            Адрес ПВЗ:{' '}
+            {pupId ? (
+              pupId.address
+            ) : (
+              <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
+            )}
           </Typography>
-          <Typography>
-            Цена: { price.usd } USD
-          </Typography>
+          <Typography>Цена: {price.usd} USD</Typography>
         </CardContent>
       </Card>
     </>

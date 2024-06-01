@@ -1,5 +1,6 @@
 import {
-  CircularProgress, Grid,
+  CircularProgress,
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -7,7 +8,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography, useMediaQuery,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
 import OrderModal from './OrderModal';
@@ -42,45 +44,47 @@ const OrdersTable = () => {
           <OrderModal />
           {loading && <CircularProgress />}
           <Grid container spacing={3}>
-            {
-              smallScreen ? shipments.map((item) => (
-                  <OrdersCard
-                    key={item._id}
-                    _id={item._id}
-                    status={item.status}
-                    pupId={item.pupId}
-                    price={item.price}
-                    trackerNumber={item.trackerNumber}
-                    delivery={item.delivery}/>
-                )) :
-                <TableContainer component={Paper}>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Трекинговый номер</TableCell>
-                        <TableCell align="left">Адрес ПВЗ</TableCell>
-                        <TableCell align="left">Стоимость</TableCell>
-                        <TableCell align="left">Статус</TableCell>
-                        <TableCell align="left">Доставка заказа</TableCell>
-                        <TableCell align="left">Отмена заказа</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      { shipments.map((item) => (
-                        <OrdersRowItem
-                          key={ item._id }
-                          _id={ item._id }
-                          status={ item.status }
-                          pupId={ item.pupId }
-                          price={ item.price }
-                          trackerNumber={ item.trackerNumber }
-                          delivery={ item.delivery }
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-            }
+            {smallScreen ? (
+              shipments.map((item) => (
+                <OrdersCard
+                  key={item._id}
+                  _id={item._id}
+                  status={item.status}
+                  pupId={item.pupId}
+                  price={item.price}
+                  trackerNumber={item.trackerNumber}
+                  delivery={item.delivery}
+                />
+              ))
+            ) : (
+              <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Трекинговый номер</TableCell>
+                      <TableCell align="left">Адрес ПВЗ</TableCell>
+                      <TableCell align="left">Стоимость</TableCell>
+                      <TableCell align="left">Статус</TableCell>
+                      <TableCell align="left">Доставка заказа</TableCell>
+                      <TableCell align="left">Отмена заказа</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {shipments.map((item) => (
+                      <OrdersRowItem
+                        key={item._id}
+                        _id={item._id}
+                        status={item.status}
+                        pupId={item.pupId}
+                        price={item.price}
+                        trackerNumber={item.trackerNumber}
+                        delivery={item.delivery}
+                      />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
           </Grid>
         </>
       )}

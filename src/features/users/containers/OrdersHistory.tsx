@@ -5,6 +5,9 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
+  TableRow,
+  useMediaQuery,
   TableHead, TablePagination,
   TableRow, useMediaQuery,
 } from '@mui/material';

@@ -18,6 +18,7 @@ import { shipmentsReducer } from '../features/shipments/shipmentsSlice';
 import { companyAddressReducer } from '../features/companyAddress/companyAddressesSlice';
 import { priceListsReducer } from '../features/priceLists/priceListsSlice';
 import { socialReducer } from '../features/socials/socialsSlice';
+import { bannedReducer } from '../features/banned/bannedSlice';
 
 const usersPersistConfig = {
   key: 'techGear:users',
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   companyAddress: companyAddressReducer,
   priceLists: priceListsReducer,
   socials: socialReducer,
+  banned: bannedReducer,
 });
 
 export const store = configureStore({

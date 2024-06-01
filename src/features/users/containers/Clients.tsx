@@ -8,7 +8,8 @@ import {
 import {
   Box,
   Button,
-  CircularProgress, TablePagination,
+  CircularProgress,
+  TablePagination,
   TextField,
   Typography,
 } from '@mui/material';
@@ -74,7 +75,10 @@ const Clients = () => {
     setPage(0);
   };
 
-  const paginatedClients = state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedClients = state.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
   return (
     <>
@@ -167,7 +171,7 @@ const Clients = () => {
       )}
       <TablePagination
         component="div"
-        sx={{ ml: "auto" }}
+        sx={{ ml: 'auto' }}
         rowsPerPageOptions={[5, 10, 15, 20]}
         labelRowsPerPage="На странице"
         count={state.length}

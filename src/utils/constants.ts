@@ -12,6 +12,7 @@ export const serverRoute = {
   staff: '/users/staff',
   clients: '/users/clients',
   socials: '/socials',
+  banned: '/banned-categories',
 };
 
 export const Roles = [
@@ -61,6 +62,7 @@ export const appRoutes = {
   socialsAdd: '/admin-profile/social-new',
   socialsEdit: '/admin-profile/social/:id',
   adminClients: '/admin-profile/clients',
+  adminBanned: '/admin-profile/banned',
 };
 
 export const Statuses = [

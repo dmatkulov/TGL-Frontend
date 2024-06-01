@@ -54,9 +54,7 @@ const AppToolbar = () => {
           </IconButton>
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link to={ appRoutes.profile }>
-                TechGear Logistics
-              </Link>
+              <Link to={appRoutes.profile}>TechGear Logistics</Link>
             </Typography>
             <Typography component="div" sx={{ flexGrow: 1 }}>
               <Link to={appRoutes.calculate}>Калькулятор</Link>

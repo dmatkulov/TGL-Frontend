@@ -4,8 +4,6 @@ import {
   Button,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   DialogTitle,
   ListItem,
   TextField,
@@ -15,11 +13,12 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectUser } from '../users/usersSlice';
 import { Edit, Remove } from '@mui/icons-material';
 import { deleteBanned, fetchBanned } from './bannedThunks';
+
 interface Props {
-  _id: string;
   banned: Banned;
+  editFn: (value: Banned) => void;
 }
-const BannedItem: FC<Props> = ({ banned }) => {
+const BannedItem: FC<Props> = ({ banned, editFn }) => {
   const { _id, name } = banned;
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
@@ -27,6 +26,11 @@ const BannedItem: FC<Props> = ({ banned }) => {
 
   const [inputData, setInputData] = useState<string>(name);
   const [open, setOpen] = React.useState(false);
+
+  const editHandler = () => {
+    editFn(banned);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -57,6 +61,7 @@ const BannedItem: FC<Props> = ({ banned }) => {
         </DialogActions>
       </Dialog>
       <Button
+        onClick={editHandler}
         variant="contained"
         startIcon={<Edit />}
         sx={{ marginLeft: '8px', marginRight: '8px' }}

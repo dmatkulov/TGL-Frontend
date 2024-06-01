@@ -14,9 +14,13 @@ export const fetchBanned = createAsyncThunk<BannedResponse | undefined>(
     }
   },
 );
-export const deleteBanned = createAsyncThunk('banned/delete', async () => {
-  try {
-  } catch (e) {
-    console.log('Caught on try - FETCH BANNED - ', e);
-  }
-});
+export const deleteBanned = createAsyncThunk<void, string>(
+  'banned/delete',
+  async (arg) => {
+    try {
+      await axiosApi.delete(serverRoute.banned + '/' + arg);
+    } catch (e) {
+      console.log('Caught on try - DELETE BANNED - ', e);
+    }
+  },
+);

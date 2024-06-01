@@ -98,7 +98,7 @@ const adminLinks: UserNav[] = [
     icon: <GroupsIcon color="primary" />,
   },
   {
-    id: 11,
+    id: 12,
     name: 'Запрет',
     navLink: appRoutes.adminBanned,
     icon: <Block color="primary" />,

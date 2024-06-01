@@ -1,32 +1,72 @@
 import React, { FC, useState } from 'react';
-import { Box, Button, ListItem, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  ListItem,
+  TextField,
+} from '@mui/material';
 import { Banned } from '../../types/types.Banned';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectUser } from '../users/usersSlice';
 import { Edit, Remove } from '@mui/icons-material';
+import { deleteBanned, fetchBanned } from './bannedThunks';
 interface Props {
+  _id: string;
   banned: Banned;
 }
 const BannedItem: FC<Props> = ({ banned }) => {
-  const name = banned.name;
+  const { _id, name } = banned;
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const permit = user?.role === 'admin' || user?.role === 'super';
 
   const [inputData, setInputData] = useState<string>(name);
+  const [open, setOpen] = React.useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
-  const deleteData = () => {
-    dispatch();
+  const deleteData = async () => {
+    setOpen(false);
+    await dispatch(deleteBanned(_id));
+    dispatch(fetchBanned());
   };
 
   const buttonGroup = (
     <Box display={permit ? 'block' : 'none'}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Удалить {name}?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleClose}>Отмена</Button>
+          <Button onClick={deleteData} autoFocus>
+            Подтвердить
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Button
         variant="contained"
         startIcon={<Edit />}
         sx={{ marginLeft: '8px', marginRight: '8px' }}
       />
-      <Button variant="contained" color="error" startIcon={<Remove />} />
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        color="error"
+        startIcon={<Remove />}
+      />
     </Box>
   );
 

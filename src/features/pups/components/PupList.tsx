@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectPups, selectPupsLoading } from '../pupsSlice';
 import { createPup, fetchPups } from '../pupsThunks';
@@ -18,6 +18,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   Typography,
 } from '@mui/material';
@@ -35,12 +36,14 @@ const styleBoxSpinner = {
   marginTop: '50px',
 };
 
-const PupList = () => {
+const PupList: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectPupsLoading);
   const pups = useAppSelector(selectPups);
   const user = useAppSelector(selectUser);
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     dispatch(fetchPups());
@@ -60,7 +63,16 @@ const PupList = () => {
     handleClose();
   };
 
-  let tableContent: React.ReactNode = <CircularProgress />;
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  let tableContent = <CircularProgress />;
 
   if (!loading) {
     tableContent = (
@@ -85,11 +97,23 @@ const PupList = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pups.map((item) => (
-              <PupItem key={item._id} pupItem={item} />
-            ))}
+            {pups
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item) => (
+                <PupItem key={item._id} pupItem={item} />
+              ))}
           </TableBody>
         </Table>
+        <TablePagination
+          labelRowsPerPage="Рядов на таблице"
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={pups.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
     );
   }

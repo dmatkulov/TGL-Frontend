@@ -33,6 +33,7 @@ import {
   SocialMutation,
   UpdateSocialArg,
 } from '../../types/types.SocialsNetwork';
+import { selectUser } from '../users/usersSlice';
 
 const historyButtonEffect = {
   marginRight: '30px',
@@ -64,6 +65,7 @@ const Socials = () => {
   const isUploading = useAppSelector(isSocialUploading);
   const isLoading = useAppSelector(isSocialsLoading);
   const isSingleLoading = useAppSelector(isSingleSocialLoading);
+  const user = useAppSelector(selectUser);
   const anyLoading = isLoading || isSingleLoading;
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<SocialMutation>(initial);
@@ -225,13 +227,15 @@ const Socials = () => {
             </LoadingButton>
           </DialogActions>
         </Dialog>
-        <Button
-          variant="contained"
-          sx={historyButtonEffect}
-          onClick={toggleToAddMode}
-        >
-          Добавить социальную сеть
-        </Button>
+        {user && (user.role === 'super') && (
+          <Button
+            variant="contained"
+            sx={historyButtonEffect}
+            onClick={toggleToAddMode}
+          >
+            Добавить социальную сеть
+          </Button>
+        )}
         {isLoading ? (
           <CircularProgress />
         ) : (

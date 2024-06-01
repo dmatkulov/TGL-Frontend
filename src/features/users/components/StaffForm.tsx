@@ -272,7 +272,9 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
               </Grid>
             )}
             <Grid item xs={12} sm={6} className="custom-tel-container">
-              <label htmlFor="phoneNumber" className="custom-tel-label">Номер телефона*</label>
+              <label htmlFor="phoneNumber" className="custom-tel-label">
+                Номер телефона*
+              </label>
               <PhoneInput
                 country="kg"
                 masks={{ kg: '(...) ..-..-..' }}

@@ -6,7 +6,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow, useMediaQuery,
+  TableRow,
+  useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
@@ -31,16 +32,17 @@ const OrdersHistory = () => {
 
   return (
     <>
-      <PageTitle title="История заказов"/>
-      {extraSmallScreen ?
+      <PageTitle title="История заказов" />
+      {extraSmallScreen ? (
         history.map((item) => (
-        <OrdersHistoryItemCard
-          key={item._id}
-          pupId={item.pupId}
-          price={item.price}
-          trackerNumber={item.trackerNumber}
-        />
-      )) :
+          <OrdersHistoryItemCard
+            key={item._id}
+            pupId={item.pupId}
+            price={item.price}
+            trackerNumber={item.trackerNumber}
+          />
+        ))
+      ) : (
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableHead>
@@ -62,7 +64,7 @@ const OrdersHistory = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      }
+      )}
     </>
   );
 };

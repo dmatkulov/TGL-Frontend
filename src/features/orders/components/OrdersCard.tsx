@@ -1,9 +1,16 @@
-import {Button, Card, CardContent, Grid, Typography, useMediaQuery} from '@mui/material';
-import {FC, useState} from 'react';
-import {Shipment} from '../../../types/types.Shipments';
-import {useAppDispatch} from '../../../app/hooks';
-import {toggleModal} from '../ordersSlice';
-import {LoadingButton} from '@mui/lab';
+import {
+  Button,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
+import { FC, useState } from 'react';
+import { Shipment } from '../../../types/types.Shipments';
+import { useAppDispatch } from '../../../app/hooks';
+import { toggleModal } from '../ordersSlice';
+import { LoadingButton } from '@mui/lab';
 import WarningModal from './WarningModal';
 
 const OrdersCard: FC<Shipment> = ({
@@ -56,7 +63,7 @@ const OrdersCard: FC<Shipment> = ({
         closeModal={closeWarningModalWindow}
         stateModal={state}
       />
-      <Grid item key={_id} xs={ smallScreen ? 12 : 6 }>
+      <Grid item key={_id} xs={smallScreen ? 12 : 6}>
         <Card sx={{ minWidth: extraSmallScreen ? 200 : 275 }}>
           <CardContent>
             <Typography
@@ -71,12 +78,8 @@ const OrdersCard: FC<Shipment> = ({
             >
               Трекинговый номер: {trackerNumber}
             </Typography>
-            <Typography>
-              Адресс ПВЗ: { pupId.address }
-            </Typography>
-            <Typography>
-              Статус: { status }
-            </Typography>
+            <Typography>Адресс ПВЗ: {pupId.address}</Typography>
+            <Typography>Статус: {status}</Typography>
             <Typography
               sx={{
                 mt: 1,
@@ -86,7 +89,7 @@ const OrdersCard: FC<Shipment> = ({
               }}
               gutterBottom
             >
-              Цена: { price.usd } USD
+              Цена: {price.usd} USD
             </Typography>
             <Typography sx={{ mt: 2 }}>
               <Button

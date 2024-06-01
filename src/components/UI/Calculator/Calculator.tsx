@@ -11,7 +11,8 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography, useMediaQuery,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { useState } from 'react';
 import box from '..//..//../assets/box.png';
@@ -290,7 +291,7 @@ const Calculator = () => {
       </Grid>
 
       <Grid container spacing={3} mt={3}>
-        <Grid item xs={ smallScreen ? 12 : 6 }>
+        <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
             <Typography variant="h6">Хозтовар</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
@@ -319,7 +320,7 @@ const Calculator = () => {
           </TableContainer>
         </Grid>
 
-        <Grid item xs={ smallScreen ? 12 : 6 }>
+        <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
             <Typography variant="h6">Одежда</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">

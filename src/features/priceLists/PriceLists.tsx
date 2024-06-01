@@ -25,10 +25,12 @@ import { deletePriceList, fetchAllPriceLists } from './priceListsThunks';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '../../utils/constants';
 import { LoadingButton } from '@mui/lab';
+import { selectUser } from '../users/usersSlice';
 
 const PriceLists = () => {
   const dispatch = useAppDispatch();
   const state = useAppSelector(priceListsState);
+  const user = useAppSelector(selectUser);
   const isLoading = useAppSelector(isPriceListsLoading);
   const isEmpty = useAppSelector(isPriceListsEmpty);
   const isDeleting = useAppSelector(isPriceListsDeleting);
@@ -90,12 +92,16 @@ const PriceLists = () => {
     <>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <Button component={NavLink} to={appRoutes.priceListsAdd}>
-            Добавить прайс лист
-          </Button>
-          <LoadingButton loading={isDeleting} onClick={deleteHandler}>
-            Удалить текущий
-          </LoadingButton>
+          {user && (user.role === 'super') && (
+            <Button component={NavLink} to={appRoutes.priceListsAdd}>
+              Добавить прайс лист
+            </Button>
+          )}
+          {user && (user.role === 'super') && (
+            <LoadingButton loading={isDeleting} onClick={deleteHandler}>
+              Удалить текущий
+            </LoadingButton>
+          )}
         </Grid>
         <Grid item>
           <Tabs value={value} onChange={handleChange}>

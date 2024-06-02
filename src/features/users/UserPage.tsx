@@ -1,11 +1,10 @@
 import { Grid, useMediaQuery } from '@mui/material';
 import UserNavigation from './components/UserNavigation';
-import {Outlet, useNavigate} from 'react-router-dom';
-import {selectUser} from './usersSlice';
-import {useAppSelector} from '../../app/hooks';
-import {useEffect} from 'react';
-import {appRoutes} from '../../utils/constants';
-
+import { Outlet, useNavigate } from 'react-router-dom';
+import { selectUser } from './usersSlice';
+import { useAppSelector } from '../../app/hooks';
+import { useEffect } from 'react';
+import { appRoutes } from '../../utils/constants';
 
 const UserPage = () => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
@@ -28,11 +27,16 @@ const UserPage = () => {
   }, [navigate, user]);
   return (
     <>
-      <Grid container direction={isSmallScreen ? 'column' : 'row'}>
-        <Grid item xs={3} pr={2}>
+      <Grid container>
+        <Grid
+          item
+          xs={3}
+          pr={2}
+          sx={{ display: isSmallScreen ? 'none' : 'block' }}
+        >
           <UserNavigation />
         </Grid>
-        <Grid item xs={9} px={3} pt={2}>
+        <Grid item xs={12} px={3} pt={2} sm={isSmallScreen ? false : 9}>
           <Outlet />
         </Grid>
       </Grid>

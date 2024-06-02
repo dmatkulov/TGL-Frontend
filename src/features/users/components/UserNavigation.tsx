@@ -9,7 +9,6 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { appRoutes } from '../../../utils/constants';
-import { useState } from 'react';
 import { UserNav } from '../../../types/types.User';
 import PinDropIcon from '@mui/icons-material/PinDrop';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
@@ -54,14 +53,12 @@ const userLinks: UserNav[] = [
     navLink: appRoutes.history,
     icon: <HistoryIcon color="primary" />,
   },
-
 ];
 
 const UserNavigation = () => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
 
   const navigate = useNavigate();
-  const [_selectedLink, setSelectedLink] = useState<number | null>(null);
   const activePath = location.pathname;
 
   return (
@@ -69,6 +66,7 @@ const UserNavigation = () => {
       <Box sx={{ bgcolor: 'background.paper' }}>
         <nav>
           <List
+            dense
             sx={{
               display: isSmallScreen ? 'flex' : '',
               flexWrap: isSmallScreen ? 'wrap' : '',
@@ -79,7 +77,6 @@ const UserNavigation = () => {
                 <ListItemButton
                   selected={activePath === link.navLink}
                   onClick={() => {
-                    setSelectedLink(link.id);
                     navigate(link.navLink);
                   }}
                   sx={{ borderRadius: 2 }}
@@ -88,8 +85,9 @@ const UserNavigation = () => {
                   <ListItemText
                     primary={link.name}
                     primaryTypographyProps={{
-                      fontSize: 20,
-                      color: activePath === link.navLink ? 'primary' : 'inherit',
+                      fontSize: 16,
+                      color:
+                        activePath === link.navLink ? 'primary' : 'inherit',
                     }}
                   />
                 </ListItemButton>

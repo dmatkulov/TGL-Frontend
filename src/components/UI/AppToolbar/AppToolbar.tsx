@@ -7,7 +7,7 @@ import {
   IconButton,
   styled,
   Toolbar,
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import UserMenu from './UserMenu';
 import { useAppSelector } from '../../../app/hooks';
@@ -28,6 +28,7 @@ const Link = styled(NavLink)({
 
 const AppToolbar = () => {
   const user = useAppSelector(selectUser);
+  const isSmallScreen = useMediaQuery('(max-width:850px)');
 
   if (user === undefined) {
     return null;
@@ -44,14 +45,16 @@ const AppToolbar = () => {
       <CssBaseline />
       <AppBar component="nav" position="sticky" sx={{ mb: 2 }}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="end"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, ml: 'auto', display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {isSmallScreen && (
+            <IconButton
+              color="inherit"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               <Link to={appRoutes.profile}>TechGear Logistics</Link>

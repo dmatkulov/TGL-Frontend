@@ -58,7 +58,7 @@ const userLinks: UserNav[] = [
 ];
 
 const UserNavigation = () => {
-  const isSmallScreen = useMediaQuery('(max-width:760px)');
+  const isSmallScreen = useMediaQuery('(max-width:850px)');
 
   const navigate = useNavigate();
   const [_selectedLink, setSelectedLink] = useState<number | null>(null);

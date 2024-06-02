@@ -4,11 +4,11 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, useMediaQuery,
+  ListItemText,
+  useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import { UserNav } from '../../../types/types.User';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import StoreIcon from '@mui/icons-material/Store';
@@ -21,6 +21,7 @@ import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { Block } from '@mui/icons-material';
+
 const adminLinks: UserNav[] = [
   {
     id: 1,
@@ -102,51 +103,53 @@ const adminLinks: UserNav[] = [
   },
 ];
 
-
 const AdminNavigation = () => {
-
-  const navigate = useNavigate();
-  const [_selectedLink, setSelectedLink] = useState<number | null>(null);
-  const activePath = location.pathname;
   const isSmallScreen = useMediaQuery('(max-width:850px)');
+  const navigate = useNavigate();
+  const activePath = location.pathname;
+
   return (
     <>
-        <Box
-          sx={{
-            bgcolor: 'background.paper',
-            borderColor: 'grey.400',
-            borderRadius: '16px',
-            borderWidth: '1px',
-          }}
-        >
-          <nav>
-            <List dense sx={{
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          borderColor: 'grey.400',
+          borderRadius: '16px',
+          borderWidth: '1px',
+        }}
+      >
+        <nav>
+          <List
+            dense
+            sx={{
               display: isSmallScreen ? 'flex' : '',
               flexWrap: isSmallScreen ? 'wrap' : '',
-            }}>
-              {adminLinks.map((link) => (
-                <ListItem key={link.id} disableGutters>
-                  <ListItemButton
-                    selected={activePath === link.navLink}
-                    onClick={() => {
-                      setSelectedLink(link.id);
-                      navigate(link.navLink);
-                    }}
-                    sx={{ borderRadius: 2 }}
-                  >
-                    <ListItemIcon>{link.icon}</ListItemIcon>
-                    <ListItemText
-                      primary={link.name} primaryTypographyProps={{
+            }}
+          >
+            {adminLinks.map((link) => (
+              <ListItem key={link.id} disableGutters>
+                <ListItemButton
+                  selected={activePath === link.navLink}
+                  onClick={() => {
+                    navigate(link.navLink);
+                  }}
+                  sx={{ borderRadius: 2 }}
+                >
+                  <ListItemIcon>{link.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={link.name}
+                    primaryTypographyProps={{
                       fontSize: 16,
-                      color: activePath === link.navLink ? 'primary' : 'inherit',
+                      color:
+                        activePath === link.navLink ? 'primary' : 'inherit',
                     }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          </nav>
-        </Box>
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </nav>
+      </Box>
     </>
   );
 };

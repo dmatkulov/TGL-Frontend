@@ -14,11 +14,16 @@ const AdminPage = () => {
   }
   return (
     <>
-      <Grid container direction={isSmallScreen ? 'column' : 'row'}>
-          <Grid item xs={3} pr={2}>
-            <AdminNavigation />
-          </Grid>
-        <Grid item xs={9} px={3} pt={2}>
+      <Grid container>
+        <Grid
+          item
+          xs={3}
+          pr={2}
+          sx={{ display: isSmallScreen ? 'none' : 'block' }}
+        >
+          <AdminNavigation />
+        </Grid>
+        <Grid item xs={12} px={3} pt={2} sm={isSmallScreen ? false : 9}>
           <Outlet />
         </Grid>
       </Grid>

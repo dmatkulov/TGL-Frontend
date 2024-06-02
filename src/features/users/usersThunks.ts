@@ -231,3 +231,17 @@ export const deleteUser = createAsyncThunk<void, string>(
     }
   },
 );
+
+export const getEmployee = createAsyncThunk<IStaffResponse, string>(
+  'users/get/staff',
+  async (arg) => {
+    const employee = await axiosApi.get(serverRoute.staff + '/' + arg);
+    const data = employee.data;
+
+    if (!data) {
+      return [];
+    }
+
+    return data;
+  },
+);

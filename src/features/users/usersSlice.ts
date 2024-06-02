@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   createStaff,
   fetchClients,
-  fetchSingleClient,
+  fetchSingleClient, getEmployee,
   getOneUser,
   getStaff,
   getStaffData,
@@ -24,6 +24,7 @@ interface UserState {
   clients: Client[];
   client: Client | null;
   staff: Staff | null;
+  employee: Staff | null;
   registerLoading: boolean;
   registerError: ValidationError | null;
   loginLoading: boolean;
@@ -35,6 +36,7 @@ interface UserState {
   isClientsLoading: boolean;
   isSingleClientLoading: boolean;
   isClientDeleting: boolean;
+  isEmployedLoading: boolean;
 }
 
 const initialState: UserState = {
@@ -45,6 +47,7 @@ const initialState: UserState = {
   clients: [],
   client: null,
   staff: null,
+  employee: null,
   registerLoading: false,
   registerError: null,
   loginLoading: false,
@@ -56,6 +59,7 @@ const initialState: UserState = {
   isClientsLoading: false,
   isSingleClientLoading: false,
   isClientDeleting: false,
+  isEmployedLoading: false,
 };
 
 export const usersSlice = createSlice({
@@ -70,6 +74,9 @@ export const usersSlice = createSlice({
     },
     setLoginError: (state, { payload: action }) => {
       state.loginError = action;
+    },
+    clearEmployee: (state) => {
+      state.employee = null;
     },
   },
   extraReducers: (builder) => {
@@ -220,6 +227,20 @@ export const usersSlice = createSlice({
       .addCase(fetchSingleClient.rejected, (state) => {
         state.isSingleClientLoading = false;
       });
+
+    builder
+      .addCase(getEmployee.pending, (state) => {
+        state.isEmployedLoading = true;
+      })
+      .addCase(getEmployee.fulfilled, (state, { payload }) => {
+        state.isEmployedLoading = false;
+        if (payload) {
+          state.employee = payload.user;
+        }
+      })
+      .addCase(getEmployee.rejected, (state) => {
+        state.isEmployedLoading = false;
+      });
   },
 });
 
@@ -241,10 +262,12 @@ export const selectGetOneUserLoading = (state: RootState) =>
   state.users.getOneUserLoading;
 export const selectGetStaffDataLoading = (state: RootState) =>
   state.users.getStaffDataLoading;
+export const selectEmployee = (state: RootState) =>
+  state.users.employee;
 export const selectLoginError = (state: RootState) => state.users.loginError;
 export const selectLogOutLoading = (state: RootState) =>
   state.users.logOutLoading;
-export const { unsetUser, setRegisterError, setLoginError } =
+export const { unsetUser, setRegisterError, setLoginError, clearEmployee } =
   usersSlice.actions;
 export const clientsState = (state: RootState) => state.users.clients;
 export const singleClientState = (state: RootState) => state.users.client;

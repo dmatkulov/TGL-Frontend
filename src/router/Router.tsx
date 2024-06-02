@@ -173,9 +173,11 @@ export const router = createBrowserRouter([
             path: appRoutes.adminBanned,
             element: (
               <ProtectedRoute>
-                <Banned />
+                <Banned/>
               </ProtectedRoute>
             ),
+          },
+          {
             path: appRoutes.myAdminProfile,
             element: <Profile />,
           },

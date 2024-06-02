@@ -136,7 +136,7 @@ const Calculator = () => {
   };
 
   if (calculatePrice() > 0) {
-    getPrice = <Typography>Общая стоимость {calculatePrice()}$</Typography>;
+    getPrice = <Typography sx={{ml:2}}>Общая стоимость {calculatePrice()}$</Typography>;
   }
 
   const createData = (name: string, express: string, standard: string) => {
@@ -201,7 +201,7 @@ const Calculator = () => {
         <b>Длина(см) х Ширина(см) х Высота(см)/6000 = объемный вес(кг)</b>
       </Typography>
       <Grid container justifyContent="start" direction="row">
-        <Grid item xs={extraSmallScreen ? 12 : 4} m={5}>
+        <Grid item xs={extraSmallScreen ? 12 : 4} m={4}>
           <Grid item xs={12} m={2}>
             <TextField
               required
@@ -247,6 +247,32 @@ const Calculator = () => {
             />
           </Grid>
         </Grid>
+        <Grid item xs={4} m={1}>
+          <Typography variant="h6">
+            Введите масса (кг) и цену за 1 кг
+          </Typography>
+          <Grid item xs={12} m={2}>
+            <TextField
+              required
+              type="number"
+              name="weight"
+              value={priceCalculate.weight}
+              label="Вес (кг)"
+              onChange={inputChangeResult}
+            />
+          </Grid>
+          <Grid item xs={12} m={2}>
+            <TextField
+              required
+              type="number"
+              name="price"
+              value={priceCalculate.price}
+              label="цена за кг"
+              onChange={inputChangeResult}
+            />
+          </Grid>
+          {getPrice}
+        </Grid>
         <Grid>
           <CardMedia
             sx={{ width: 300, display: extraSmallScreen ? 'none' : 'block' }}
@@ -256,7 +282,7 @@ const Calculator = () => {
           />
         </Grid>
       </Grid>
-      <Grid marginLeft={12}>
+      <Grid marginLeft={6}>
         <Button variant="contained" color="inherit" onClick={calculateResult}>
           Рассчитать
         </Button>
@@ -265,35 +291,10 @@ const Calculator = () => {
         {answer}
       </Grid>
 
-      <Grid item xs={4} m={5}>
-        <Typography variant="h6">Введите масса(кг) и цену за 1 кг</Typography>
-        <Grid item xs={12} m={2}>
-          <TextField
-            required
-            type="number"
-            name="weight"
-            value={priceCalculate.weight}
-            label="Вес (кг)"
-            onChange={inputChangeResult}
-          />
-        </Grid>
-        <Grid item xs={12} m={2}>
-          <TextField
-            required
-            type="number"
-            name="price"
-            value={priceCalculate.price}
-            label="цена за кг"
-            onChange={inputChangeResult}
-          />
-        </Grid>
-        {getPrice}
-      </Grid>
-
       <Grid container spacing={3} mt={3}>
         <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
-            <Typography variant="h6">Хозтовар</Typography>
+            <Typography variant="h6" ml={2}>Хозтовар</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -322,7 +323,7 @@ const Calculator = () => {
 
         <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
-            <Typography variant="h6">Одежда</Typography>
+            <Typography variant="h6" ml={2}>Одежда</Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
               <TableHead>
                 <TableRow>

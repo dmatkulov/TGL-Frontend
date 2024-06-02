@@ -3,6 +3,9 @@ import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
   createShipment,
   fetchShipments,
+  fetchShipmentsByDatetime,
+  fetchShipmentsByRegion,
+  fetchShipmentsByRegionAndDatetime,
   fetchShipmentsByRegionAndPup,
   fetchShipmentsByUser,
   updateShipmentStatus,
@@ -85,6 +88,45 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
       })
       .addCase(fetchShipmentsByRegionAndPup.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+
+    builder
+      .addCase(fetchShipmentsByRegion.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(fetchShipmentsByRegion.fulfilled, (state, { payload }) => {
+        state.shipments = payload.shipments;
+        state.shipmentsLoading = false;
+      })
+      .addCase(fetchShipmentsByRegion.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+
+    builder
+      .addCase(fetchShipmentsByDatetime.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(fetchShipmentsByDatetime.fulfilled, (state, { payload }) => {
+        state.shipments = payload.shipments;
+        state.shipmentsLoading = false;
+      })
+      .addCase(fetchShipmentsByDatetime.rejected, (state) => {
+        state.shipmentsLoading = false;
+        state.shipmentsError = true;
+      });
+
+    builder
+      .addCase(fetchShipmentsByRegionAndDatetime.pending, (state) => {
+        state.shipmentsLoading = true;
+      })
+      .addCase(fetchShipmentsByRegionAndDatetime.fulfilled, (state, { payload }) => {
+        state.shipments = payload.shipments;
+        state.shipmentsLoading = false;
+      })
+      .addCase(fetchShipmentsByRegionAndDatetime.rejected, (state) => {
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });

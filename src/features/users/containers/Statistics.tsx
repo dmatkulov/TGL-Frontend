@@ -5,16 +5,24 @@ import {
   CircularProgress,
   Grid,
   MenuItem,
+  TablePagination,
   TextField,
   useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { fetchPups } from '../../pups/pupsThunks';
-import { selectPups, selectPupsLoading } from '../../pups/pupsSlice';
+import {
+  clearItems,
+  selectPups,
+  selectPupsLoading,
+} from '../../pups/pupsSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchShipments,
+  fetchShipmentsByDatetime,
+  fetchShipmentsByRegion,
+  fetchShipmentsByRegionAndDatetime,
   fetchShipmentsByRegionAndPup,
 } from '../../shipments/shipmentsThunk';
 import {
@@ -29,6 +37,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableBody from '@mui/material/TableBody';
+import { fetchRegions } from '../../regions/regionsThunks';
+import { toast } from 'react-toastify';
+import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 
 const initialState: statistics = {
   pupId: '',
@@ -53,10 +64,55 @@ const Statistics = () => {
 
   const tableWrapperRef = useRef<HTMLDivElement | null>(null);
   const [state, setState] = useState<statistics>(initialState);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [searched, setSearched] = useState<boolean>(false);
+
+  useEffect(() => {
+    dispatch(clearItems());
+    dispatch(fetchRegions());
+  }, []);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
   };
+
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
+
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    event?.preventDefault();
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const renderMultiple = (
+    rowsPerPage > 0
+      ? shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+      : shipments
+  ).map((shipment) => (
+    <TableRow
+      key={shipment._id}
+      sx={{
+        '&:last-child td, &:last-child th': { border: 0 },
+      }}
+    >
+      <TableCell align="left">{shipment.userId.firstName}</TableCell>
+      <TableCell align="left">{shipment.status}</TableCell>
+      <TableCell align="left">{shipment.isPaid ? 'Да' : 'Нет'}</TableCell>
+      <TableCell align="left">{shipment.trackerNumber}</TableCell>
+      <TableCell align="left">{shipment.price.som}</TableCell>
+    </TableRow>
+  ));
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -73,16 +129,30 @@ const Statistics = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
+    const { pupId, region, datetime } = state;
+
+    if (!state.pupId && !state.region && !state.datetime) {
+      toast.warning('Пожалуйста, заполните хотя бы одно поле.');
+      return;
+    }
 
     try {
-      await dispatch(
-        fetchShipmentsByRegionAndPup({
-          pupId: state.pupId,
-          datetime: state.datetime,
-        }),
-      );
-
-      setState(initialState);
+      if (region && !pupId && !datetime) {
+        await dispatch(fetchShipmentsByRegion({ region }));
+      } else if (region && datetime && !pupId) {
+        await dispatch(fetchShipmentsByRegionAndDatetime({ region, datetime }));
+      } else if (!region && datetime) {
+        await dispatch(fetchShipmentsByDatetime({ datetime }));
+      } else if (region && pupId) {
+        await dispatch(
+          fetchShipmentsByRegionAndPup({
+            pupId: state.pupId,
+            datetime: state.datetime,
+          }),
+        );
+      }
+      setSearched(true);
+      console.log(state);
     } catch (e) {
       console.error(e);
     }
@@ -90,26 +160,32 @@ const Statistics = () => {
 
   const statisticAll = async () => {
     await dispatch(fetchShipments());
+    await dispatch(clearItems());
     setState(initialState);
+    setSearched(false);
   };
 
   return (
     <>
-      <Alert sx={{ width: 450, marginBottom: 1 }} severity="warning">
-        Для получения статистики, пожалуйста, укажите все параметры
+      <Alert sx={{ width: '100%', marginBottom: 1 }} severity="warning">
+        Для получения статистики, пожалуйста, укажите нужные параметры
       </Alert>
 
-      <Box display={'flex'} sx={{ justifyContent: 'space-between' }}>
+      <Box
+        display={'flex'}
+        sx={{ justifyContent: 'space-between', flexDirection: 'column' }}
+      >
         <Grid
           component={'form'}
           onSubmit={submitFormHandler}
           sx={{ marginRight: 3 }}
+          container
+          spacing={2}
         >
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={3}>
             <TextField
-              sx={{ width: 200, marginBottom: 1 }}
+              sx={{ width: '100%' }}
               select
-              required
               name="region"
               label="Регион"
               type="text"
@@ -124,7 +200,13 @@ const Statistics = () => {
                 <MenuItem
                   key={region._id}
                   value={region._id}
-                  onClick={() => fetchPupsByRegion(region._id)}
+                  onClick={() => {
+                    fetchPupsByRegion(region._id);
+                    setState((prevState) => ({
+                      ...prevState,
+                      pupId: '',
+                    }));
+                  }}
                 >
                   {region.name}
                 </MenuItem>
@@ -132,11 +214,10 @@ const Statistics = () => {
             </TextField>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={3}>
             <TextField
-              sx={{ width: 200 }}
+              sx={{ width: '100%' }}
               disabled={loadingPups}
-              required
               select
               name="pupId"
               label="ПВЗ"
@@ -165,9 +246,9 @@ const Statistics = () => {
             </TextField>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={3}>
             <TextField
-              sx={{ width: 200, marginTop: 1, marginBottom: 1 }}
+              sx={{ width: '100%' }}
               select
               name="datetime"
               label="Период"
@@ -180,12 +261,12 @@ const Statistics = () => {
                 Выберите период
               </MenuItem>
 
-              <MenuItem value="month">За месяц</MenuItem>
+              <MenuItem value="month">За прошлый месяц</MenuItem>
 
               <MenuItem value="year">За год</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={3}>
             <Button
               disabled={loading}
               sx={{
@@ -199,19 +280,20 @@ const Statistics = () => {
             >
               Поиск
             </Button>
+            <Button
+              variant="contained"
+              disabled={loading || !searched}
+              sx={{
+                '&.MuiButton-root:hover': { background: '#D2122E' },
+                color: 'white',
+                width: 200,
+                background: '#9e1b32',
+              }}
+              onClick={() => statisticAll()}
+            >
+              Сбросить
+            </Button>
           </Grid>
-          <Button
-            disabled={loading}
-            sx={{
-              '&.MuiButton-root:hover': { background: '#D2122E' },
-              color: 'white',
-              width: 200,
-              background: '#9e1b32',
-            }}
-            onClick={() => statisticAll()}
-          >
-            Сбросить
-          </Button>
         </Grid>
 
         <Box ref={tableWrapperRef} sx={{ width: '100%' }}>
@@ -251,27 +333,37 @@ const Statistics = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {shipments.map((shipment) => (
-                      <TableRow
-                        key={shipment._id}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                        }}
-                      >
-                        <TableCell align="left">
-                          {shipment.userId.firstName}
-                        </TableCell>
-                        <TableCell align="left">{shipment.status}</TableCell>
-                        <TableCell align="left">
-                          {shipment.isPaid ? 'Да' : 'Нет'}
-                        </TableCell>
-                        <TableCell align="left">
-                          {shipment.trackerNumber}
-                        </TableCell>
-                        <TableCell align="left">{shipment.price.som}</TableCell>
+                    {renderMultiple}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
+                  <tfoot>
+                    <TableRow>
+                      <TablePagination
+                        style={{ width: '100%' }}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        colSpan={6}
+                        labelRowsPerPage="Рядов на странице"
+                        count={shipments.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        slotProps={{
+                          select: {
+                            inputProps: {
+                              'aria-label': 'Показать',
+                            },
+                            native: true,
+                          },
+                        }}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                      />
+                    </TableRow>
+                  </tfoot>
                 </Table>
               </TableContainer>
             </Box>

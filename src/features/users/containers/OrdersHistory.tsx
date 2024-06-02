@@ -6,14 +6,13 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
   useMediaQuery,
-  TableHead, TablePagination,
-  TableRow, useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchShipmentsHistoryByUser } from '../../shipments/shipmentsThunk';
 import OrdersHistoryItem from '../../orders/components/OrdersHistoryItem';
 import { selectOrders } from '../../orders/ordersSlice';
@@ -33,7 +32,10 @@ const OrdersHistory = () => {
     }
   }, [dispatch, user]);
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
     event?.preventDefault();
     setPage(newPage);
   };
@@ -63,10 +65,16 @@ const OrdersHistory = () => {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell sx={{fontWeight:'bold'}}>Дата</TableCell>
-                <TableCell sx={{fontWeight:'bold'}}>Трекинговый номер</TableCell>
-                <TableCell align="left" sx={{fontWeight:'bold'}}>Адрес ПВЗ</TableCell>
-                <TableCell align="left" sx={{fontWeight:'bold'}}>Стоимость</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>Дата</TableCell>
+                <TableCell sx={{ fontWeight: 'bold' }}>
+                  Трекинговый номер
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                  Адрес ПВЗ
+                </TableCell>
+                <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+                  Стоимость
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -99,5 +107,3 @@ const OrdersHistory = () => {
 };
 
 export default OrdersHistory;
-
-

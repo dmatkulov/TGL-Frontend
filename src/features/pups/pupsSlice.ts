@@ -22,7 +22,11 @@ const initialState: PupsState = {
 export const pupsSlice = createSlice({
   name: 'pups',
   initialState,
-  reducers: {},
+  reducers: {
+    clearItems(state) {
+      state.items = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPups.pending, (state) => {
@@ -79,3 +83,4 @@ export const selectPupsLoading = (state: RootState) => state.pups.fetchLoading;
 export const selectPupCreating = (state: RootState) => state.pups.creating;
 export const selectPupEditing = (state: RootState) => state.pups.isEditing;
 export const isDeletePup = (state: RootState) => state.pups.isDelete;
+export const { clearItems } = pupsSlice.actions;

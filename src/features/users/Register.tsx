@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Container,
-  Grid,
-  IconButton,
-  Link,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Container, Grid, IconButton, Link, MenuItem, TextField, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/material.css';
-import {
-  selectRegisterError,
-  selectRegisterLoading,
-  setRegisterError,
-} from './usersSlice';
+import { selectRegisterError, selectRegisterLoading, setRegisterError } from './usersSlice';
 import { register } from './usersThunks';
 import { appRoutes, regEx } from '../../utils/constants';
 import { selectPups } from '../pups/pupsSlice';
@@ -50,7 +37,7 @@ const Register: React.FC = () => {
   const loading = useAppSelector(selectRegisterLoading);
   const pups = useAppSelector(selectPups);
   const regions = useAppSelector(regionsState);
-
+  
   const [state, setState] = useState<RegisterMutation>(initialState);
   const [showPass, setShowPass] = useState(false);
   const [passLabel, setPassLabel] = useState<string>(
@@ -60,10 +47,10 @@ const Register: React.FC = () => {
     undefined,
   );
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-
+  
   const [emailIsValid, setEmailIsValid] = useState<boolean>(true);
   const [emailLabel, setEmailLabel] = useState<string>('');
-
+  
   const getFieldError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -71,7 +58,7 @@ const Register: React.FC = () => {
       return undefined;
     }
   };
-
+  
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setState((prevState) => {
@@ -79,11 +66,11 @@ const Register: React.FC = () => {
         setPassIsValid(true);
         setPassLabel('Надежный пароль');
       }
-
+      
       return { ...prevState, [name]: value };
     });
   };
-
+  
   const isFormValid = () => {
     return (
       state.email &&
@@ -95,14 +82,14 @@ const Register: React.FC = () => {
       state.region
     );
   };
-
+  
   const handleClickShowPassword = () => setShowPass((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
   };
-
+  
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
       if (value.length < 12) {
@@ -113,31 +100,31 @@ const Register: React.FC = () => {
       return { ...prevState, phoneNumber: value };
     });
   };
-
+  
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
   }, [dispatch]);
-
+  
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
   };
-
+  
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     try {
       if (state.password.length >= 1 && state.password.length < 8) {
         setPassLabel('Пароль слишком короткий');
         setPassIsValid(false);
         return;
       }
-
+      
       if (state.phoneNumber.length < 12) {
         setPhoneNumberLabel('Пропишите номер полностью');
         return;
       }
-
+      
       if (regEx.test(state.email)) {
         setEmailIsValid(true);
       } else if (!regEx.test(state.email) && state.email !== '') {
@@ -145,7 +132,7 @@ const Register: React.FC = () => {
         setEmailIsValid(false);
         return;
       }
-
+      
       await dispatch(register(state)).unwrap();
       navigate(appRoutes.profile);
       setState(initialState);
@@ -153,7 +140,7 @@ const Register: React.FC = () => {
       console.error(e);
     }
   };
-
+  
   return (
     <Container component="main">
       <Box
@@ -318,7 +305,7 @@ const Register: React.FC = () => {
                 </Typography>
               )}
             </Grid>
-
+            
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
@@ -341,7 +328,7 @@ const Register: React.FC = () => {
                 }}
               />
             </Grid>
-
+            
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
@@ -392,8 +379,7 @@ const Register: React.FC = () => {
                 {pups.length > 0 ? (
                   pups.map((pup) => (
                     <MenuItem key={pup._id} value={pup._id}>
-                      <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                      {pup.region.name} обл., {pup.address}, {pup.settlement}
+                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                     </MenuItem>
                   ))
                 ) : (
@@ -440,37 +426,6 @@ const Register: React.FC = () => {
                   },
                 }}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                select
-                name="pupID"
-                label="ПВЗ"
-                type="text"
-                value={state.pupID}
-                autoComplete="new-pupID"
-                onChange={inputChangeHandler}
-                error={Boolean(getFieldError('pupID'))}
-                helperText={getFieldError('pupID')}
-              >
-                {pups.length > 0 && (
-                  <MenuItem value="" disabled>
-                    Выберите ближайший ПВЗ
-                  </MenuItem>
-                )}
-                {pups.length > 0 ? (
-                  pups.map((pup) => (
-                    <MenuItem key={pup._id} value={pup._id}>
-                      {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="" disabled>
-                    Сначала выберите регион
-                  </MenuItem>
-                )}
-              </TextField>
             </Grid>
             <Grid
               container

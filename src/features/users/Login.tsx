@@ -72,7 +72,7 @@ const Login: React.FC = () => {
       }
 
       await dispatch(login(state)).unwrap();
-      navigate(appRoutes.profile);
+      navigate(appRoutes.home);
     } catch (e) {
       console.error(e);
     }
@@ -87,7 +87,7 @@ const Login: React.FC = () => {
           token: lastUser.token,
         };
         await dispatch(loginByLastSession(tokenObj));
-        navigate(appRoutes.profile);
+        navigate(appRoutes.home);
       }
     } catch (e) {
       console.error(e);

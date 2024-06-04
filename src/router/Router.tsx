@@ -29,6 +29,7 @@ import Clients from '../features/users/containers/Clients';
 import Information from '../features/users/components/Information';
 import Banned from '../features/banned/Banned';
 import Profile from '../features/users/containers/Profile';
+import ProtectedRouteForNotLogged from '../components/ProtectedRoute/ProtectedRouteForNotLogged';
 
 export const router = createBrowserRouter([
   {
@@ -53,7 +54,11 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: <UserPage />,
+        element: (
+          <ProtectedRouteForNotLogged>
+            <UserPage />
+          </ProtectedRouteForNotLogged>
+        ),
         children: [
           {
             path: appRoutes.tracking,
@@ -77,13 +82,21 @@ export const router = createBrowserRouter([
           },
           {
             path: appRoutes.myProfile,
-            element: <Profile />,
+            element: (
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
       {
         path: appRoutes.profileAdmin,
-        element: <AdminPage />,
+        element: (
+          <ProtectedRouteForNotLogged>
+            <AdminPage />
+          </ProtectedRouteForNotLogged>
+        ),
         children: [
           {
             path: appRoutes.statistics,
@@ -173,7 +186,7 @@ export const router = createBrowserRouter([
             path: appRoutes.adminBanned,
             element: (
               <ProtectedRoute>
-                <Banned/>
+                <Banned />
               </ProtectedRoute>
             ),
           },

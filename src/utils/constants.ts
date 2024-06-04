@@ -1,4 +1,4 @@
-export const apiURL = 'http://localhost:8000';
+export const apiURL = import.meta.env['VITE_API_URL'];
 
 export const serverRoute = {
   users: '/users',

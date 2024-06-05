@@ -53,7 +53,11 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profile,
-        element: <UserPage />,
+        element: (
+          <ProtectedRoute>
+            <UserPage />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: appRoutes.tracking,

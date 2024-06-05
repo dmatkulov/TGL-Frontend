@@ -83,7 +83,11 @@ export const router = createBrowserRouter([
       },
       {
         path: appRoutes.profileAdmin,
-        element: <AdminPage />,
+        element: (
+          <ProtectedRoute>
+            <AdminPage />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: appRoutes.statistics,
@@ -115,67 +119,35 @@ export const router = createBrowserRouter([
           },
           {
             path: appRoutes.adminWarehousesAdd,
-            element: (
-              <ProtectedRoute>
-                <NewWarehouse />
-              </ProtectedRoute>
-            ),
+            element: <NewWarehouse />,
           },
           {
             path: appRoutes.adminWarehousesEdit,
-            element: (
-              <ProtectedRoute>
-                <EditWarehouse />
-              </ProtectedRoute>
-            ),
+            element: <EditWarehouse />,
           },
           {
             path: appRoutes.adminCompanyAddress,
-            element: (
-              <ProtectedRoute>
-                <CompanyAddresses />
-              </ProtectedRoute>
-            ),
+            element: <CompanyAddresses />,
           },
           {
             path: appRoutes.price,
-            element: (
-              <ProtectedRoute>
-                <Price />
-              </ProtectedRoute>
-            ),
+            element: <Price />,
           },
           {
             path: appRoutes.socials,
-            element: (
-              <ProtectedRoute>
-                <Socials />
-              </ProtectedRoute>
-            ),
+            element: <Socials />,
           },
           {
             path: appRoutes.priceLists,
-            element: (
-              <ProtectedRoute>
-                <PriceLists />
-              </ProtectedRoute>
-            ),
+            element: <PriceLists />,
           },
           {
             path: appRoutes.priceListsAdd,
-            element: (
-              <ProtectedRoute>
-                <PriceListsForm />
-              </ProtectedRoute>
-            ),
+            element: <PriceListsForm />,
           },
           {
             path: appRoutes.adminBanned,
-            element: (
-              <ProtectedRoute>
-                <Banned/>
-              </ProtectedRoute>
-            ),
+            element: <Banned />,
           },
           {
             path: appRoutes.myAdminProfile,

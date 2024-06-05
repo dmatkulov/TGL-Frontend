@@ -234,8 +234,7 @@ const Statistics = () => {
               {pups.length > 0 ? (
                 pups.map((pup) => (
                   <MenuItem key={pup._id} value={pup._id}>
-                    <b style={{ marginRight: '10px' }}>{pup.name}</b>
-                    {pup.region.name} обл., {pup.address}, {pup.settlement}
+                    {`${pup.name} ${pup.region.name} обл., ${pup.address}, ${pup.settlement}`}
                   </MenuItem>
                 ))
               ) : (

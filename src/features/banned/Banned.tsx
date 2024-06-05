@@ -17,12 +17,14 @@ import {
 import BannedItem from './BannedItem';
 import React, { useEffect, useState } from 'react';
 import { fetchBanned, updateBanned, uploadBanned } from './bannedThunks';
+import { selectUser } from '../users/usersSlice';
 
 const Banned = () => {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(isBannedLoading);
   const state = useAppSelector(bannedState);
   const isEmpty = state.length < 1;
+  const user = useAppSelector(selectUser);
 
   const [inputData, setInputData] = useState<string>('');
   const [editId, setEditId] = useState<string>('');
@@ -121,13 +123,15 @@ const Banned = () => {
                 <Button type="submit">Подтвердить</Button>
               </DialogActions>
             </Dialog>
-            <Button
-              variant="contained"
-              onClick={handleClickOpen}
-              sx={{ marginTop: '8px' }}
-            >
-              Добавить
-            </Button>
+            {user && (user?.role === 'admin' || user?.role === 'super') && (
+              <Button
+                variant="contained"
+                onClick={handleClickOpen}
+                sx={{ marginTop: '8px' }}
+              >
+                Добавить
+              </Button>
+            )}
             <List dense={true}>
               {state.map((item) => (
                 <BannedItem key={item._id} banned={item} editFn={editFn} />

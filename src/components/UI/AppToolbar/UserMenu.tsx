@@ -64,13 +64,13 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         }}
       >
         {user.role === 'client' ? (
-          <MenuItem key="profile" onClick={() => navigate(appRoutes.information)}>
+          <MenuItem key="profile" onClick={() => navigate(appRoutes.myProfile)}>
             Профиль
           </MenuItem>
         ) : (
           <MenuItem
             key="profileAdmin"
-            onClick={() => navigate(appRoutes.statistics)}
+            onClick={() => navigate(appRoutes.myAdminProfile)}
           >
             Профиль руководства
           </MenuItem>

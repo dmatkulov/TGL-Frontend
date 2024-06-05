@@ -7,7 +7,8 @@ import {
   IconButton,
   styled,
   Toolbar,
-  Typography, useMediaQuery,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import UserMenu from './UserMenu';
 import { useAppSelector } from '../../../app/hooks';
@@ -57,7 +58,13 @@ const AppToolbar = () => {
           )}
           <Grid container justifyContent="space-between" alignItems="center">
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <Link to={appRoutes.profile}>TechGear Logistics</Link>
+              {!user ? (
+                <Link to={appRoutes.register}>TechGear Logistics</Link>
+              ) : user?.role === 'client' ? (
+                <Link to={appRoutes.information}>TechGear Logistics</Link>
+              ) : (
+                <Link to={appRoutes.statistics}>TechGear Logistics</Link>
+              )}
             </Typography>
             <Typography component="div" sx={{ flexGrow: 1 }}>
               <Link to={appRoutes.calculate}>Калькулятор</Link>

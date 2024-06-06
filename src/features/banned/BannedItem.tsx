@@ -65,13 +65,17 @@ const BannedItem: FC<Props> = ({ banned, editFn }) => {
         variant="contained"
         startIcon={<Edit />}
         sx={{ marginLeft: '8px', marginRight: '8px' }}
-      />
+      >
+        Редактировать
+      </Button>
       <Button
         onClick={handleOpen}
         variant="contained"
         color="error"
         startIcon={<Remove />}
-      />
+      >
+        Удалить
+      </Button>
     </Box>
   );
 

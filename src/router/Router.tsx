@@ -29,7 +29,6 @@ import Clients from '../features/users/containers/Clients';
 import Information from '../features/users/components/Information';
 import Banned from '../features/banned/Banned';
 import Profile from '../features/users/containers/Profile';
-import ProtectedRouteForNotLogged from '../components/ProtectedRoute/ProtectedRouteForNotLogged';
 
 export const router = createBrowserRouter([
   {
@@ -55,9 +54,9 @@ export const router = createBrowserRouter([
       {
         path: appRoutes.profile,
         element: (
-          <ProtectedRouteForNotLogged>
+          <ProtectedRoute>
             <UserPage />
-          </ProtectedRouteForNotLogged>
+          </ProtectedRoute>
         ),
         children: [
           {

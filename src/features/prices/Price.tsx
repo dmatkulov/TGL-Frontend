@@ -99,7 +99,6 @@ const Price = () => {
     <Grid container direction="column">
       <PageTitle title="Курс доллара и цена за доставку" />
       {form}
-
       <Dialog open={open} onClose={handleClose} maxWidth="md">
         <DialogTitle>
           <Typography>{edit ? 'Редактирование' : 'Создать'}</Typography>

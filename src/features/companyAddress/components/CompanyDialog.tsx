@@ -102,7 +102,7 @@ const CompanyDialog: React.FC<Props> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="lg">
       <DialogTitle>
-        <Typography>Новый адрес:</Typography>
+        <Typography>{edit ? 'Обновить адрес' : 'Новый адрес'}</Typography>
         <IconButton
           onClick={handleClose}
           sx={{
@@ -115,15 +115,12 @@ const CompanyDialog: React.FC<Props> = ({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
-      <DialogContent
-        sx={{
-          mt: '20px',
-        }}
-      >
+      <DialogContent sx={{ mt: '20px' }}>
         <form autoComplete="off" onSubmit={submitFormHandler}>
           <Grid container direction="column" spacing={2}>
             <Grid item xs={12} container gap={'10px'}>
               <TextField
+                sx={{ marginTop: 1 }}
                 fullWidth
                 required
                 name="address"
@@ -131,7 +128,7 @@ const CompanyDialog: React.FC<Props> = ({
                 type="text"
                 value={state.address}
                 onChange={inputChangeHandler}
-              ></TextField>
+              />
               <TextField
                 fullWidth
                 required
@@ -140,7 +137,7 @@ const CompanyDialog: React.FC<Props> = ({
                 type="text"
                 value={state.city}
                 onChange={inputChangeHandler}
-              ></TextField>
+              />
               <TextField
                 fullWidth
                 required
@@ -149,7 +146,7 @@ const CompanyDialog: React.FC<Props> = ({
                 type="text"
                 value={state.postCode}
                 onChange={inputChangeHandler}
-              ></TextField>
+              />
               <TextField
                 fullWidth
                 required
@@ -158,9 +155,8 @@ const CompanyDialog: React.FC<Props> = ({
                 type="text"
                 value={state.district}
                 onChange={inputChangeHandler}
-              ></TextField>
+              />
             </Grid>
-
             <Grid item xs>
               <LoadingButton
                 fullWidth

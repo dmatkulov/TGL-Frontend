@@ -57,8 +57,6 @@ const ShipmentsForm = () => {
     'status',
   ];
 
-
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
@@ -68,7 +66,7 @@ const ShipmentsForm = () => {
 
     if (isInputValid(state.userMarketId)) {
       setMarketIdValid(true);
-      setUserMarketIdLabel('Не корректный номер')
+      setUserMarketIdLabel('Не корректный номер');
     }
 
     if (valueFields.includes(name)) {
@@ -120,7 +118,7 @@ const ShipmentsForm = () => {
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2} direction={{xs: 'column', md:'row'}}>
+        <Grid container spacing={2} direction={{ xs: 'column', md: 'row' }}>
           <Grid item xs={4} md={12}>
             <TextField
               fullWidth

@@ -227,7 +227,7 @@ const Socials = () => {
             </LoadingButton>
           </DialogActions>
         </Dialog>
-        {user && (user.role === 'super') && (
+        {user && user.role === 'super' && (
           <Button
             variant="contained"
             sx={historyButtonEffect}

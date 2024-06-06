@@ -61,7 +61,7 @@ export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
 
 export const fetchShipmentsByRegion = createAsyncThunk<
   ShipmentsResponse,
-  { region: string;}
+  { region: string }
 >('shipments/fetchShipmentsByRegion', async (arg) => {
   try {
     const response = await axiosApi.get<ShipmentsResponse>(
@@ -76,7 +76,7 @@ export const fetchShipmentsByRegion = createAsyncThunk<
 
 export const fetchShipmentsByDatetime = createAsyncThunk<
   ShipmentsResponse,
-  { datetime: string;}
+  { datetime: string }
 >('shipments/fetchShipmentsByDatetime', async (arg) => {
   try {
     const response = await axiosApi.get<ShipmentsResponse>(
@@ -91,7 +91,7 @@ export const fetchShipmentsByDatetime = createAsyncThunk<
 
 export const fetchShipmentsByRegionAndDatetime = createAsyncThunk<
   ShipmentsResponse,
-  { region: string; datetime: string}
+  { region: string; datetime: string }
 >('shipments/fetchShipmentsByRegionAndDatetime', async (arg) => {
   try {
     const response = await axiosApi.get<ShipmentsResponse>(
@@ -99,7 +99,10 @@ export const fetchShipmentsByRegionAndDatetime = createAsyncThunk<
     );
     return response.data ?? [];
   } catch (e) {
-    console.log('Caught on try - FETCH ALL SHIPMENT BY REGION AND DATETIME ', e);
+    console.log(
+      'Caught on try - FETCH ALL SHIPMENT BY REGION AND DATETIME ',
+      e,
+    );
     throw e;
   }
 });

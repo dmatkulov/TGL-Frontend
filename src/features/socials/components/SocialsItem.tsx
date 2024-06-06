@@ -61,7 +61,7 @@ const SocialsItem: React.FC<Props> = ({
             alt={link}
           />
           <Typography>{name}</Typography>
-          {user && (user.role === 'super') && (
+          {user && user.role === 'super' && (
             <Box>
               <LoadingButton
                 onClick={deleteHandler}

@@ -41,7 +41,9 @@ const StaffItem: React.FC<Props> = ({ user, onSubmit, onDelete }) => {
   return (
     <>
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-        <TableCell component="th" scope="row">{user.email}</TableCell>
+        <TableCell component="th" scope="row">
+          {user.email}
+        </TableCell>
         <TableCell align="left">{user.firstName}</TableCell>
         <TableCell align="left">{user.lastName}</TableCell>
         <TableCell align="left">{user.address}</TableCell>

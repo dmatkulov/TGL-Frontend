@@ -92,13 +92,13 @@ const PriceLists = () => {
     <>
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          {user && (user.role === 'super') && (
-            <Button component={NavLink} to={appRoutes.priceListsAdd}>
+          {user && user.role === 'super' && (
+            <Button sx={{marginRight: 1}} variant="contained" component={NavLink} to={appRoutes.priceListsAdd}>
               Добавить прайс лист
             </Button>
           )}
-          {user && (user.role === 'super') && (
-            <LoadingButton loading={isDeleting} onClick={deleteHandler}>
+          {user && user.role === 'super' && (
+            <LoadingButton variant="contained" loading={isDeleting} onClick={deleteHandler}>
               Удалить текущий
             </LoadingButton>
           )}

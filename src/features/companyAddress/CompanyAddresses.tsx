@@ -10,6 +10,13 @@ import { fetchCompanyAddresses } from './companyAddressThunks';
 import CompanyDialog from './components/CompanyDialog';
 import { selectUser } from '../users/usersSlice';
 
+const styleBoxSpinner = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginTop: "5rem",
+};
+
 const CompanyAddresses = () => {
   const dispatch = useAppDispatch();
   const addresses = useAppSelector(companyAddressState);
@@ -36,7 +43,9 @@ const CompanyAddresses = () => {
   let content;
 
   if (addresses.length < 1) {
-    content = <Typography>Нет доступных адресов</Typography>;
+    content = (
+      <Typography sx={{ paddingTop: 1 }}>Нет доступных адресов</Typography>
+    );
   } else {
     content = (
       <Grid container spacing={3} sx={{ mt: '15px' }}>
@@ -64,7 +73,13 @@ const CompanyAddresses = () => {
           </Button>
         )}
       </Box>
-      {isLoading ? <CircularProgress /> : content}
+      {isLoading ? (
+        <Box style={styleBoxSpinner}>
+          <CircularProgress size={100} />
+        </Box>
+      ) : (
+        content
+      )}
       <CompanyDialog
         open={open}
         onClose={() => setOpen(false)}

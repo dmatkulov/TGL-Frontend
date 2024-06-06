@@ -61,22 +61,24 @@ const PriceForm: React.FC<Props> = ({
       <Grid container direction="column" spacing={2} alignItems="center">
         <Grid item xs>
           <TextField
+            required
             id="title"
             label="Курс"
             value={state.exchangeRate}
             onChange={inputChangeHandler}
             name="exchangeRate"
             type="number"
+            sx={{marginTop: 1}}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">USD</InputAdornment>
               ),
             }}
-            required
           />
         </Grid>
         <Grid item xs>
           <TextField
+            required
             id="title"
             label="Цена за доставку"
             value={state.deliveryPrice}
@@ -88,7 +90,6 @@ const PriceForm: React.FC<Props> = ({
                 <InputAdornment position="start">Сом</InputAdornment>
               ),
             }}
-            required
           />
         </Grid>
         <Grid item xs>

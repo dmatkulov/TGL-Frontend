@@ -9,7 +9,6 @@ const OrdersHistoryItem: FC<ShipmentThatDone> = ({
   trackerNumber,
   datetime,
 }) => {
-
   const formattedDate = dayjs(datetime).format('YYYY-MM-DD HH:mm:ss');
   return (
     <>

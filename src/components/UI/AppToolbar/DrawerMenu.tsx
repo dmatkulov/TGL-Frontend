@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -6,7 +6,8 @@ import {
   Drawer,
   List,
   Stack,
-  Typography, useMediaQuery,
+  Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useAppSelector } from '../../../app/hooks';
@@ -26,7 +27,6 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
 
   return (
     <Drawer
@@ -84,4 +84,3 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
 };
 
 export default DrawerMenu;
-

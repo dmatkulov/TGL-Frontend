@@ -122,10 +122,13 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipmentsByRegionAndDatetime.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByRegionAndDatetime.fulfilled, (state, { payload }) => {
-        state.shipments = payload.shipments;
-        state.shipmentsLoading = false;
-      })
+      .addCase(
+        fetchShipmentsByRegionAndDatetime.fulfilled,
+        (state, { payload }) => {
+          state.shipments = payload.shipments;
+          state.shipmentsLoading = false;
+        },
+      )
       .addCase(fetchShipmentsByRegionAndDatetime.rejected, (state) => {
         state.shipmentsLoading = false;
         state.shipmentsError = true;

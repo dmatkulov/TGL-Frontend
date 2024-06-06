@@ -136,7 +136,11 @@ const Calculator = () => {
   };
 
   if (calculatePrice() > 0) {
-    getPrice = <Typography sx={{ml:2}}>Общая стоимость {calculatePrice()}$</Typography>;
+    getPrice = (
+      <Typography sx={{ ml: 2 }}>
+        Общая стоимость {calculatePrice()}$
+      </Typography>
+    );
   }
 
   const createData = (name: string, express: string, standard: string) => {
@@ -294,7 +298,9 @@ const Calculator = () => {
       <Grid container spacing={3} mt={3}>
         <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
-            <Typography variant="h6" ml={2}>Хозтовар</Typography>
+            <Typography variant="h6" ml={2}>
+              Хозтовар
+            </Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -323,7 +329,9 @@ const Calculator = () => {
 
         <Grid item xs={smallScreen ? 12 : 6}>
           <TableContainer component={Paper}>
-            <Typography variant="h6" ml={2}>Одежда</Typography>
+            <Typography variant="h6" ml={2}>
+              Одежда
+            </Typography>
             <Table sx={{ minWidth: 300 }} aria-label="simple table">
               <TableHead>
                 <TableRow>

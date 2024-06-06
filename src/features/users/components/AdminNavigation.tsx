@@ -1,4 +1,12 @@
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from '@mui/material';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  useMediaQuery,
+} from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { UserNav } from '../../../types/types.User';
@@ -99,7 +107,7 @@ const AdminNavigation = () => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
   const navigate = useNavigate();
   const activePath = location.pathname;
-  
+
   return (
     <>
       <Box

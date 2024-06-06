@@ -6,7 +6,8 @@ import {
   Tab,
   TablePagination,
   Tabs,
-  TextField, Typography,
+  TextField,
+  Typography,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
@@ -17,7 +18,12 @@ import {
   selectStaffData,
   selectUser,
 } from '../usersSlice';
-import {createStaff, getEmployee, getStaffData, updateStaff} from '../usersThunks';
+import {
+  createStaff,
+  getEmployee,
+  getStaffData,
+  updateStaff,
+} from '../usersThunks';
 import StaffItem from '../components/StaffItem';
 import AddStaff from './AddStaff';
 import { IStaff, UsersRequestParams } from '../../../types/types.User';
@@ -127,7 +133,10 @@ const Staff: React.FC = () => {
     setPage(0);
   };
 
-  const paginatedStaff = users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedStaff = users.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage,
+  );
 
   const inputChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -162,7 +171,9 @@ const Staff: React.FC = () => {
             </StaffTable>
             <Typography sx={{ borderBottom: '1px solid #000' }} />
           </>
-        ) : ''}
+        ) : (
+          ''
+        )}
         <StaffTable>
           {paginatedStaff.map((item) => (
             <StaffItem
@@ -191,7 +202,12 @@ const Staff: React.FC = () => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" spacing={2} alignItems="flex-start">
+      <Grid
+        container
+        justifyContent="space-between"
+        spacing={2}
+        alignItems="flex-start"
+      >
         <Box component="form" onSubmit={handleForm}>
           <TextField
             name="email"
@@ -200,7 +216,11 @@ const Staff: React.FC = () => {
             value={email}
             onChange={inputChangeEmail}
           />
-          <Button type="submit" variant="contained" sx={{ mr: 2, mt: 1, ml: 1 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mr: 2, mt: 1, ml: 1 }}
+          >
             Найти
           </Button>
           <Button

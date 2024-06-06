@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import {
   createStaff,
   fetchClients,
-  fetchSingleClient, getEmployee,
+  fetchSingleClient,
+  getEmployee,
   getOneUser,
   getStaff,
   getStaffData,
@@ -262,8 +263,7 @@ export const selectGetOneUserLoading = (state: RootState) =>
   state.users.getOneUserLoading;
 export const selectGetStaffDataLoading = (state: RootState) =>
   state.users.getStaffDataLoading;
-export const selectEmployee = (state: RootState) =>
-  state.users.employee;
+export const selectEmployee = (state: RootState) => state.users.employee;
 export const selectLoginError = (state: RootState) => state.users.loginError;
 export const selectLogOutLoading = (state: RootState) =>
   state.users.logOutLoading;

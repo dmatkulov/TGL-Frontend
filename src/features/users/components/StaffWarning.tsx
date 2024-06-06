@@ -26,7 +26,11 @@ const StaffWarning: FC<Props> = ({ open, onClose, id, onDelete }) => {
           Вы уверены, что хотите удалить сотрудника?
         </DialogTitle>
         <DialogActions>
-          <Button onClick={() => staffDelete(id)} variant="contained" color="success">
+          <Button
+            onClick={() => staffDelete(id)}
+            variant="contained"
+            color="success"
+          >
             Да
           </Button>
           <Button onClick={onClose} variant="contained" color="error" autoFocus>

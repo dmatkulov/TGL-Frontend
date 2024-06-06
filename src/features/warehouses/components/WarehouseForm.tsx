@@ -40,9 +40,9 @@ const WarehouseForm: React.FC<Props> = ({
   
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
-      if (value.length < 12) {
+      if (value.length < 13) {
         setPhoneNumberLabel('Номер должен быть введен полностью');
-      } else if (value.length > 11) {
+      } else if (value.length > 12) {
         setPhoneNumberLabel('');
       }
       return { ...prevState, phoneNumber: value };
@@ -111,14 +111,14 @@ const WarehouseForm: React.FC<Props> = ({
                   fullWidth
                   required
                   name="address"
-                  label="Aдрес"
+                  label="Адрес"
                   type="text"
                   value={state.address}
                   autoComplete="new-address"
                   onChange={inputChangeHandler}
                 />
               </Grid>
-              <Grid item xs={12} className="custom-tel-container">
+              <Grid item xs={12}>
                 <label htmlFor="phoneNumber" className="custom-tel-label">
                   Номер телефона*
                 </label>

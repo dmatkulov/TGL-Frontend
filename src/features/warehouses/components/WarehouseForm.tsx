@@ -26,32 +26,29 @@ const WarehouseForm: React.FC<Props> = ({
 }) => {
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
   const error = useAppSelector(selectRegisterError);
-
+  
   const [state, setState] = useState<WarehouseMutation>(initialWarehouse);
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-  const [phoneNumberIsValid, setPhoneNumberIsValid] = useState<boolean>(false);
-
+  
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
+    
     setState((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
-
+  
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
-      if (value.length < 12) {
-        setPhoneNumberIsValid(true);
+      if (value.length < 13) {
         setPhoneNumberLabel('Номер должен быть введен полностью');
       } else if (value.length > 12) {
-        setPhoneNumberIsValid(true);
         setPhoneNumberLabel('');
       }
       return { ...prevState, phoneNumber: value };
     });
   };
-
+  
   const getFieldError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -59,18 +56,17 @@ const WarehouseForm: React.FC<Props> = ({
       return undefined;
     }
   };
-
+  
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-
+    
     if (state.phoneNumber.length < 13) {
       setPhoneNumberLabel('Пропишите номер полностью');
-      setPhoneNumberIsValid(false);
       return;
     }
     onSubmit(state);
   };
-
+  
   return (
     <Container component="main">
       <Box
@@ -115,7 +111,7 @@ const WarehouseForm: React.FC<Props> = ({
                   fullWidth
                   required
                   name="address"
-                  label="Aдрес"
+                  label="Адрес"
                   type="text"
                   value={state.address}
                   autoComplete="new-address"
@@ -123,24 +119,28 @@ const WarehouseForm: React.FC<Props> = ({
                 />
               </Grid>
               <Grid item xs={12}>
+                <label htmlFor="phoneNumber" className="custom-tel-label">
+                  Номер телефона*
+                </label>
                 <PhoneInput
                   country="cn"
                   masks={{ cn: '(..) ...-....-..' }}
                   onlyCountries={['cn']}
                   containerStyle={{ width: '100%' }}
                   value={state.phoneNumber}
+                  countryCodeEditable={false}
                   onChange={handlePhoneChange}
-                  defaultErrorMessage={getFieldError('phoneNumber')}
-                  specialLabel="Номер телефона*"
                   disableDropdown
-                  inputStyle={{ width: '100%' }}
+                  inputStyle={{
+                    width: '100%',
+                    borderColor: getFieldError('phoneNumber') && '#d32f2f',
+                    color: getFieldError('phoneNumber') && '#d32f2f',
+                  }}
                   inputProps={{
+                    id: 'phoneNumber',
                     name: 'phoneNumber',
                     required: true,
                   }}
-                  error={Boolean(
-                    getFieldError('phoneNumber') || !phoneNumberIsValid,
-                  )}
                 />
                 {getFieldError('phoneNumber') ? (
                   <Typography

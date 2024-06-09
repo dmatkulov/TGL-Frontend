@@ -46,6 +46,7 @@ const skeletonStyle = {
   width: '100%',
   marginBottom: '8px',
 };
+
 enum StateStatus {
   edit = 'edit',
   add = 'add',
@@ -138,7 +139,7 @@ const Socials = () => {
   };
 
   return (
-    <>
+    <Box>
       <Box>
         <Dialog
           open={open}
@@ -251,7 +252,7 @@ const Socials = () => {
           ))
         )}
       </Box>
-    </>
+    </Box>
   );
 };
 

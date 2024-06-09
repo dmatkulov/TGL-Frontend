@@ -1,4 +1,4 @@
-import { Box, CardMedia, Typography } from '@mui/material';
+import { Box, CardMedia, Typography, useMediaQuery } from '@mui/material';
 import noLogoImage from '../../../assets/nologo.png';
 import { apiURL } from '../../../utils/constants';
 import { LoadingButton } from '@mui/lab';
@@ -16,14 +16,6 @@ interface Props {
   editHandler: () => void;
 }
 
-const outerBoxStyle = {
-  border: '2px solid grey',
-  borderRadius: '10px',
-  padding: '10px',
-  marginBottom: '10px',
-  overflow: 'hidden',
-};
-
 const imgBtnBoxStyle = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -38,6 +30,16 @@ const SocialsItem: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const isSmallScreen = useMediaQuery('(max-width:380px)');
+
+  const outerBoxStyle = {
+    border: '2px solid grey',
+    borderRadius: '10px',
+    padding: '10px',
+    marginBottom: '10px',
+    overflow: 'hidden',
+    width: isSmallScreen ? '320px' : '100%',
+  };
 
   const deleteHandler = async () => {
     await dispatch(deleteSocialNetwork(id));
@@ -52,8 +54,8 @@ const SocialsItem: React.FC<Props> = ({
 
   return (
     <>
-      <Box id={id} key={id} sx={outerBoxStyle}  >
-        <Box sx={imgBtnBoxStyle} >
+      <Box id={id} key={id} sx={outerBoxStyle}>
+        <Box sx={imgBtnBoxStyle}>
           <Box sx={imgBtnBoxStyle}>
             <CardMedia
               component="img"
@@ -73,7 +75,9 @@ const SocialsItem: React.FC<Props> = ({
                 sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
                 color="error"
               >
-                <CancelIcon />
+                <Box>
+                  <CancelIcon />
+                </Box>
               </LoadingButton>
             </Box>
           )}

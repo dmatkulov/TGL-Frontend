@@ -52,26 +52,28 @@ const SocialsItem: React.FC<Props> = ({
 
   return (
     <>
-      <Box id={id} key={id} sx={outerBoxStyle}>
-        <Box sx={imgBtnBoxStyle}>
-          <CardMedia
-            component="img"
-            sx={{ width: 50, borderRadius: '10px' }}
-            image={coverImage}
-            alt={link}
-          />
-          <Typography>{name}</Typography>
+      <Box id={id} key={id} sx={outerBoxStyle}  >
+        <Box sx={imgBtnBoxStyle} >
+          <Box sx={imgBtnBoxStyle}>
+            <CardMedia
+              component="img"
+              sx={{ width: 50, borderRadius: '10px' }}
+              image={coverImage}
+              alt={link}
+            />
+            <Typography>{name}</Typography>
+          </Box>
           {user && user.role === 'super' && (
             <Box>
+              <LoadingButton onClick={editHandler} variant="contained">
+                Изменить
+              </LoadingButton>
               <LoadingButton
                 onClick={deleteHandler}
                 sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
                 color="error"
               >
                 <CancelIcon />
-              </LoadingButton>
-              <LoadingButton onClick={editHandler} variant="contained">
-                Изменить
               </LoadingButton>
             </Box>
           )}

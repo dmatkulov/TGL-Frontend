@@ -105,7 +105,8 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-  }, [dispatch]);
+    dispatch(fetchPups(formData.region));
+  }, [dispatch, formData.region]);
 
   const handleRegionChange = async (region: string) => {
     await dispatch(fetchPups(region));

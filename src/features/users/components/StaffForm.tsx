@@ -129,7 +129,8 @@ const StaffForm: React.FC<AddStaffFormProps> = ({
   useEffect(() => {
     dispatch(setRegisterError(null));
     dispatch(fetchRegions());
-  }, [dispatch]);
+    dispatch(fetchPups(formData.region));
+  }, [dispatch, formData.region]);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));

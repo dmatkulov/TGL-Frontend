@@ -39,3 +39,14 @@ export const updateWarehouse = createAsyncThunk<void, UpdateWarehouseArg>(
     return axiosApi.patch(`/warehouse/${warehouseId}`, warehouseMutation);
   },
 );
+
+export const deleteWarehouse = createAsyncThunk<void, string>(
+  'warehouse/deleteWarehouse',
+  async (id) => {
+    try {
+      await axiosApi.delete(`/warehouse/${id}`);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+);

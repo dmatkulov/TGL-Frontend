@@ -4,7 +4,10 @@ import {
   warehousesState,
 } from '../../../warehouses/warehousesSlice';
 import { useEffect } from 'react';
-import { fetchWarehouseData } from '../../../warehouses/warehousesThunks';
+import {
+  deleteWarehouse,
+  fetchWarehouseData,
+} from '../../../warehouses/warehousesThunks';
 import WarehousesListItem from './WarehousesListItem';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { selectUser } from '../../usersSlice';
@@ -18,6 +21,11 @@ const WarehousesList = () => {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
+  const deleteWarehouses = async (_id: string) => {
+    await dispatch(deleteWarehouse(_id));
+    await dispatch(fetchWarehouseData());
+  };
+
   useEffect(() => {
     dispatch(fetchWarehouseData());
   }, [dispatch]);
@@ -28,7 +36,8 @@ const WarehousesList = () => {
     content = <CircularProgress />;
   }
 
-  if (state.length < 1) {
+
+  if (state.length === 0) {
     content = (
       <>
         {user?.role === 'super' && (
@@ -57,6 +66,7 @@ const WarehousesList = () => {
             name={item.name}
             address={item.address}
             phoneNumber={item.phoneNumber}
+            deleteWarehouse={() => deleteWarehouses(item._id)}
           />
         ))}
       </>

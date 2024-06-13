@@ -3,6 +3,7 @@ import { RootState } from '../../app/store';
 import { Warehouse } from '../../types/types.Warehouses';
 import {
   createWarehouse,
+  deleteWarehouse,
   fetchOneWarehouse,
   fetchWarehouseData,
 } from './warehousesThunks';
@@ -13,6 +14,7 @@ interface WarehousesState {
   isLoading: boolean;
   fetchOneLoading: boolean;
   isCreateLoading: boolean;
+  isDeleteLoad: string;
 }
 
 const initialState: WarehousesState = {
@@ -21,6 +23,7 @@ const initialState: WarehousesState = {
   isLoading: false,
   fetchOneLoading: false,
   isCreateLoading: false,
+  isDeleteLoad: '',
 };
 
 const WarehouseSlice = createSlice({
@@ -61,6 +64,16 @@ const WarehouseSlice = createSlice({
     builder.addCase(createWarehouse.rejected, (state) => {
       state.isCreateLoading = false;
     });
+
+    builder.addCase(deleteWarehouse.pending, (state) => {
+      state.isDeleteLoad = '';
+    });
+    builder.addCase(deleteWarehouse.fulfilled, (state, action) => {
+      state.isDeleteLoad = action.meta.arg || '';
+    });
+    builder.addCase(deleteWarehouse.rejected, (state) => {
+      state.isDeleteLoad = '';
+    });
   },
 });
 export const warehousesReducer = WarehouseSlice.reducer;
@@ -75,3 +88,6 @@ export const selectOneWarehouseFetching = (state: RootState) =>
   state.warehouses.fetchOneLoading;
 export const isWarehousesCreateLoading = (state: RootState) =>
   state.warehouses.isCreateLoading;
+
+export const isWarehousesDeleteLoading = (state: RootState) =>
+  state.warehouses.isDeleteLoad;

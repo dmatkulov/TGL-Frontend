@@ -45,7 +45,7 @@ const WarehousesListItem: FC<Props> = ({
             Изменить
           </Button>
 
-          <Button variant="contained" onClick={() => deleteWarehouse(_id)}>
+          <Button variant="contained" sx={{marginLeft:1}} onClick={() => deleteWarehouse(_id)}>
             Удалить
           </Button>
         </>

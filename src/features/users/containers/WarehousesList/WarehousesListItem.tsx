@@ -1,18 +1,27 @@
 import { Box, Button, Typography } from '@mui/material';
-import { Warehouse } from '../../../../types/types.Warehouses';
 import { FC } from 'react';
 import { useAppSelector } from '../../../../app/hooks';
 import { selectUser } from '../../usersSlice';
 import { NavLink } from 'react-router-dom';
 import { appRoutes } from '../../../../utils/constants';
 
-const WarehousesListItem: FC<Warehouse> = ({
+interface Props {
+  deleteWarehouse: (_id: string) => void;
+  _id: string;
+  name: string;
+  address: string;
+  phoneNumber: string;
+}
+
+const WarehousesListItem: FC<Props> = ({
+  deleteWarehouse,
   _id,
-  address,
   name,
+  address,
   phoneNumber,
 }) => {
   const user = useAppSelector(selectUser);
+
   return (
     <Box borderBottom="1px solid grey" py={2}>
       <Box mb={2}>
@@ -27,13 +36,19 @@ const WarehousesListItem: FC<Warehouse> = ({
         </Typography>
       </Box>
       {user && user?.role === 'super' && (
-        <Button
-          component={NavLink}
-          to={appRoutes.adminWarehousesEdit.replace(':id', _id)}
-          variant="contained"
-        >
-          Изменить
-        </Button>
+        <>
+          <Button
+            component={NavLink}
+            to={appRoutes.adminWarehousesEdit.replace(':id', _id)}
+            variant="contained"
+          >
+            Изменить
+          </Button>
+
+          <Button variant="contained" onClick={() => deleteWarehouse(_id)}>
+            Удалить
+          </Button>
+        </>
       )}
     </Box>
   );

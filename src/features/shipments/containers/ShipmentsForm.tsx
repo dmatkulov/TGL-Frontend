@@ -46,8 +46,6 @@ const ShipmentsForm = () => {
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
 
-  const marketIdField: string = 'userMarketId';
-
   const valueFields: string[] = [
     'userMarketId',
     'trackerNumber',

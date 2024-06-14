@@ -1,5 +1,14 @@
-import { Box, Button, Typography } from '@mui/material';
-import { FC } from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
+import { FC, useState } from 'react';
 import { useAppSelector } from '../../../../app/hooks';
 import { selectUser } from '../../usersSlice';
 import { NavLink } from 'react-router-dom';
@@ -21,6 +30,20 @@ const WarehousesListItem: FC<Props> = ({
   phoneNumber,
 }) => {
   const user = useAppSelector(selectUser);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleDelete = () => {
+    deleteWarehouse(_id);
+    setOpen(false);
+  };
 
   return (
     <Box borderBottom="1px solid grey" py={2}>
@@ -45,11 +68,33 @@ const WarehousesListItem: FC<Props> = ({
             Изменить
           </Button>
 
-          <Button variant="contained" sx={{marginLeft:1}} onClick={() => deleteWarehouse(_id)}>
+          <Button
+            variant="contained"
+            sx={{ marginLeft: 1 }}
+            onClick={handleClickOpen}
+          >
             Удалить
           </Button>
         </>
       )}
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Подтверждение удаления</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Вы уверены, что хотите удалить этот склад? Это действие нельзя будет
+            отменить.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Отмена
+          </Button>
+          <Button onClick={handleDelete} color="primary" autoFocus>
+            Подтвердить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

@@ -108,7 +108,7 @@ const PupForm: React.FC<Props> = ({
               name="region"
               label="Регион"
               type="text"
-              value={state.region}
+              value={regions.length > 0 ? state.region : ''}
               autoComplete="new-region"
               onChange={inputChangeHandler}
             >
@@ -144,21 +144,26 @@ const PupForm: React.FC<Props> = ({
               required
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className="custom-tel-container">
+            <label htmlFor="phoneNumber" className="custom-tel-label-pup">
+              Номер телефона*
+            </label>
             <PhoneInput
               country="kg"
               masks={{ kg: '(...) ..-..-..' }}
               onlyCountries={['kg']}
               containerStyle={{ width: '100%' }}
               value={state.phoneNumber}
-              countryCodeEditable={false}
               onChange={handlePhoneChange}
-              specialLabel="Номер телефона*"
+              defaultErrorMessage={getFieldError('phoneNumber')}
               disableDropdown
               inputStyle={{
                 width: '100%',
+                borderColor: getFieldError('phoneNumber') && '#d32f2f',
+                color: getFieldError('phoneNumber') && '#d32f2f',
               }}
               inputProps={{
+                id: 'phoneNumber',
                 name: 'phoneNumber',
                 required: true,
               }}

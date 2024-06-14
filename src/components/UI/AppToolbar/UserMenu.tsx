@@ -37,9 +37,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   return (
     <>
       <Stack direction="row" alignItems="center">
-        <Typography color="inherit" onClick={handleClick}>
-          {user.firstName} {user.lastName}
-        </Typography>
+          <Typography id="username" color="inherit" onClick={handleClick}>
+            {user.firstName} {user.lastName}
+          </Typography>
         <IconButton
           onClick={handleClick}
           sx={{ display: 'flex', gap: 1 }}
@@ -72,7 +72,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             key="profileAdmin"
             onClick={() => navigate(appRoutes.myAdminProfile)}
           >
-            Профиль руководства
+              Профиль руководства
           </MenuItem>
         )}
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>

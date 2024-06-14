@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { fetchWarehouseData } from './warehousesThunks';
 import { selectUser } from '../users/usersSlice';
 import { Slide, toast } from 'react-toastify';
+import {Warehouse} from '../../types/types.Warehouses';
 
 const Warehouses = () => {
   const dispatch = useAppDispatch();
@@ -16,14 +17,14 @@ const Warehouses = () => {
     dispatch(fetchWarehouseData());
   }, [dispatch]);
 
-  const handleCopy = async () => {
+  const handleCopy = async (warehouse: Warehouse) => {
     if (user?.marketId) {
       const text =
-        state[0].name +
+        warehouse.name +
         ' ' +
-        state[0].phoneNumber +
+        warehouse.phoneNumber +
         ' ' +
-        state[0].address +
+        warehouse.address +
         user?.marketId;
 
       try {
@@ -55,27 +56,30 @@ const Warehouses = () => {
       </Typography>
     );
   }
-  if (state.length > 1) {
-    content = (
-      <Typography>
-        Есть несколько складов. Нужно добавить селект для выбора одного.
-      </Typography>
-    );
-  }
-  if (state.length === 1) {
-    content = (
-      <>
-        <Typography>收货人：{state[0].name}</Typography>
-        <Typography>电话：{state[0].phoneNumber}</Typography>
-        <Typography sx={{ mb: 3 }}>
-          {state[0].address + user?.marketId}
+  content = (
+    <>
+      {state.map((elem) => (
+        <Typography key={elem._id} sx={{
+          mt: 2,
+          pb: 2,
+          mb: 1,
+          '--Grid-borderWidth': '1px',
+          borderBottom: 'var(--Grid-borderWidth) solid',
+          borderColor: 'divider',
+        }}>
+          <Typography>收货人：{elem.name}</Typography>
+          <Typography>电话：{elem.phoneNumber}</Typography>
+          <Typography sx={{mb: 3}}>
+            {elem.address + user?.marketId}
+          </Typography>
+          <Button variant="contained" onClick={() => handleCopy(elem)}>
+            Скопировать
+          </Button>
         </Typography>
-        <Button variant="contained" onClick={handleCopy}>
-          Скопировать
-        </Button>
-      </>
-    );
-  }
+      ))}
+    </>
+  );
+
   return <Box>{isLoading ? <CircularProgress /> : content}</Box>;
 };
 

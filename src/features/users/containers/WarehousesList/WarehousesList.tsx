@@ -45,7 +45,7 @@ const WarehousesList = () => {
             Добавить склад в Китае
           </Button>
         )}
-        <Typography>В настоящее время складов в Китае нет.</Typography>
+        <Typography>В настоящее время складов в Китае нет!</Typography>
       </>
     );
   } else if (!isLoading && state.length > 0) {

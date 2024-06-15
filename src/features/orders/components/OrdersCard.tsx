@@ -78,7 +78,14 @@ const OrdersCard: FC<Shipment> = ({
             >
               Трекинговый номер: {trackerNumber}
             </Typography>
-            <Typography>Адресс ПВЗ: {pupId.address}</Typography>
+            <Typography>
+              Адресс ПВЗ:{' '}
+              {pupId ? (
+                pupId.address
+              ) : (
+                <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
+              )}
+            </Typography>
             <Typography>Статус: {status}</Typography>
             <Typography
               sx={{

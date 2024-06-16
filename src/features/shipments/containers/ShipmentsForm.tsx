@@ -20,13 +20,13 @@ import { ShipmentStatus } from '../../../utils/constants';
 const initialState: ShipmentMutation = {
   userMarketId: '',
   trackerNumber: '',
-  weight: '',
+  weight: 0,
   pupId: '',
   status: '',
   dimensions: {
-    height: '',
-    width: '',
-    length: '',
+    height: 0,
+    width: 0,
+    length: 0,
   },
 };
 
@@ -64,11 +64,6 @@ const ShipmentsForm = () => {
       return;
     }
 
-    if (isInputValid(state.userMarketId)) {
-      setMarketIdValid(true);
-      setUserMarketIdLabel('Не корректный номер');
-    }
-
     if (valueFields.includes(name)) {
       setState((prevState) => ({
         ...prevState,
@@ -81,18 +76,20 @@ const ShipmentsForm = () => {
     }
   };
 
-  const isFormValid = () => {
-    const { userMarketId, trackerNumber, weight, dimensions, status } = state;
+  const handleChangeMarketId = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
 
-    return (
-      userMarketId &&
-      trackerNumber &&
-      weight &&
-      dimensions.height &&
-      dimensions.length &&
-      dimensions.width &&
-      status
-    );
+    if (isInputValid(state.userMarketId)) {
+      setMarketIdValid(true);
+      setUserMarketIdLabel('Не корректный номер');
+    }
+
+    if (marketIdField) {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const onFormHandle = async (e: React.FormEvent) => {
@@ -126,7 +123,7 @@ const ShipmentsForm = () => {
               type="number"
               name="userMarketId"
               label="Маркет"
-              onChange={handleChange}
+              onChange={handleChangeMarketId}
               value={state.userMarketId}
               autoComplete="new-userMarketId"
               error={marketIdValid}
@@ -159,7 +156,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="height"
               type="number"
               label="Высота"
@@ -176,7 +172,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="length"
               type="number"
               label="Длина"
@@ -193,7 +188,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="width"
               type="number"
               label="Ширина"
@@ -210,7 +204,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="weight"
               type="number"
               label="Килограмм"
@@ -279,7 +272,7 @@ const ShipmentsForm = () => {
           type="submit"
           variant="contained"
           sx={{ mt: 3 }}
-          disabled={!isFormValid() || loading}
+          disabled={loading}
         >
           {loading ? <CircularProgress /> : 'Добавить отправку'}
         </Button>

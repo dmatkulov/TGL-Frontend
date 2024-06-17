@@ -1,12 +1,4 @@
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  MenuItem,
-  TextField,
-} from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
 import React, { useEffect, useState } from 'react';
@@ -40,12 +32,12 @@ const ShipmentsForm = () => {
   const [state, setState] = useState<ShipmentMutation>(initialState);
   const [marketIdValid, setMarketIdValid] = useState<boolean>(false);
   const [userMarketIdLabel, setUserMarketIdLabel] = useState<string>('');
-
+  
   const pups = useAppSelector(selectPups);
   const loadingPups = useAppSelector(selectPupsLoading);
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
-
+  
   const valueFields: string[] = [
     'userMarketId',
     'trackerNumber',
@@ -56,46 +48,43 @@ const ShipmentsForm = () => {
     'pupId',
     'status',
   ];
-
+  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-    if (parseFloat(value) <= 0) {
-      return;
-    }
-
+    
     if (isInputValid(state.userMarketId)) {
       setMarketIdValid(true);
       setUserMarketIdLabel('Не корректный номер');
     }
-
+    
     if (valueFields.includes(name)) {
       setState((prevState) => ({
         ...prevState,
         [name]: value,
         dimensions: {
           ...prevState.dimensions,
+          [name]: value,
         },
       }));
     }
   };
-
+  
   const isFormValid = () => {
     const { trackerNumber } = state;
-
+    
     return trackerNumber;
   };
-
+  
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(createShipment(state));
     setState(initialState);
   };
-
+  
   useEffect(() => {
     dispatch(fetchPups());
   }, [dispatch]);
-
+  
   return (
     <>
       {error && (

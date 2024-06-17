@@ -110,6 +110,7 @@ const PriceListsForm = () => {
       deleteHandler: deleteHandler,
     },
   ]);
+
   return (
     <Box
       component="form"
@@ -149,6 +150,7 @@ const PriceListsForm = () => {
             rangeChangeHandler={rangeInputChangeHandler}
             valueChangeHandler={valueInputChangeHandler}
             deleteHandler={deleteHandler}
+            isFirst={ranges.length === 1}
           />
         ))}
       </Box>

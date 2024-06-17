@@ -34,4 +34,5 @@ export interface PriceListRangesInputData {
   rangeChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
   valueChangeHandler: (e: ChangeEvent<HTMLInputElement>) => void;
   deleteHandler: (nameId: number) => void;
+  isFirst?: boolean;
 }

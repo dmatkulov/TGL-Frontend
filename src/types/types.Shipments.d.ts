@@ -85,13 +85,13 @@ export interface ShipmentThatDone {
 export interface ShipmentMutation {
   userMarketId: string;
   trackerNumber: string;
-  weight: number;
+  weight: string;
   pupId: string;
   status: string;
   dimensions: {
-    height: number;
-    width: number;
-    length: number;
+    height: string;
+    width: string;
+    length: string;
   };
 }
 

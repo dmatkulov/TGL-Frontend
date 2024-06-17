@@ -14,6 +14,7 @@ const RangeInputGroup: FC<PriceListRangesInputData> = ({
   rangeId,
   valueId,
   valueValue,
+  isFirst,
 }) => {
   return (
     <Box>
@@ -45,6 +46,8 @@ const RangeInputGroup: FC<PriceListRangesInputData> = ({
           deleteHandler(rangeId);
         }}
         variant="contained"
+        disabled={isFirst}
+        color="error"
       >
         <DeleteIcon />
       </Button>

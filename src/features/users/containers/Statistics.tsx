@@ -12,11 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { regionsState } from '../../regions/regionsSlice';
 import { fetchPups } from '../../pups/pupsThunks';
-import {
-  clearItems,
-  selectPups,
-  selectPupsLoading,
-} from '../../pups/pupsSlice';
+import { clearItems, selectPups, selectPupsLoading } from '../../pups/pupsSlice';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchShipments,
@@ -25,10 +21,7 @@ import {
   fetchShipmentsByRegionAndDatetime,
   fetchShipmentsByRegionAndPup,
 } from '../../shipments/shipmentsThunk';
-import {
-  selectShipments,
-  selectShipmentsLoading,
-} from '../../shipments/shipmentsSlice';
+import { selectShipments, selectShipmentsLoading } from '../../shipments/shipmentsSlice';
 import { Statistics as statistics } from '../../../types/types.Statistics';
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
@@ -61,25 +54,25 @@ const Statistics = () => {
   const shipments = useAppSelector(selectShipments);
   const loading = useAppSelector(selectShipmentsLoading);
   const dispatch = useAppDispatch();
-
+  
   const tableWrapperRef = useRef<HTMLDivElement | null>(null);
   const [state, setState] = useState<statistics>(initialState);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [searched, setSearched] = useState<boolean>(false);
-
+  
   useEffect(() => {
     dispatch(clearItems());
     dispatch(fetchRegions());
-  }, []);
-
+  }, [dispatch]);
+  
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
   };
-
+  
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - shipments.length) : 0;
-
+  
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -87,14 +80,14 @@ const Statistics = () => {
     event?.preventDefault();
     setPage(newPage);
   };
-
+  
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  
   const renderMultiple = (
     rowsPerPage > 0
       ? shipments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -113,29 +106,29 @@ const Statistics = () => {
       <TableCell align="left">{shipment.price.som}</TableCell>
     </TableRow>
   ));
-
+  
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
+    
     setState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   };
-
+  
   useEffect(() => {
     dispatch(fetchShipments());
   }, [dispatch]);
-
+  
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
     const { pupId, region, datetime } = state;
-
+    
     if (!state.pupId && !state.region && !state.datetime) {
       toast.warning('Пожалуйста, заполните хотя бы одно поле.');
       return;
     }
-
+    
     try {
       if (region && !pupId && !datetime) {
         await dispatch(fetchShipmentsByRegion({ region }));
@@ -152,25 +145,24 @@ const Statistics = () => {
         );
       }
       setSearched(true);
-      console.log(state);
     } catch (e) {
       console.error(e);
     }
   };
-
+  
   const statisticAll = async () => {
     await dispatch(fetchShipments());
-    await dispatch(clearItems());
+    dispatch(clearItems());
     setState(initialState);
     setSearched(false);
   };
-
+  
   return (
     <>
       <Alert sx={{ width: '100%', marginBottom: 1 }} severity="warning">
         Для получения статистики, пожалуйста, укажите нужные параметры
       </Alert>
-
+      
       <Box
         display={'flex'}
         sx={{ justifyContent: 'space-between', flexDirection: 'column' }}
@@ -201,7 +193,7 @@ const Statistics = () => {
                   key={region._id}
                   value={region._id}
                   onClick={() => {
-                    fetchPupsByRegion(region._id);
+                    void fetchPupsByRegion(region._id);
                     setState((prevState) => ({
                       ...prevState,
                       pupId: '',
@@ -213,7 +205,7 @@ const Statistics = () => {
               ))}
             </TextField>
           </Grid>
-
+          
           <Grid item xs={12} sm={3}>
             <TextField
               sx={{ width: '100%' }}
@@ -244,7 +236,7 @@ const Statistics = () => {
               )}
             </TextField>
           </Grid>
-
+          
           <Grid item xs={12} sm={3}>
             <TextField
               sx={{ width: '100%' }}
@@ -259,9 +251,9 @@ const Statistics = () => {
               <MenuItem value="" disabled>
                 Выберите период
               </MenuItem>
-
+              
               <MenuItem value="month">За прошлый месяц</MenuItem>
-
+              
               <MenuItem value="year">За год</MenuItem>
             </TextField>
           </Grid>
@@ -294,7 +286,7 @@ const Statistics = () => {
             </Button>
           </Grid>
         </Grid>
-
+        
         <Box ref={tableWrapperRef} sx={{ width: '100%' }}>
           {shipments.length === 0 && (
             <Alert severity="info">Заказов за этот период нет</Alert>
@@ -340,28 +332,28 @@ const Statistics = () => {
                     )}
                   </TableBody>
                   <tfoot>
-                    <TableRow>
-                      <TablePagination
-                        style={{ width: '100%' }}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        colSpan={6}
-                        labelRowsPerPage="Рядов на странице"
-                        count={shipments.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        slotProps={{
-                          select: {
-                            inputProps: {
-                              'aria-label': 'Показать',
-                            },
-                            native: true,
+                  <TableRow>
+                    <TablePagination
+                      style={{ width: '100%' }}
+                      rowsPerPageOptions={[5, 10, 20]}
+                      colSpan={6}
+                      labelRowsPerPage="Рядов на странице"
+                      count={shipments.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      slotProps={{
+                        select: {
+                          inputProps: {
+                            'aria-label': 'Показать',
                           },
-                        }}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                      />
-                    </TableRow>
+                          native: true,
+                        },
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
                   </tfoot>
                 </Table>
               </TableContainer>

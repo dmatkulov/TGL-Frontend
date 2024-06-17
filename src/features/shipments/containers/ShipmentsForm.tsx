@@ -75,6 +75,7 @@ const ShipmentsForm = () => {
         [name]: value,
         dimensions: {
           ...prevState.dimensions,
+          [name]: value,
         },
       }));
     }

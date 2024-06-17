@@ -24,6 +24,8 @@ const OrdersCard: FC<Shipment> = ({
   const smallScreen = useMediaQuery('(max-width:860px)');
   const extraSmallScreen = useMediaQuery('(max-width:400px)');
 
+  const isPriceDefault = price.usd === 0 && price.som === 0;
+
   const dispatch = useAppDispatch();
   const [state, setState] = useState(false);
   const [color, setColor] = useState(false);
@@ -78,7 +80,14 @@ const OrdersCard: FC<Shipment> = ({
             >
               Трекинговый номер: {trackerNumber}
             </Typography>
-            <Typography>Адресс ПВЗ: {pupId.address}</Typography>
+            <Typography>
+              Адресс ПВЗ:{' '}
+              {pupId ? (
+                pupId.address
+              ) : (
+                <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
+              )}
+            </Typography>
             <Typography>Статус: {status}</Typography>
             <Typography
               sx={{
@@ -89,7 +98,7 @@ const OrdersCard: FC<Shipment> = ({
               }}
               gutterBottom
             >
-              Цена: {price.usd} USD
+              Цена: {isPriceDefault ? ' в обработке' : price.usd + ' USD'}
             </Typography>
             <Typography sx={{ mt: 2 }}>
               <Button

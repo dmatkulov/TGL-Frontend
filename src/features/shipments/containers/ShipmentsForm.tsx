@@ -20,13 +20,13 @@ import { ShipmentStatus } from '../../../utils/constants';
 const initialState: ShipmentMutation = {
   userMarketId: '',
   trackerNumber: '',
-  weight: '',
+  weight: '1',
   pupId: '',
-  status: '',
+  status: 'КНР_ПРИБЫЛО',
   dimensions: {
-    height: '',
-    width: '',
-    length: '',
+    height: '0',
+    width: '0',
+    length: '0',
   },
 };
 
@@ -75,23 +75,19 @@ const ShipmentsForm = () => {
         [name]: value,
         dimensions: {
           ...prevState.dimensions,
-          [name]: value,
         },
       }));
     }
   };
 
   const isFormValid = () => {
-    const { userMarketId, trackerNumber, weight, dimensions, status } = state;
+    const { trackerNumber, dimensions } = state;
 
     return (
-      userMarketId &&
       trackerNumber &&
-      weight &&
       dimensions.height &&
       dimensions.length &&
-      dimensions.width &&
-      status
+      dimensions.width
     );
   };
 
@@ -122,7 +118,6 @@ const ShipmentsForm = () => {
           <Grid item xs={4} md={12}>
             <TextField
               fullWidth
-              required
               type="number"
               name="userMarketId"
               label="Маркет"
@@ -227,7 +222,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               select
               name="status"
               label="Статус"

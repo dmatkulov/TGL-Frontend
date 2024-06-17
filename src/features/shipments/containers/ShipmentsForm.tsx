@@ -22,11 +22,11 @@ const initialState: ShipmentMutation = {
   trackerNumber: '',
   weight: '1',
   pupId: '',
-  status: 'КНР_ПРИБЫЛО',
+  status: '',
   dimensions: {
-    height: '0',
-    width: '0',
-    length: '0',
+    height: '',
+    width: '',
+    length: '',
   },
 };
 
@@ -82,14 +82,9 @@ const ShipmentsForm = () => {
   };
 
   const isFormValid = () => {
-    const { trackerNumber, dimensions } = state;
+    const { trackerNumber } = state;
 
-    return (
-      trackerNumber &&
-      dimensions.height &&
-      dimensions.length &&
-      dimensions.width
-    );
+    return trackerNumber;
   };
 
   const onFormHandle = async (e: React.FormEvent) => {
@@ -155,7 +150,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="height"
               type="number"
               label="Высота"
@@ -172,7 +166,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="length"
               type="number"
               label="Длина"
@@ -189,7 +182,6 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               name="width"
               type="number"
               label="Ширина"

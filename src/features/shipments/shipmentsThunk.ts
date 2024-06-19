@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
+  oneShipmentResponse,
   ShipmentData,
   ShipmentMutation,
+  ShipmentQueryArgs,
   ShipmentsResponse,
-  oneShipmentResponse,
   ShipmentStatusData,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
@@ -18,7 +19,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
         serverRoute.shipments,
       );
       const shipments = response.data ?? [];
-
+      
       shipments.shipments.sort((a, b) => {
         if (a.delivery.status && !b.delivery.status) {
           return -1;
@@ -28,7 +29,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
           return 0;
         }
       });
-
+      
       return shipments;
     } catch (e) {
       console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
@@ -59,68 +60,20 @@ export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
   },
 );
 
-export const fetchShipmentsByRegion = createAsyncThunk<
-  ShipmentsResponse,
-  { region: string }
->('shipments/fetchShipmentsByRegion', async (arg) => {
-  try {
-    const response = await axiosApi.get<ShipmentsResponse>(
-      serverRoute.shipments + `?region=${arg.region}`,
-    );
-    return response.data ?? [];
-  } catch (e) {
-    console.log('Caught on try - FETCH ALL SHIPMENT BY REGION ', e);
-    throw e;
-  }
-});
-
-export const fetchShipmentsByDatetime = createAsyncThunk<
-  ShipmentsResponse,
-  { datetime: string }
->('shipments/fetchShipmentsByDatetime', async (arg) => {
-  try {
-    const response = await axiosApi.get<ShipmentsResponse>(
-      serverRoute.shipments + `?datetime=${arg.datetime}`,
-    );
-    return response.data ?? [];
-  } catch (e) {
-    console.log('Caught on try - FETCH ALL SHIPMENT BY DATETIME ', e);
-    throw e;
-  }
-});
-
-export const fetchShipmentsByRegionAndDatetime = createAsyncThunk<
-  ShipmentsResponse,
-  { region: string; datetime: string }
->('shipments/fetchShipmentsByRegionAndDatetime', async (arg) => {
-  try {
-    const response = await axiosApi.get<ShipmentsResponse>(
-      serverRoute.shipments + `?region=${arg.region}&datetime=${arg.datetime}`,
-    );
-    return response.data ?? [];
-  } catch (e) {
-    console.log(
-      'Caught on try - FETCH ALL SHIPMENT BY REGION AND DATETIME ',
-      e,
-    );
-    throw e;
-  }
-});
-
-export const fetchShipmentsByRegionAndPup = createAsyncThunk<
-  ShipmentsResponse,
-  { pupId: string; datetime: string }
->('shipments/fetchShipmentsByRegionAndPup', async (arg) => {
-  try {
-    const response = await axiosApi.get<ShipmentsResponse>(
-      serverRoute.shipments + `?pupId=${arg.pupId}&datetime=${arg.datetime}`,
-    );
-    return response.data ?? [];
-  } catch (e) {
-    console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
-    throw e;
-  }
-});
+export const fetchShipmentsByQuery = createAsyncThunk<ShipmentsResponse, ShipmentQueryArgs>(
+  'shipments/queries',
+  async (query) => {
+    try {
+      const response = await axiosApi.get<ShipmentsResponse>(
+        serverRoute.shipments, { params: query },
+      );
+      return response.data ?? [];
+    } catch (e) {
+      console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
+      throw e;
+    }
+  },
+);
 
 export const orderDelivery = createAsyncThunk<void, DeliveryData>(
   'shipments/orderDelivery',
@@ -189,7 +142,6 @@ export const changeShipmentsStatus = createAsyncThunk<
       serverRoute.shipments + '/changeStatus',
       arg,
     );
-    console.log('thun ', arg);
     return response.data;
   } catch (e) {
     console.log('Caught on try - CHANGE SINGLE SHIPMENT ', e);

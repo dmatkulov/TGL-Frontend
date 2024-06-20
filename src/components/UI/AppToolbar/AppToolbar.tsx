@@ -20,9 +20,10 @@ const Link = styled(NavLink)({
 const AppToolbar = () => {
   const user = useAppSelector(selectUser);
   const isSmallScreen = useMediaQuery('(max-width:850px)');
-  
+  const isExtraSmallScreen = useMediaQuery('(max-width:599px)');
+
   const [mobileOpen, setMobileOpen] = useState(false);
-  
+
   if (user === undefined) {
     return null;
   }
@@ -56,7 +57,7 @@ const AppToolbar = () => {
                 <Link to={appRoutes.statistics}>TechGear Logistics</Link>
               )}
             </Typography>
-            <Typography component="div" sx={{ flexGrow: 1 }}>
+            <Typography component="div" sx={{ flexGrow: 1, visibility: isExtraSmallScreen ? 'hidden' : 'none' }}>
               <Link to={appRoutes.calculate}>Калькулятор</Link>
             </Typography>
             <Box sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>

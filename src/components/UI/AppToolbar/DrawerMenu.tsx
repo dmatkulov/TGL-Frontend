@@ -10,12 +10,12 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../../features/users/usersSlice';
 import UserNavigation from '../../../features/users/components/UserNavigation';
 import AdminNavigation from '../../../features/users/components/AdminNavigation';
-import {logout} from '../../../features/users/usersThunks';
-import {useNavigate} from 'react-router-dom';
+import { logout } from '../../../features/users/usersThunks';
+import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 
@@ -78,9 +78,12 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
                       <ListItemText
                         primaryTypographyProps={{
                           fontSize: 16,
-                          color:'primary'}}
+                          color: 'primary',
+                        }}
                       >Выйти</ListItemText>
                     </ListItemButton>
+
+
                   </ListItem>
                 )}
               </>

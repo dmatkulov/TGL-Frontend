@@ -1,15 +1,5 @@
 import { useState } from 'react';
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Grid,
-  IconButton,
-  styled,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { AppBar, Box, CssBaseline, Grid, IconButton, styled, Toolbar, Typography, useMediaQuery } from '@mui/material';
 import UserMenu from './UserMenu';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../../features/users/usersSlice';
@@ -30,17 +20,17 @@ const Link = styled(NavLink)({
 const AppToolbar = () => {
   const user = useAppSelector(selectUser);
   const isSmallScreen = useMediaQuery('(max-width:850px)');
-
+  
+  const [mobileOpen, setMobileOpen] = useState(false);
+  
   if (user === undefined) {
     return null;
   }
-
-  const [mobileOpen, setMobileOpen] = useState(false);
-
+  
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
+  
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

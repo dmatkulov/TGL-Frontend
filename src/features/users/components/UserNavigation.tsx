@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, styled,
+  ListItemText,
+  styled,
   useMediaQuery,
 } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -105,9 +106,15 @@ const UserNavigation = () => {
             ))}
           </List>
           {isExtraSmallScreen && (
-            <Box sx={{padding: '4px 16px', display: 'flex', alignItems: 'center'}}>
+            <Box
+              sx={{
+                padding: '4px 16px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <CalculateIcon color="primary" />
-              <Link to={appRoutes.calculate} sx={{paddingLeft: '32px'}}>
+              <Link to={appRoutes.calculate} sx={{ paddingLeft: '32px' }}>
                 Калькулятор
               </Link>
             </Box>

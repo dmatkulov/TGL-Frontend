@@ -1,6 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
-import { createShipment, fetchShipments, fetchShipmentsByQuery, fetchShipmentsByUser } from './shipmentsThunk';
+import {
+  createShipment,
+  fetchShipments,
+  fetchShipmentsByQuery,
+  fetchShipmentsByUser,
+} from './shipmentsThunk';
 import { RootState } from '../../app/store';
 import { toast } from 'react-toastify';
 
@@ -39,7 +44,7 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-    
+
     builder
       .addCase(createShipment.pending, (state) => {
         state.addShipmentLoading = true;
@@ -56,7 +61,7 @@ export const shipmentsSlice = createSlice({
         state.addShipmentLoading = false;
         state.addShipmentError = true;
       });
-    
+
     builder
       .addCase(fetchShipmentsByUser.pending, (state) => {
         state.shipmentsLoading = true;
@@ -69,7 +74,7 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-    
+
     builder
       .addCase(fetchShipmentsByQuery.pending, (state) => {
         state.shipmentsLoading = true;

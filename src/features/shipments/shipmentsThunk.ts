@@ -19,7 +19,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
         serverRoute.shipments,
       );
       const shipments = response.data ?? [];
-      
+
       shipments.shipments.sort((a, b) => {
         if (a.delivery.status && !b.delivery.status) {
           return -1;
@@ -29,7 +29,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
           return 0;
         }
       });
-      
+
       return shipments;
     } catch (e) {
       console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
@@ -60,20 +60,21 @@ export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
   },
 );
 
-export const fetchShipmentsByQuery = createAsyncThunk<ShipmentsResponse, ShipmentQueryArgs>(
-  'shipments/queries',
-  async (query) => {
-    try {
-      const response = await axiosApi.get<ShipmentsResponse>(
-        serverRoute.shipments, { params: query },
-      );
-      return response.data ?? [];
-    } catch (e) {
-      console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
-      throw e;
-    }
-  },
-);
+export const fetchShipmentsByQuery = createAsyncThunk<
+  ShipmentsResponse,
+  ShipmentQueryArgs
+>('shipments/queries', async (query) => {
+  try {
+    const response = await axiosApi.get<ShipmentsResponse>(
+      serverRoute.shipments,
+      { params: query },
+    );
+    return response.data ?? [];
+  } catch (e) {
+    console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
+    throw e;
+  }
+});
 
 export const orderDelivery = createAsyncThunk<void, DeliveryData>(
   'shipments/orderDelivery',

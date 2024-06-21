@@ -10,8 +10,13 @@ import { FC, useState } from 'react';
 import { Shipment } from '../../../types/types.Shipments';
 import { useAppDispatch } from '../../../app/hooks';
 import { toggleModal } from '../ordersSlice';
-import { LoadingButton } from '@mui/lab';
 import WarningModal from './WarningModal';
+
+const buttonStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 
 const OrdersCard: FC<Shipment> = ({
   _id,
@@ -81,7 +86,7 @@ const OrdersCard: FC<Shipment> = ({
               Трекинговый номер: {trackerNumber}
             </Typography>
             <Typography>
-              Адресс ПВЗ:{' '}
+              Адрес ПВЗ:{' '}
               {pupId ? (
                 pupId.address
               ) : (
@@ -100,27 +105,32 @@ const OrdersCard: FC<Shipment> = ({
             >
               Цена: {isPriceDefault ? ' в обработке' : price.usd + ' USD'}
             </Typography>
-            <Typography sx={{ mt: 2 }}>
-              <Button
-                variant="contained"
-                onClick={handleDeliveryButtonClick}
-                disabled={color}
-                sx={{ mr: 3 }}
-              >
-                {delivery.status
-                  ? 'Отменить доставку'
-                  : color
-                    ? 'Отмена'
-                    : 'Доставка'}
-              </Button>
-              <LoadingButton
-                sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
-                onClick={openWarningModalWindow}
-                color="error"
-              >
-                Отменить
-              </LoadingButton>
-            </Typography>
+            <Grid container spacing={2} sx={{ marginTop: 1 }}>
+              <Grid item xs={12} sx={buttonStyle}>
+                <Button
+                  variant="contained"
+                  onClick={handleDeliveryButtonClick}
+                  disabled={color}
+                  sx={{ minWidth: '70%' }}
+                >
+                  {delivery.status
+                    ? 'Отменить доставку'
+                    : color
+                      ? 'Отмена'
+                      : 'Доставка'}
+                </Button>
+              </Grid>
+              <Grid item xs={12} style={buttonStyle}>
+                <Button
+                  sx={{ minWidth: '70%' }}
+                  onClick={openWarningModalWindow}
+                  variant="contained"
+                  color="error"
+                >
+                  Отменить
+                </Button>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Grid>

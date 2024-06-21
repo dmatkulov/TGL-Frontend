@@ -22,7 +22,6 @@ import { logout } from '../../../features/users/usersThunks';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-
 interface Props {
   open: boolean;
   toggleDrawer: React.MouseEventHandler;
@@ -34,17 +33,17 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  
+
   const isSmallScreen = useMediaQuery('(max-width:850px)');
   const isExtraSmallScreen = useMediaQuery('(max-width:599px)');
   const handleLogOut = async () => {
     navigate(appRoutes.login);
     await dispatch(logout());
   };
-  
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
-  
+
   return (
     <Drawer
       container={container}
@@ -78,16 +77,18 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
                       onClick={handleLogOut}
                       sx={{ borderRadius: 2 }}
                     >
-                      <ListItemIcon><LogoutIcon color="primary" /></ListItemIcon>
+                      <ListItemIcon>
+                        <LogoutIcon color="primary" />
+                      </ListItemIcon>
                       <ListItemText
                         primaryTypographyProps={{
                           fontSize: 16,
                           color: 'primary',
                         }}
-                      >Выйти</ListItemText>
+                      >
+                        Выйти
+                      </ListItemText>
                     </ListItemButton>
-                  
-                  
                   </ListItem>
                 )}
               </>
@@ -101,16 +102,18 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
                       onClick={handleLogOut}
                       sx={{ borderRadius: 2 }}
                     >
-                      <ListItemIcon><LogoutIcon color="primary" /></ListItemIcon>
+                      <ListItemIcon>
+                        <LogoutIcon color="primary" />
+                      </ListItemIcon>
                       <ListItemText
                         primaryTypographyProps={{
                           fontSize: 16,
                           color: 'primary',
                         }}
-                      >Выйти</ListItemText>
+                      >
+                        Выйти
+                      </ListItemText>
                     </ListItemButton>
-                  
-                  
                   </ListItem>
                 )}
               </>

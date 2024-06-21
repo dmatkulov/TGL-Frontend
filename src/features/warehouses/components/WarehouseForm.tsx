@@ -26,18 +26,18 @@ const WarehouseForm: React.FC<Props> = ({
 }) => {
   const isCreateLoading = useAppSelector(isWarehousesCreateLoading);
   const error = useAppSelector(selectRegisterError);
-  
+
   const [state, setState] = useState<WarehouseMutation>(initialWarehouse);
   const [phoneNumberLabel, setPhoneNumberLabel] = useState<string>('');
-  
+
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    
+
     setState((prevState) => {
       return { ...prevState, [name]: value };
     });
   };
-  
+
   const handlePhoneChange = (value: string) => {
     setState((prevState) => {
       if (value.length < 13) {
@@ -48,7 +48,7 @@ const WarehouseForm: React.FC<Props> = ({
       return { ...prevState, phoneNumber: value };
     });
   };
-  
+
   const getFieldError = (fieldName: string) => {
     try {
       return error?.errors[fieldName].message;
@@ -56,17 +56,17 @@ const WarehouseForm: React.FC<Props> = ({
       return undefined;
     }
   };
-  
+
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    
+
     if (state.phoneNumber.length < 13) {
       setPhoneNumberLabel('Пропишите номер полностью');
       return;
     }
     onSubmit(state);
   };
-  
+
   return (
     <Container component="main">
       <Box

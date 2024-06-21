@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ShipmentData,
-  ShipmentStatusData,
-} from '../../../types/types.Shipments';
+import { ShipmentData, ShipmentStatusData } from '../../../types/types.Shipments';
 import { Statuses } from '../../../utils/constants';
 import {
   Button,
@@ -52,9 +49,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const [statusToggle, setStatusToggle] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
-
+  
   const [open, setOpen] = React.useState(false);
-
+  
   const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setLocalState((prevState) => {
@@ -62,7 +59,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
     });
     setStatusToggle(true);
   };
-
+  
   const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
     if (checked) {
@@ -71,7 +68,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
     }
     createItem(shipment._id, shipment.status, shipment.isPaid);
   };
-
+  
   const paidStatusChangeHandler = () => {
     if (checked) {
       setLocalState((prevState) => {
@@ -80,7 +77,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
       setPaidToggle(true);
     }
   };
-
+  
   useEffect(() => {
     setLocalState((prevState) => ({
       ...prevState,
@@ -89,7 +86,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
       isPaid: shipment.isPaid,
     }));
   }, [shipment._id, shipment.isPaid, shipment.status]);
-
+  
   useEffect(() => {
     if (checked && paidToggle) {
       changeHandler(localState._id, localState.status, localState.isPaid);
@@ -103,7 +100,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
     localState.status,
     paidToggle,
   ]);
-
+  
   useEffect(() => {
     if (statusToggle && checked) {
       changeHandler(localState._id, localState.status, localState.isPaid);
@@ -117,7 +114,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
     localState.status,
     statusToggle,
   ]);
-
+  
   return (
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -130,7 +127,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell scope="row">
           {shipment.trackerNumber}
         </TableCell>
         <TableCell>{shipment.userMarketId}</TableCell>

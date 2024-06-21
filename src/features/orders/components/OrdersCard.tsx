@@ -11,6 +11,7 @@ import { Shipment } from '../../../types/types.Shipments';
 import { useAppDispatch } from '../../../app/hooks';
 import { toggleModal } from '../ordersSlice';
 import WarningModal from './WarningModal';
+import { LoadingButton } from '@mui/lab';
 
 const buttonStyle = {
   display: 'flex',
@@ -121,14 +122,14 @@ const OrdersCard: FC<Shipment> = ({
                 </Button>
               </Grid>
               <Grid item xs={12} style={buttonStyle}>
-                <Button
+                <LoadingButton
                   sx={{ minWidth: '70%' }}
                   onClick={openWarningModalWindow}
                   variant="contained"
                   color="error"
                 >
                   Отменить
-                </Button>
+                </LoadingButton>
               </Grid>
             </Grid>
           </CardContent>

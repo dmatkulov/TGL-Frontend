@@ -3,7 +3,7 @@ import {
   ShipmentData,
   ShipmentStatusData,
 } from '../../../types/types.Shipments';
-import { Statuses } from '../../../utils/constants';
+import {appRoutes, Statuses} from '../../../utils/constants';
 import {
   Button,
   Checkbox,
@@ -23,8 +23,13 @@ import {
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import dayjs from 'dayjs';
-import { useAppSelector } from '../../../app/hooks';
-import { addShipmentGetLoad } from '../shipmentsSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {addShipmentGetLoad, selectShipmentDeleting} from '../shipmentsSlice';
+import {deleteShipment, fetchShipments} from '../shipmentsThunk';
+import {useNavigate} from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {LoadingButton} from '@mui/lab';
+import WarningShipmentModal from './WarningShipmentModal';
 
 interface Props {
   shipment: ShipmentData;
@@ -52,8 +57,12 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const [statusToggle, setStatusToggle] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isDelete = useAppSelector(selectShipmentDeleting);
 
   const [open, setOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -118,8 +127,26 @@ const ShipmentsRowItem: React.FC<Props> = ({
     statusToggle,
   ]);
 
+  const openWarningModalWindow = () => {
+    setModalOpen(true);
+  };
+
+  const closeWarningModalWindow = () => {
+    setModalOpen(false);
+  };
+  const deleteHandler = async () => {
+    await dispatch(deleteShipment(shipment?._id));
+    await dispatch(fetchShipments());
+    navigate(appRoutes.shipments);
+  };
+
   return (
     <>
+      <WarningShipmentModal
+        stateModal={modalOpen}
+        deleteHandler={deleteHandler}
+        closeModal={closeWarningModalWindow}
+      />
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
           <IconButton
@@ -177,6 +204,21 @@ const ShipmentsRowItem: React.FC<Props> = ({
           >
             {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
           </Button>
+        </TableCell>
+        <TableCell>
+          <LoadingButton
+            disabled={isDelete}
+            loading={isDelete}
+            onClick={openWarningModalWindow}
+            sx={{
+              minWidth: '29px',
+              padding: '3px',
+              borderRadius: '50%',
+            }}
+            color="error"
+          >
+            <CancelIcon />
+          </LoadingButton>
         </TableCell>
       </TableRow>
       <TableRow>

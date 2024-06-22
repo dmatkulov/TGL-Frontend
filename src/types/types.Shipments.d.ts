@@ -1,3 +1,5 @@
+import {PupMutation} from './types.Pup';
+
 export interface ShipmentData {
   _id: string;
   userId: {
@@ -107,4 +109,9 @@ export interface ShipmentsResponse {
 export interface oneShipmentResponse {
   message: string;
   shipment: ShipmentData;
+}
+
+export interface UpdateShipmentArg {
+  shipmentId: string;
+  shipmentMutation: ShipmentMutation;
 }

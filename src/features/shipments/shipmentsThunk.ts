@@ -4,7 +4,7 @@ import {
   ShipmentMutation,
   ShipmentsResponse,
   oneShipmentResponse,
-  ShipmentStatusData,
+  ShipmentStatusData, UpdateShipmentArg,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
 import { serverRoute } from '../../utils/constants';
@@ -195,3 +195,18 @@ export const changeShipmentsStatus = createAsyncThunk<
     console.log('Caught on try - CHANGE SINGLE SHIPMENT ', e);
   }
 });
+
+export const deleteShipment = createAsyncThunk<void, string>(
+  'shipments/deleteShipment',
+  async (id) => {
+    const response = await axiosApi.delete(`${serverRoute.shipments}/${id}`);
+    return response.data;
+  }
+);
+
+export const editShipment = createAsyncThunk<void, UpdateShipmentArg>(
+  'shipments/editShipment',
+  async ({shipmentId, shipmentMutation}) => {
+    return await axiosApi.put(`${serverRoute.shipments}/${shipmentId}`, shipmentMutation)
+  }
+);

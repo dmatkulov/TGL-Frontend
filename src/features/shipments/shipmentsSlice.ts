@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
-  createShipment,
+  createShipment, deleteShipment, editShipment,
   fetchShipments,
   fetchShipmentsByDatetime,
   fetchShipmentsByRegion,
@@ -20,6 +20,8 @@ interface shipmentsState {
   addShipment: ShipmentsResponse | null;
   addShipmentLoading: boolean;
   addShipmentError: boolean;
+  isDelete: boolean;
+  isEditing: boolean;
 }
 
 const initialState: shipmentsState = {
@@ -29,6 +31,8 @@ const initialState: shipmentsState = {
   addShipment: null,
   addShipmentLoading: false,
   addShipmentError: false,
+  isDelete: false,
+  isEditing: false,
 };
 
 export const shipmentsSlice = createSlice({
@@ -145,6 +149,27 @@ export const shipmentsSlice = createSlice({
         state.addShipmentLoading = false;
         state.addShipmentError = true;
       });
+    builder
+      .addCase(deleteShipment.pending, (state) => {
+        state.isDelete = true;
+      })
+      .addCase(deleteShipment.fulfilled, (state) => {
+        state.isDelete = false;
+      })
+      .addCase(deleteShipment.rejected, (state) => {
+        state.isDelete = false;
+      })
+
+    builder
+      .addCase(editShipment.pending, (state) => {
+        state.isEditing = true;
+      })
+      .addCase(editShipment.fulfilled, (state) => {
+        state.isEditing = false;
+      })
+      .addCase(editShipment.rejected, (state) => {
+        state.isEditing = false;
+      })
   },
 });
 
@@ -154,8 +179,11 @@ export const selectShipmentsLoading = (state: RootState) =>
   state.shipments.shipmentsLoading;
 export const selectShipmentsError = (state: RootState) =>
   state.shipments.shipmentsError;
-
 export const addShipmentGetLoad = (state: RootState) =>
   state.shipments.addShipmentLoading;
 export const addShipmentGetError = (state: RootState) =>
   state.shipments.addShipmentError;
+export const selectShipmentEditing = (state: RootState) =>
+  state.shipments.isEditing;
+export const selectShipmentDeleting = (state: RootState) =>
+  state.shipments.isDelete;

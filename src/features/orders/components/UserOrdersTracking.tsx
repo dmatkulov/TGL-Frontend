@@ -57,7 +57,7 @@ const UserOrdersTracking = () => {
             <TextField
               required
               name="search"
-              label="Поиск по трек номеру"
+              label="поиск по трек номеру"
               sx={{
                 minWidth: '100%',
               }}

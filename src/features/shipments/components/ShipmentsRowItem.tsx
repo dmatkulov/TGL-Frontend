@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  ShipmentData,
+  ShipmentData, ShipmentMutation,
   ShipmentStatusData,
 } from '../../../types/types.Shipments';
 import {appRoutes, Statuses} from '../../../utils/constants';
 import {
   Button,
   Checkbox,
-  Collapse,
+  Collapse, Dialog, DialogContent,
   Grid,
   IconButton,
   MenuItem,
@@ -25,11 +25,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import dayjs from 'dayjs';
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
 import {addShipmentGetLoad, selectShipmentDeleting} from '../shipmentsSlice';
-import {deleteShipment, fetchShipments} from '../shipmentsThunk';
+import {deleteShipment, editShipment, fetchShipments} from '../shipmentsThunk';
 import {useNavigate} from 'react-router-dom';
 import CancelIcon from '@mui/icons-material/Cancel';
 import {LoadingButton} from '@mui/lab';
 import WarningShipmentModal from './WarningShipmentModal';
+import ShipmentsForm from '../containers/ShipmentsForm';
 
 interface Props {
   shipment: ShipmentData;
@@ -63,6 +64,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
 
   const [open, setOpen] = React.useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -140,6 +142,34 @@ const ShipmentsRowItem: React.FC<Props> = ({
     navigate(appRoutes.shipments);
   };
 
+  const toggleOpen = () => {
+    setOpenEditModal(true);
+  };
+  const handleClose = () => {
+    setOpenEditModal(false);
+  };
+
+  const submitFormHandler = async (state: ShipmentMutation) => {
+    await dispatch(
+      editShipment({ shipmentId: shipment._id, shipmentMutation: state }),
+    ).unwrap();
+    await dispatch(fetchShipments());
+    setModalOpen(false);
+  };
+
+  const shipmentMutation: ShipmentMutation = {
+    userMarketId: shipment.userMarketId.toString(),
+    trackerNumber: shipment.trackerNumber.toString(),
+    weight: shipment.weight.toString(),
+    pupId: shipment.pupId._id,
+    status: shipment.status,
+    dimensions: {
+      height: shipment.dimensions.height.toString(),
+      width: shipment.dimensions.width.toString(),
+      length: shipment.dimensions.length.toString(),
+    },
+  };
+
   return (
     <>
       <WarningShipmentModal
@@ -203,6 +233,17 @@ const ShipmentsRowItem: React.FC<Props> = ({
             color={localState.isPaid ? 'success' : 'error'}
           >
             {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
+          </Button>
+        </TableCell>
+        <TableCell>
+          <Button
+            variant="contained"
+            onClick={toggleOpen}
+            sx={{
+              fontSize: '11px',
+            }}
+          >
+            Редактировать
           </Button>
         </TableCell>
         <TableCell>
@@ -301,6 +342,19 @@ const ShipmentsRowItem: React.FC<Props> = ({
           </Collapse>
         </TableCell>
       </TableRow>
+      <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          <ShipmentsForm
+            onSubmit={submitFormHandler}
+            initialShipmentState={shipmentMutation}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

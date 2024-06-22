@@ -1,5 +1,6 @@
 import PageTitle from '../components/PageTitle';
 import {
+  Alert,
   Paper,
   Table,
   TableBody,
@@ -32,6 +33,8 @@ const OrdersHistory = () => {
     }
   }, [dispatch, user]);
 
+  console.log(history);
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -51,15 +54,21 @@ const OrdersHistory = () => {
     <>
       <PageTitle title="История заказов" />
       {extraSmallScreen ? (
-        history.map((item) => (
-          <OrdersHistoryItemCard
-            key={item._id}
-            pupId={item.pupId}
-            price={item.price}
-            trackerNumber={item.trackerNumber}
-            datetime={item.datetime}
-          />
-        ))
+        !history.length ? (
+          <Alert sx={{ p: 0 }} severity="info">
+            Вы еще не совершали заказ!
+          </Alert>
+        ) : (
+          history.map((item) => (
+            <OrdersHistoryItemCard
+              key={item._id}
+              pupId={item.pupId}
+              price={item.price}
+              trackerNumber={item.trackerNumber}
+              datetime={item.datetime}
+            />
+          ))
+        )
       ) : (
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
@@ -78,17 +87,23 @@ const OrdersHistory = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {history
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item) => (
-                  <OrdersHistoryItem
-                    pupId={item.pupId}
-                    price={item.price}
-                    trackerNumber={item.trackerNumber}
-                    key={item._id}
-                    datetime={item.datetime}
-                  />
-                ))}
+              {!history.length ? (
+                <Alert sx={{ m: 1 }} severity="info">
+                  Вы еще не совершали заказ!
+                </Alert>
+              ) : (
+                history
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item) => (
+                    <OrdersHistoryItem
+                      pupId={item.pupId}
+                      price={item.price}
+                      trackerNumber={item.trackerNumber}
+                      key={item._id}
+                      datetime={item.datetime}
+                    />
+                  ))
+              )}
             </TableBody>
           </Table>
           <TablePagination

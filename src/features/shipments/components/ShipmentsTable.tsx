@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   MenuItem,
@@ -15,7 +16,10 @@ import {
 } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
 import TablePaginationActions from './TablePaginationActions';
-import { ShipmentData, ShipmentStatusData } from '../../../types/types.Shipments';
+import {
+  ShipmentData,
+  ShipmentStatusData,
+} from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
 import { Statuses } from '../../../utils/constants';
@@ -38,12 +42,12 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const [currentStatus, setCurrentStatus] = useState<string>('');
   const [isMultipleSelected, setIsMultipleSelected] = useState<boolean>(false);
   const statuses = Statuses;
-  
+
   const isInitial = statusState.length === 0;
-  
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - state.length) : 0;
-  
+
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number,
@@ -51,7 +55,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     event?.preventDefault();
     setPage(newPage);
   };
-  
+
   useEffect(() => {
     if (isMultipleSelected) {
       setStatusState((prevState) =>
@@ -62,20 +66,20 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
       );
     }
   }, [isMultipleSelected, multipleStatus]);
-  
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
+
   const sendData = async () => {
     setIsMultipleSelected(false);
     await dispatch(changeShipmentsStatus(statusState));
     onDataSend();
   };
-  
+
   const createItem = (_id: string, status: string, isPaid: boolean) => {
     const item: ShipmentStatusData = {
       _id: _id,
@@ -84,30 +88,30 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     };
     setStatusState((prevState) => [...prevState, item]);
   };
-  
+
   const removeItem = (_id: string) => {
     setStatusState((prevState) => prevState.filter((item) => item._id !== _id));
   };
-  
+
   const changeHandler = (_id: string, status: string, isPaid: boolean) => {
     setStatusState((prevState) =>
       prevState.map((item) =>
         item._id === _id
           ? {
-            ...item,
-            status,
-            isPaid,
-          }
+              ...item,
+              status,
+              isPaid,
+            }
           : item,
       ),
     );
   };
-  
+
   const multipleStatusHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleStatus(e.target.value);
     setIsMultipleSelected(true);
   };
-  
+
   const setIsPaidToFalse = () => {
     setStatusState((prevState) =>
       prevState.map((item) => ({
@@ -128,7 +132,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     setIsToggled(true);
     setCurrentStatus('Оплачено');
   };
-  
+
   const renderMultiple = (
     rowsPerPage > 0
       ? state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -142,9 +146,9 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
       changeHandler={changeHandler}
     />
   ));
-  
+
   let renderSingle;
-  
+
   if (searchResult) {
     renderSingle = (
       <ShipmentsRowItem
@@ -159,12 +163,14 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     renderSingle = (
       <TableRow>
         <TableCell>
-          <Typography>Заказ не найден!</Typography>
+          <Alert sx={{ width: '200px' }} severity="info">
+            Заказ не найден!
+          </Alert>
         </TableCell>
       </TableRow>
     );
   }
-  
+
   return (
     <>
       <Box display="flex" alignItems="center" flexWrap="wrap" mb={2}>
@@ -240,28 +246,28 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
             )}
           </TableBody>
           <tfoot>
-          <TableRow>
-            <TablePagination
-              style={{ width: '100%' }}
-              rowsPerPageOptions={[5, 10, 20]}
-              colSpan={6}
-              labelRowsPerPage="Рядов на странице"
-              count={state.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              slotProps={{
-                select: {
-                  inputProps: {
-                    'aria-label': 'Показать',
+            <TableRow>
+              <TablePagination
+                style={{ width: '100%' }}
+                rowsPerPageOptions={[5, 10, 20]}
+                colSpan={6}
+                labelRowsPerPage="Рядов на странице"
+                count={state.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                slotProps={{
+                  select: {
+                    inputProps: {
+                      'aria-label': 'Показать',
+                    },
+                    native: true,
                   },
-                  native: true,
-                },
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
           </tfoot>
         </Table>
       </TableContainer>

@@ -210,6 +210,7 @@ const Staff: React.FC = () => {
       >
         <Box component="form" onSubmit={handleForm}>
           <TextField
+            required
             name="email"
             label="Найти сотрудника по email"
             type="email"
@@ -228,7 +229,10 @@ const Staff: React.FC = () => {
             variant="contained"
             color="error"
             onClick={clearFilter}
-            sx={{ mt: 1 }}
+            sx={{
+              mt: 1,
+              background: '#A52A2A',
+            }}
           >
             Сбросить фильтр
           </Button>

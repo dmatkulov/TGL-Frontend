@@ -58,7 +58,14 @@ const StaffItem: React.FC<Props> = ({ user, onSubmit, onDelete }) => {
               size="small"
               startIcon={<DeleteIcon />}
               color="warning"
-              sx={{ ml: 3 }}
+              sx={{
+                ml:3,
+                background:'#A52A2A',
+                color:'#fff',
+                '&:hover': {
+                  background: '#A52A2A',
+                }
+              }}
             >
               Удалить
             </Button>

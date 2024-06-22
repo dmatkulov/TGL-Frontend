@@ -105,7 +105,13 @@ const ClientsItem: FC<Client> = ({
           {user && (user.role === 'super' || user.role === 'admin') && (
             <Button
               onClick={handleClickOpen}
-              color="warning"
+              sx={{
+                background:'#A52A2A',
+                color:'#fff',
+                '&:hover': {
+                  background: '#A52A2A',
+                }
+              }}
               startIcon={<DeleteIcon />}
             >
               Удалить

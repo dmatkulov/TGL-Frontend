@@ -1,4 +1,5 @@
 import {
+  Alert,
   CircularProgress,
   Grid,
   Paper,
@@ -8,7 +9,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
   useMediaQuery,
 } from '@mui/material';
 import OrdersRowItem from './OrdersRowItem';
@@ -38,7 +38,9 @@ const OrdersTable = () => {
   return (
     <>
       {isEmpty ? (
-        <Typography>Нет заказов</Typography>
+        <Alert sx={{ width: '300px' }} severity="info">
+          Вы еще не совершали заказ!
+        </Alert>
       ) : (
         <>
           <OrderModal />

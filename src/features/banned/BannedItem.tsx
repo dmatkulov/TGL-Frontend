@@ -86,7 +86,7 @@ const BannedItem: FC<Props> = ({ banned, editFn }) => {
   const input = <TextField onChange={changeHandler} value={inputData} />;
 
   return (
-    <ListItem>
+    <ListItem sx={{pl:0}}>
       {permit ? input : name}
       {buttonGroup}
     </ListItem>

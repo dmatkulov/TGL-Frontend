@@ -46,9 +46,12 @@ const UserOrdersTracking = () => {
       <Box component="form" onSubmit={searchOrder}>
         <Grid
           container
-          xs={10}
           spacing={2}
-          direction={{ xs: 'column', sm: 'row', md: 'row' }}
+          direction={{
+            xs: 'column',
+            sm: 'row',
+            md: 'row',
+          }}
         >
           <Grid item sm={8} md={7} lg={6} sx={inputSearchGrid}>
             <TextField

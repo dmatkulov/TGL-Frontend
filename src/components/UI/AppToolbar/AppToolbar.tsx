@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { AppBar, Box, CssBaseline, Grid, IconButton, styled, Toolbar, Typography, useMediaQuery } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Grid,
+  IconButton,
+  styled,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import UserMenu from './UserMenu';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../../features/users/usersSlice';
@@ -27,11 +37,11 @@ const AppToolbar = () => {
   if (user === undefined) {
     return null;
   }
-  
+
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-  
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -57,7 +67,13 @@ const AppToolbar = () => {
                 <Link to={appRoutes.statistics}>TechGear Logistics</Link>
               )}
             </Typography>
-            <Typography component="div" sx={{ flexGrow: 1, visibility: isExtraSmallScreen ? 'hidden' : 'none' }}>
+            <Typography
+              component="div"
+              sx={{
+                flexGrow: 1,
+                visibility: isExtraSmallScreen ? 'hidden' : 'none',
+              }}
+            >
               <Link to={appRoutes.calculate}>Калькулятор</Link>
             </Typography>
             <Box sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>

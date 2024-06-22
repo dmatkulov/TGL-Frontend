@@ -1,4 +1,4 @@
-import {Box, Button, Modal, Typography} from '@mui/material';
+import { Box, Button, Modal, Typography } from '@mui/material';
 import WarningPicture from '../../../assets/warning.png';
 import React from 'react';
 
@@ -51,7 +51,7 @@ const WarningPupModal: React.FC<PropsModal> = ({
               component="img"
               src={WarningPicture}
               alt="Warning Picture"
-              sx={{width: 30, height: 30}}
+              sx={{ width: 30, height: 30 }}
             />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Вы точно хотите удалить заказ?

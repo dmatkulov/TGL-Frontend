@@ -13,14 +13,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import TablePaginationActions from './TablePaginationActions';
-import { ShipmentData, ShipmentStatusData } from '../../../types/types.Shipments';
+import {ShipmentData, ShipmentStatusData} from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
 import ShipmentsTableHead from './ShipmentsTableHead';
-import { Statuses } from '../../../utils/constants';
-import { changeShipmentsStatus } from '../shipmentsThunk';
-import { useAppDispatch } from '../../../app/hooks';
+import {Statuses} from '../../../utils/constants';
+import {changeShipmentsStatus} from '../shipmentsThunk';
+import {useAppDispatch} from '../../../app/hooks';
 
 interface Props {
   onDataSend: () => void;
@@ -28,7 +28,7 @@ interface Props {
   searchResult?: ShipmentData | null;
 }
 
-const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
+const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -177,22 +177,26 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         >
           <TextField
             select
-            variant="standard"
             required
+            size="small"
             name="statusAll"
             id="statusAll"
-            InputProps={{
-              disableUnderline: true,
-            }}
+            label="Статус"
             value={multipleStatus}
             onChange={multipleStatusHandler}
-            sx={{ marginRight: '8px', flexBasis: '25%' }}
+            sx={{marginRight: '8px', flexBasis: '25%'}}
           >
+            <MenuItem
+              disabled
+              style={{fontSize: '14px'}}
+            >
+              Выберите статус
+            </MenuItem>
             {statuses.map((status) => (
               <MenuItem
                 key={status}
                 value={status}
-                style={{ fontSize: '14px' }}
+                style={{fontSize: '14px'}}
               >
                 {status}
               </MenuItem>
@@ -202,7 +206,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
             onClick={setIsPaidToTrue}
             disabled={isInitial}
             variant="contained"
-            sx={{ marginRight: '8px' }}
+            sx={{marginRight: '8px'}}
           >
             Оплачено
           </Button>
@@ -217,7 +221,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
             onClick={sendData}
             disabled={isInitial}
             variant="contained"
-            sx={{ marginLeft: 'auto' }}
+            sx={{marginLeft: 'auto'}}
           >
             Подтвердить
           </Button>
@@ -229,20 +233,20 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
-            <ShipmentsTableHead />
+            <ShipmentsTableHead/>
           </TableHead>
           <TableBody>
             {searchResult !== undefined ? renderSingle : renderMultiple}
             {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+              <TableRow style={{height: 53 * emptyRows}}>
+                <TableCell colSpan={6}/>
               </TableRow>
             )}
           </TableBody>
           <tfoot>
           <TableRow>
             <TablePagination
-              style={{ width: '100%' }}
+              style={{width: '100%'}}
               rowsPerPageOptions={[5, 10, 20]}
               colSpan={6}
               labelRowsPerPage="Рядов на странице"

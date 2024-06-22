@@ -111,3 +111,8 @@ export interface oneShipmentResponse {
   message: string;
   shipment: ShipmentData;
 }
+
+export interface UpdateShipmentArg {
+  shipmentId: string;
+  shipmentMutation: ShipmentMutation;
+}

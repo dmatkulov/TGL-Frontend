@@ -1,4 +1,4 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   oneShipmentResponse,
   ShipmentData,
@@ -6,10 +6,11 @@ import {
   ShipmentQueryArgs,
   ShipmentsResponse,
   ShipmentStatusData,
+  UpdateShipmentArg,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
-import { serverRoute } from '../../utils/constants';
-import { DeliveryData } from '../../types/types.Order';
+import {serverRoute} from '../../utils/constants';
+import {DeliveryData} from '../../types/types.Order';
 
 export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   'shipments/fetchAll',
@@ -65,7 +66,7 @@ export const fetchShipmentsByQuery = createAsyncThunk<ShipmentsResponse, Shipmen
   async (query) => {
     try {
       const response = await axiosApi.get<ShipmentsResponse>(
-        serverRoute.shipments, { params: query },
+        serverRoute.shipments, {params: query},
       );
       return response.data ?? [];
     } catch (e) {
@@ -147,3 +148,18 @@ export const changeShipmentsStatus = createAsyncThunk<
     console.log('Caught on try - CHANGE SINGLE SHIPMENT ', e);
   }
 });
+
+export const deleteShipment = createAsyncThunk<void, string>(
+  'shipments/deleteShipment',
+  async (id) => {
+    const response = await axiosApi.delete(`${serverRoute.shipments}/${id}`);
+    return response.data;
+  }
+);
+
+export const editShipment = createAsyncThunk<void, UpdateShipmentArg>(
+  'shipments/editShipment',
+  async ({shipmentId, shipmentMutation}) => {
+    return await axiosApi.put(`${serverRoute.shipments}/${shipmentId}`, shipmentMutation)
+  }
+);

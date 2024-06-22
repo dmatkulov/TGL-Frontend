@@ -67,7 +67,7 @@ const Banned = () => {
         ))
       : (content = (
           <>
-            <Alert severity="info" sx={{ marginTop: '8px' }}>
+            <Alert severity="error" sx={{ marginTop: '8px' }}>
               Товары и категории товаров частично или полностью запрещенные к
               ввозу на территорию КР
             </Alert>

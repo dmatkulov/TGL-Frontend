@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {ShipmentData, ShipmentsResponse} from '../../types/types.Shipments';
+import { createSlice } from '@reduxjs/toolkit';
+import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
   createShipment,
   deleteShipment,
@@ -7,10 +7,10 @@ import {
   fetchShipments,
   fetchShipmentsByQuery,
   fetchShipmentsByUser,
-  updateShipmentStatus
+  updateShipmentStatus,
 } from './shipmentsThunk';
-import {RootState} from '../../app/store';
-import {toast} from 'react-toastify';
+import { RootState } from '../../app/store';
+import { toast } from 'react-toastify';
 
 interface shipmentsState {
   shipments: ShipmentData[];
@@ -43,7 +43,7 @@ export const shipmentsSlice = createSlice({
       .addCase(fetchShipments.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipments.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipments.fulfilled, (state, { payload }) => {
         state.shipmentsLoading = false;
         state.shipments = payload.shipments;
       })
@@ -51,13 +51,13 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-    
+
     builder
       .addCase(createShipment.pending, (state) => {
         state.addShipmentLoading = true;
         state.addShipmentError = false;
       })
-      .addCase(createShipment.fulfilled, (state, {payload: data}) => {
+      .addCase(createShipment.fulfilled, (state, { payload: data }) => {
         state.addShipmentLoading = false;
         state.addShipment = data;
         if (data.message) {
@@ -68,12 +68,12 @@ export const shipmentsSlice = createSlice({
         state.addShipmentLoading = false;
         state.addShipmentError = true;
       });
-    
+
     builder
       .addCase(fetchShipmentsByUser.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByUser.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipmentsByUser.fulfilled, (state, { payload }) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
@@ -81,12 +81,12 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-    
+
     builder
       .addCase(fetchShipmentsByQuery.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByQuery.fulfilled, (state, {payload}) => {
+      .addCase(fetchShipmentsByQuery.fulfilled, (state, { payload }) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
@@ -94,7 +94,7 @@ export const shipmentsSlice = createSlice({
         state.shipmentsLoading = false;
         state.shipmentsError = true;
       });
-    
+
     builder
       .addCase(updateShipmentStatus.pending, (state) => {
         state.addShipmentLoading = true;
@@ -106,7 +106,7 @@ export const shipmentsSlice = createSlice({
         state.addShipmentLoading = false;
         state.addShipmentError = true;
       });
-    
+
     builder
       .addCase(deleteShipment.pending, (state) => {
         state.isDelete = true;
@@ -116,18 +116,19 @@ export const shipmentsSlice = createSlice({
       })
       .addCase(deleteShipment.rejected, (state) => {
         state.isDelete = false;
-      })
-    
+      });
+
     builder
       .addCase(editShipment.pending, (state) => {
         state.isEditing = true;
       })
-      .addCase(editShipment.fulfilled, (state) => {
+      .addCase(editShipment.fulfilled, (state, { payload: data }) => {
         state.isEditing = false;
+        toast.success(data?.message);
       })
       .addCase(editShipment.rejected, (state) => {
         state.isEditing = false;
-      })
+      });
   },
 });
 

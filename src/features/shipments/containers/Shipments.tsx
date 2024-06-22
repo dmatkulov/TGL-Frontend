@@ -25,23 +25,26 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
-  
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
   };
-  
+
   const searchOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (state.trim() === '') {
+      return;
+    }
     setSearched(true);
     await dispatch(searchByTrack(state));
   };
-  
+
   const clearFilter = async () => {
     setSearched(false);
     setState('');
     await dispatch(fetchShipments());
   };
-  
+
   const refetchData = () => {
     if (searched) {
       dispatch(searchByTrack(state));
@@ -49,27 +52,27 @@ const Shipments = () => {
     }
     dispatch(fetchShipments());
   };
-  
+
   useEffect(() => {
     const updateShipments = () => {
       dispatch(fetchShipments());
     };
-    
+
     updateShipments();
-    
+
     const intervalId = setInterval(updateShipments, 1800000);
-    
+
     return () => clearInterval(intervalId);
   }, [dispatch]);
-  
+
   if (user && user?.role === 'manager' && user.region) {
     filteredShipments = shipments.filter(
       (shipment) => shipment.pupId?.region === user.region._id,
     );
   }
-  
+
   let content;
-  
+
   if (loading) {
     content = (
       <div style={styleBoxSpinner}>
@@ -89,7 +92,7 @@ const Shipments = () => {
       <ShipmentsTable onDataSend={refetchData} state={filteredShipments} />
     );
   }
-  
+
   return (
     <>
       <Grid
@@ -137,7 +140,7 @@ const Shipments = () => {
           </Button>
         </Grid>
       </Grid>
-      
+
       {content}
     </>
   );

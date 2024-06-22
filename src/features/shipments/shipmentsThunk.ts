@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
   oneShipmentResponse,
   ShipmentData,
@@ -9,8 +9,8 @@ import {
   UpdateShipmentArg,
 } from '../../types/types.Shipments';
 import axiosApi from '../../utils/axiosApi';
-import {serverRoute} from '../../utils/constants';
-import {DeliveryData} from '../../types/types.Order';
+import { serverRoute } from '../../utils/constants';
+import { DeliveryData } from '../../types/types.Order';
 
 export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
   'shipments/fetchAll',
@@ -20,7 +20,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
         serverRoute.shipments,
       );
       const shipments = response.data ?? [];
-      
+
       shipments.shipments.sort((a, b) => {
         if (a.delivery.status && !b.delivery.status) {
           return -1;
@@ -30,7 +30,7 @@ export const fetchShipments = createAsyncThunk<ShipmentsResponse>(
           return 0;
         }
       });
-      
+
       return shipments;
     } catch (e) {
       console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
@@ -61,20 +61,21 @@ export const fetchShipmentsByUser = createAsyncThunk<ShipmentsResponse, string>(
   },
 );
 
-export const fetchShipmentsByQuery = createAsyncThunk<ShipmentsResponse, ShipmentQueryArgs>(
-  'shipments/queries',
-  async (query) => {
-    try {
-      const response = await axiosApi.get<ShipmentsResponse>(
-        serverRoute.shipments, {params: query},
-      );
-      return response.data ?? [];
-    } catch (e) {
-      console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
-      throw e;
-    }
-  },
-);
+export const fetchShipmentsByQuery = createAsyncThunk<
+  ShipmentsResponse,
+  ShipmentQueryArgs
+>('shipments/queries', async (query) => {
+  try {
+    const response = await axiosApi.get<ShipmentsResponse>(
+      serverRoute.shipments,
+      { params: query },
+    );
+    return response.data ?? [];
+  } catch (e) {
+    console.log('Caught on try - FETCH ALL SHIPMENTS ', e);
+    throw e;
+  }
+});
 
 export const orderDelivery = createAsyncThunk<void, DeliveryData>(
   'shipments/orderDelivery',
@@ -154,12 +155,16 @@ export const deleteShipment = createAsyncThunk<void, string>(
   async (id) => {
     const response = await axiosApi.delete(`${serverRoute.shipments}/${id}`);
     return response.data;
-  }
+  },
 );
 
-export const editShipment = createAsyncThunk<void, UpdateShipmentArg>(
-  'shipments/editShipment',
-  async ({shipmentId, shipmentMutation}) => {
-    return await axiosApi.put(`${serverRoute.shipments}/${shipmentId}`, shipmentMutation)
-  }
-);
+export const editShipment = createAsyncThunk<
+  ShipmentsResponse,
+  UpdateShipmentArg
+>('shipments/editShipment', async ({ shipmentId, shipmentMutation }) => {
+  const response = await axiosApi.put<ShipmentsResponse>(
+    `${serverRoute.shipments}/${shipmentId}`,
+    shipmentMutation,
+  );
+  return response.data;
+});

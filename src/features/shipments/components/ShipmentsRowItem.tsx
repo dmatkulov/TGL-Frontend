@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { ShipmentData, ShipmentStatusData } from '../../../types/types.Shipments';
-import { Statuses } from '../../../utils/constants';
+import React, {useEffect, useState} from 'react';
+import {ShipmentData, ShipmentMutation, ShipmentStatusData,} from '../../../types/types.Shipments';
+import {appRoutes, Statuses} from '../../../utils/constants';
 import {
   Button,
   Checkbox,
   Collapse,
+  Dialog,
+  DialogContent,
   Grid,
   IconButton,
   MenuItem,
@@ -20,8 +22,14 @@ import {
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import dayjs from 'dayjs';
-import { useAppSelector } from '../../../app/hooks';
-import { addShipmentGetLoad } from '../shipmentsSlice';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {addShipmentGetLoad, selectShipmentDeleting} from '../shipmentsSlice';
+import {deleteShipment, editShipment, fetchShipments} from '../shipmentsThunk';
+import {useNavigate} from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {LoadingButton} from '@mui/lab';
+import WarningShipmentModal from './WarningShipmentModal';
+import ShipmentsForm from '../containers/ShipmentsForm';
 
 interface Props {
   shipment: ShipmentData;
@@ -49,13 +57,18 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const [statusToggle, setStatusToggle] = useState(false);
   const loading = useAppSelector(addShipmentGetLoad);
   const statuses = Statuses;
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isDelete = useAppSelector(selectShipmentDeleting);
   
   const [open, setOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   
   const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setLocalState((prevState) => {
-      return { ...prevState, [name]: value };
+      return {...prevState, [name]: value};
     });
     setStatusToggle(true);
   };
@@ -72,7 +85,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const paidStatusChangeHandler = () => {
     if (checked) {
       setLocalState((prevState) => {
-        return { ...prevState, isPaid: !prevState.isPaid };
+        return {...prevState, isPaid: !prevState.isPaid};
       });
       setPaidToggle(true);
     }
@@ -115,19 +128,65 @@ const ShipmentsRowItem: React.FC<Props> = ({
     statusToggle,
   ]);
   
+  const openWarningModalWindow = () => {
+    setModalOpen(true);
+  };
+  
+  const closeWarningModalWindow = () => {
+    setModalOpen(false);
+  };
+  const deleteHandler = async () => {
+    await dispatch(deleteShipment(shipment?._id));
+    await dispatch(fetchShipments());
+    navigate(appRoutes.shipments);
+  };
+  
+  const toggleOpen = () => {
+    setOpenEditModal(true);
+  };
+  const handleClose = () => {
+    setOpenEditModal(false);
+  };
+  
+  const submitFormHandler = async (state: ShipmentMutation) => {
+    await dispatch(
+      editShipment({shipmentId: shipment._id, shipmentMutation: state}),
+    ).unwrap();
+    await dispatch(fetchShipments());
+    setModalOpen(false);
+  };
+  
+  const shipmentMutation: ShipmentMutation = {
+    userMarketId: shipment.userMarketId.toString(),
+    trackerNumber: shipment.trackerNumber.toString(),
+    weight: shipment.weight.toString(),
+    pupId: shipment.pupId._id,
+    status: shipment.status,
+    dimensions: {
+      height: shipment.dimensions.height.toString(),
+      width: shipment.dimensions.width.toString(),
+      length: shipment.dimensions.length.toString(),
+    },
+  };
+  
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <WarningShipmentModal
+        stateModal={modalOpen}
+        deleteHandler={deleteHandler}
+        closeModal={closeWarningModalWindow}
+      />
+      <TableRow sx={{'& > *': {borderBottom: 'unset'}}}>
         <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
             onClick={() => setOpen(!open)}
           >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            {open ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
           </IconButton>
         </TableCell>
-        <TableCell scope="row">
+        <TableCell component="th" scope="row">
           {shipment.trackerNumber}
         </TableCell>
         <TableCell>{shipment.userMarketId}</TableCell>
@@ -138,7 +197,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
             spacing={1}
             justifyContent="space-between"
           >
-            <Checkbox checked={checked} onChange={onCheck} />
+            <Checkbox checked={checked} onChange={onCheck}/>
             <TextField
               select
               disabled={loading || !checked}
@@ -150,7 +209,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
               InputProps={{
                 disableUnderline: true,
               }}
-              style={{ flexGrow: 1, marginRight: 2 }}
+              style={{flexGrow: 1, marginRight: 2}}
               value={localState.status}
               onChange={inputChangeHandler}
             >
@@ -158,7 +217,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
                 <MenuItem
                   key={status}
                   value={status}
-                  style={{ fontSize: '14px' }}
+                  style={{fontSize: '14px'}}
                 >
                   {status}
                 </MenuItem>
@@ -175,27 +234,53 @@ const ShipmentsRowItem: React.FC<Props> = ({
             {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
           </Button>
         </TableCell>
+        <TableCell>
+          <Button
+            variant="contained"
+            onClick={toggleOpen}
+            sx={{
+              fontSize: '11px',
+            }}
+          >
+            Редактировать
+          </Button>
+        </TableCell>
+        <TableCell>
+          <LoadingButton
+            disabled={isDelete}
+            loading={isDelete}
+            onClick={openWarningModalWindow}
+            sx={{
+              minWidth: '29px',
+              padding: '3px',
+              borderRadius: '50%',
+            }}
+            color="error"
+          >
+            <CancelIcon/>
+          </LoadingButton>
+        </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Grid sx={{ margin: 1 }}>
+            <Grid sx={{margin: 1}}>
               <Typography variant="subtitle1" gutterBottom color="primary">
                 Информация
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
+                    <TableCell style={{fontWeight: 'bolder', color: 'gray'}}>
                       Время
                     </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
+                    <TableCell style={{fontWeight: 'bolder', color: 'gray'}}>
                       Габариты
                     </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
+                    <TableCell style={{fontWeight: 'bolder', color: 'gray'}}>
                       Цена (сом)
                     </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
+                    <TableCell style={{fontWeight: 'bolder', color: 'gray'}}>
                       Создал
                     </TableCell>
                   </TableRow>
@@ -205,7 +290,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
                     <TableCell
                       component="th"
                       scope="row"
-                      style={{ verticalAlign: 'top' }}
+                      style={{verticalAlign: 'top'}}
                     >
                       <Typography
                         variant="body2"
@@ -215,32 +300,32 @@ const ShipmentsRowItem: React.FC<Props> = ({
                         {dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
                       </Typography>
                     </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
+                    <TableCell style={{verticalAlign: 'top'}}>
                       <Typography
                         variant="body2"
                         fontSize="smaller"
                         color="gray"
                       >
                         Высота: {shipment.dimensions.height} см
-                        <br />
+                        <br/>
                         Ширина: {shipment.dimensions.width} см
-                        <br />
+                        <br/>
                         Длина: {shipment.dimensions.length} см
-                        <br />
+                        <br/>
                         Вес: {shipment.weight} кг
                       </Typography>
                     </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
+                    <TableCell style={{verticalAlign: 'top'}}>
                       <Typography
                         variant="body2"
                         fontSize="smaller"
                         color="gray"
                       >
-                        USD: {shipment.price.usd} $<br />
+                        USD: {shipment.price.usd} $<br/>
                         SOM: {shipment.price.som} сом
                       </Typography>
                     </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
+                    <TableCell style={{verticalAlign: 'top'}}>
                       <Typography
                         variant="body2"
                         fontSize="smaller"
@@ -256,6 +341,19 @@ const ShipmentsRowItem: React.FC<Props> = ({
           </Collapse>
         </TableCell>
       </TableRow>
+      <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          <ShipmentsForm
+            onSubmit={submitFormHandler}
+            initialShipmentState={shipmentMutation}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

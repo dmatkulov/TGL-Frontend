@@ -1,18 +1,19 @@
-import { Alert, Box, Button, CircularProgress, Grid, MenuItem, TextField } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { createShipment } from '../shipmentsThunk';
-import React, { useEffect, useState } from 'react';
-import { ShipmentMutation } from '../../../types/types.Shipments';
-import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
+import {Alert, Box, Button, CircularProgress, Grid, MenuItem, TextField,} from '@mui/material';
+import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import {createShipment} from '../shipmentsThunk';
+import React, {useEffect, useState} from 'react';
+import {ShipmentMutation} from '../../../types/types.Shipments';
+import {addShipmentGetError, addShipmentGetLoad, selectShipmentEditing} from '../shipmentsSlice';
 import InputAdornment from '@mui/material/InputAdornment';
-import { selectPups, selectPupsLoading } from '../../pups/pupsSlice';
-import { fetchPups } from '../../pups/pupsThunks';
-import { ShipmentStatus } from '../../../utils/constants';
+import {selectPups, selectPupsLoading} from '../../pups/pupsSlice';
+import {fetchPups} from '../../pups/pupsThunks';
+import {ShipmentStatus} from '../../../utils/constants';
+import {LoadingButton} from '@mui/lab';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
   trackerNumber: '',
-  weight: '1',
+  weight: '',
   pupId: '',
   status: '',
   dimensions: {
@@ -22,14 +23,25 @@ const initialState: ShipmentMutation = {
   },
 };
 
+interface Props {
+  onSubmit: (shipmentMutation: ShipmentMutation) => void;
+  initialShipmentState?: ShipmentMutation;
+  isEdit?: boolean;
+}
+
+
 const isInputValid = (marketIdString: string) => {
   const regex = /^\d{5}$/;
   return regex.test(marketIdString);
 };
 
-const ShipmentsForm = () => {
+const ShipmentsForm: React.FC<Props> = ({
+  onSubmit,
+  initialShipmentState = initialState,
+  isEdit = false,
+}) => {
   const dispatch = useAppDispatch();
-  const [state, setState] = useState<ShipmentMutation>(initialState);
+  const [state, setState] = useState<ShipmentMutation>(initialShipmentState);
   const [marketIdValid, setMarketIdValid] = useState<boolean>(false);
   const [userMarketIdLabel, setUserMarketIdLabel] = useState<string>('');
   
@@ -37,6 +49,7 @@ const ShipmentsForm = () => {
   const loadingPups = useAppSelector(selectPupsLoading);
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
+  const editing = useAppSelector(selectShipmentEditing);
   
   const valueFields: string[] = [
     'userMarketId',
@@ -50,7 +63,11 @@ const ShipmentsForm = () => {
   ];
   
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
+    const {name, value} = event.target;
+    
+    if (parseFloat(value) <= 0) {
+      return;
+    }
     
     if (isInputValid(state.userMarketId)) {
       setMarketIdValid(true);
@@ -70,14 +87,23 @@ const ShipmentsForm = () => {
   };
   
   const isFormValid = () => {
-    const { trackerNumber } = state;
+    const {userMarketId, trackerNumber, weight, dimensions, status} = state;
     
-    return trackerNumber;
+    return (
+      userMarketId &&
+      trackerNumber &&
+      weight &&
+      dimensions.height &&
+      dimensions.length &&
+      dimensions.width &&
+      status
+    );
   };
   
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(createShipment(state));
+    onSubmit(state);
     setState(initialState);
   };
   
@@ -88,20 +114,21 @@ const ShipmentsForm = () => {
   return (
     <>
       {error && (
-        <Alert severity="error" sx={{ mt: 3, mb: 1, width: '100%' }}>
+        <Alert severity="error" sx={{mt: 3, mb: 1, width: '100%'}}>
           {'Введенные данные не верны. Попробуйте снова!'}
         </Alert>
       )}
       {loading && (
-        <Alert severity="success" sx={{ mt: 3, mb: 1, width: '100%' }}>
+        <Alert severity="success" sx={{mt: 3, mb: 1, width: '100%'}}>
           {'Данные успешно отправлены!'}
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2} direction={{ xs: 'column', md: 'row' }}>
+        <Grid container spacing={2} direction={{xs: 'column', md: 'row'}}>
           <Grid item xs={4} md={12}>
             <TextField
               fullWidth
+              required
               type="number"
               name="userMarketId"
               label="Маркет"
@@ -138,6 +165,7 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
+              required
               name="height"
               type="number"
               label="Высота"
@@ -154,6 +182,7 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
+              required
               name="length"
               type="number"
               label="Длина"
@@ -170,6 +199,7 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
+              required
               name="width"
               type="number"
               label="Ширина"
@@ -203,6 +233,7 @@ const ShipmentsForm = () => {
           <Grid item xs={3}>
             <TextField
               fullWidth
+              required
               select
               name="status"
               label="Статус"
@@ -250,14 +281,27 @@ const ShipmentsForm = () => {
             </TextField>
           </Grid>
         </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ mt: 3 }}
-          disabled={!isFormValid() || loading}
-        >
-          {loading ? <CircularProgress /> : 'Добавить отправку'}
-        </Button>
+        {isEdit ? (
+          <LoadingButton sx={{mt: 3}}
+                         fullWidth
+                         type="submit"
+                         color="primary"
+                         variant="contained"
+                         disabled={editing}
+                         loading={editing}
+          >
+            Редактировать
+          </LoadingButton>
+        ) : (
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{mt: 3}}
+            disabled={!isFormValid() || loading}
+          >
+            {loading ? <CircularProgress/> : 'Добавить отправку'}
+          </Button>
+        )}
       </Box>
     </>
   );

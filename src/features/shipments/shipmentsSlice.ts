@@ -6,7 +6,8 @@ import {
   editShipment,
   fetchShipments,
   fetchShipmentsByQuery,
-  fetchShipmentsByUser
+  fetchShipmentsByUser,
+  updateShipmentStatus
 } from './shipmentsThunk';
 import {RootState} from '../../app/store';
 import {toast} from 'react-toastify';
@@ -95,6 +96,18 @@ export const shipmentsSlice = createSlice({
       });
     
     builder
+      .addCase(updateShipmentStatus.pending, (state) => {
+        state.addShipmentLoading = true;
+      })
+      .addCase(updateShipmentStatus.fulfilled, (state) => {
+        state.addShipmentLoading = false;
+      })
+      .addCase(updateShipmentStatus.rejected, (state) => {
+        state.addShipmentLoading = false;
+        state.addShipmentError = true;
+      });
+    
+    builder
       .addCase(deleteShipment.pending, (state) => {
         state.isDelete = true;
       })
@@ -127,3 +140,7 @@ export const addShipmentGetLoad = (state: RootState) =>
   state.shipments.addShipmentLoading;
 export const addShipmentGetError = (state: RootState) =>
   state.shipments.addShipmentError;
+export const selectShipmentEditing = (state: RootState) =>
+  state.shipments.isEditing;
+export const selectShipmentDeleting = (state: RootState) =>
+  state.shipments.isDelete;

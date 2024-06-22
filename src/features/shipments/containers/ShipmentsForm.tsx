@@ -24,7 +24,7 @@ const initialState: ShipmentMutation = {
 };
 
 interface Props {
-  onSubmit: (shipmentMutation: ShipmentMutation) => void;
+  onSubmit?: (shipmentMutation: ShipmentMutation) => void;
   initialShipmentState?: ShipmentMutation;
   isEdit?: boolean;
 }
@@ -103,7 +103,9 @@ const ShipmentsForm: React.FC<Props> = ({
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
     await dispatch(createShipment(state));
-    onSubmit(state);
+    if (onSubmit) {
+      onSubmit(state);
+    }
     setState(initialState);
   };
   

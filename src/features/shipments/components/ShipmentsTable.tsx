@@ -17,10 +17,10 @@ import React, {FC, useEffect, useState} from 'react';
 import TablePaginationActions from './TablePaginationActions';
 import {ShipmentData, ShipmentStatusData} from '../../../types/types.Shipments';
 import ShipmentsRowItem from './ShipmentsRowItem';
-import ShipmentsTableHead from './ShipmentsTableHead';
 import {Statuses} from '../../../utils/constants';
-import {changeShipmentsStatus} from '../shipmentsThunk';
 import {useAppDispatch} from '../../../app/hooks';
+import ShipmentsTableHead from './ShipmentsTableHead';
+import {changeShipmentsStatus} from '../shipmentsThunk';
 
 interface Props {
   onDataSend: () => void;
@@ -32,25 +32,16 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  
   const [statusState, setStatusState] = useState<ShipmentStatusData[]>([]);
   const [multipleStatus, setMultipleStatus] = useState<string>('');
-  const [isToggled, setIsToggled] = useState<boolean>(false);
-  const [currentStatus, setCurrentStatus] = useState<string>('');
+  
   const [isMultipleSelected, setIsMultipleSelected] = useState<boolean>(false);
   const statuses = Statuses;
   
   const isInitial = statusState.length === 0;
-  
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - state.length) : 0;
-  
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
-    event?.preventDefault();
-    setPage(newPage);
-  };
+  const [selected, setSelected] = useState<string[]>([]);
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
   
   useEffect(() => {
     if (isMultipleSelected) {
@@ -63,14 +54,8 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
     }
   }, [isMultipleSelected, multipleStatus]);
   
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  
   const sendData = async () => {
+    console.log(statusState)
     setIsMultipleSelected(false);
     await dispatch(changeShipmentsStatus(statusState));
     onDataSend();
@@ -89,20 +74,6 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
     setStatusState((prevState) => prevState.filter((item) => item._id !== _id));
   };
   
-  const changeHandler = (_id: string, status: string, isPaid: boolean) => {
-    setStatusState((prevState) =>
-      prevState.map((item) =>
-        item._id === _id
-          ? {
-            ...item,
-            status,
-            isPaid,
-          }
-          : item,
-      ),
-    );
-  };
-  
   const multipleStatusHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleStatus(e.target.value);
     setIsMultipleSelected(true);
@@ -115,9 +86,8 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
         isPaid: false,
       })),
     );
-    setIsToggled(true);
-    setCurrentStatus('Не оплачено');
   };
+  
   const setIsPaidToTrue = () => {
     setStatusState((prevState) =>
       prevState.map((item) => ({
@@ -125,23 +95,82 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
         isPaid: true,
       })),
     );
-    setIsToggled(true);
-    setCurrentStatus('Оплачено');
+  };
+  
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const currentItems = state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+      const newSelected = currentItems.map((n) => n._id);
+      setSelected(newSelected);
+      const newStatusState = currentItems.map((shipment) => ({
+        _id: shipment._id,
+        status: shipment.status,
+        isPaid: shipment.isPaid,
+      }));
+      setStatusState(newStatusState);
+      return;
+    }
+    setSelected([]);
+    setStatusState([])
+  };
+  
+  const handleClick = (id: string) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: string[] = [];
+    
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+    setSelected(newSelected);
+  };
+  
+  
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - state.length) : 0;
+  
+  const rowsCount = state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    event?.preventDefault();
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
   
   const renderMultiple = (
     rowsPerPage > 0
       ? state.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
       : state
-  ).map((shipment) => (
-    <ShipmentsRowItem
-      shipment={shipment}
-      key={shipment._id}
-      createItem={createItem}
-      removeItem={removeItem}
-      changeHandler={changeHandler}
-    />
-  ));
+  ).map((shipment) => {
+    const isItemSelected = isSelected(shipment._id);
+    
+    return (
+      <ShipmentsRowItem
+        shipment={shipment}
+        key={shipment._id}
+        createItem={createItem}
+        removeItem={removeItem}
+        isItemSelected={isItemSelected}
+        handleClick={handleClick}
+      />
+    )
+  });
   
   let renderSingle;
   
@@ -152,7 +181,7 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
         key={searchResult._id}
         createItem={createItem}
         removeItem={removeItem}
-        changeHandler={changeHandler}
+        handleClick={handleClick}
       />
     );
   } else if (searchResult === null) {
@@ -167,7 +196,7 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
   
   return (
     <>
-      <Box display="flex" alignItems="center" flexWrap="wrap" mb={2}>
+      <Box display="flex" alignItems="center" flexWrap="wrap" mb={5}>
         <Box
           flexGrow={1}
           flexBasis="100%"
@@ -226,14 +255,13 @@ const ShipmentsTable: FC<Props> = ({onDataSend, state, searchResult}) => {
             Подтвердить
           </Button>
         </Box>
-        <Typography>
-          {isToggled ? `Текущий статус: ${currentStatus}` : 'Статус не задан'}
-        </Typography>
+      
       </Box>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
           <TableHead>
-            <ShipmentsTableHead/>
+            <ShipmentsTableHead numSelected={selected.length} rowCount={rowsCount.length}
+                                onSelectAllClick={handleSelectAllClick}/>
           </TableHead>
           <TableBody>
             {searchResult !== undefined ? renderSingle : renderMultiple}

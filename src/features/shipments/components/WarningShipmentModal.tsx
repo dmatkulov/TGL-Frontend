@@ -1,5 +1,6 @@
 import {Box, Button, Modal, Typography} from '@mui/material';
 import WarningPicture from '../../../assets/warning.png';
+import React from 'react';
 
 const mainBoxStyle = {
   position: 'absolute',

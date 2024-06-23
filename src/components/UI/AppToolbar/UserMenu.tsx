@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  // CircularProgress,
   IconButton,
   Menu,
   MenuItem,
@@ -10,7 +9,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/hooks';
 import { logout } from '../../../features/users/usersThunks';
-// import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { User } from '../../../types/types.User';

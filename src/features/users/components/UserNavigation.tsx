@@ -17,6 +17,7 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HistoryIcon from '@mui/icons-material/History';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const userLinks: UserNav[] = [
   {
@@ -29,7 +30,7 @@ const userLinks: UserNav[] = [
     id: 2,
     name: 'Мой профиль',
     navLink: appRoutes.myProfile,
-    icon: <AssignmentIcon color="primary" />,
+    icon: <AccountBoxIcon color="primary" />,
   },
   {
     id: 3,

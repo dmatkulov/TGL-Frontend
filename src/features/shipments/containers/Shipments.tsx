@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectShipments, selectShipmentsLoading } from '../shipmentsSlice';
 import { fetchShipments, searchByTrack } from '../shipmentsThunk';
-import { Button, CircularProgress, Grid, TextField } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  useMediaQuery,
+} from '@mui/material';
 import { selectOneOrder, selectOrdersLoading } from '../../orders/ordersSlice';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
@@ -25,6 +31,8 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
+  const isSmallScreen = useMediaQuery('(max-width:380px)');
+  const isLargeScreen = useMediaQuery('(min-width:678px)');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
@@ -32,6 +40,9 @@ const Shipments = () => {
 
   const searchOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (state.trim() === '') {
+      return;
+    }
     setSearched(true);
     await dispatch(searchByTrack(state));
   };
@@ -100,7 +111,7 @@ const Shipments = () => {
         onSubmit={searchOrder}
         spacing={2}
         justifyContent="space-between"
-        mb={4}
+        mb={6}
       >
         <Grid item xs={12} md={6}>
           <TextField
@@ -115,7 +126,15 @@ const Shipments = () => {
             onChange={handleChange}
           />
         </Grid>
-        <Grid item xs={12} md={6} display="flex" gap={1} alignItems="center">
+        <Grid
+          item
+          xs={12}
+          md={6}
+          display="flex"
+          gap={2}
+          alignItems="center"
+          justifyContent={!isLargeScreen ? 'space-between' : 'flex-start'}
+        >
           <LoadingButton
             type="submit"
             variant="contained"
@@ -123,6 +142,7 @@ const Shipments = () => {
             loading={loadingOneOrder}
             loadingPosition="start"
             startIcon={<SearchIcon />}
+            fullWidth={isSmallScreen}
           >
             Поиск
           </LoadingButton>
@@ -132,8 +152,9 @@ const Shipments = () => {
             disabled={loadingOneOrder || !searched}
             color="error"
             onClick={clearFilter}
+            fullWidth={isSmallScreen}
           >
-            Сбросить фильтр
+            Сбросить
           </Button>
         </Grid>
       </Grid>

@@ -11,11 +11,16 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { createShipment } from '../shipmentsThunk';
 import React, { useEffect, useState } from 'react';
 import { ShipmentMutation } from '../../../types/types.Shipments';
-import { addShipmentGetError, addShipmentGetLoad } from '../shipmentsSlice';
+import {
+  addShipmentGetError,
+  addShipmentGetLoad,
+  selectShipmentEditing,
+} from '../shipmentsSlice';
 import InputAdornment from '@mui/material/InputAdornment';
 import { selectPups, selectPupsLoading } from '../../pups/pupsSlice';
 import { fetchPups } from '../../pups/pupsThunks';
 import { ShipmentStatus } from '../../../utils/constants';
+import { LoadingButton } from '@mui/lab';
 
 const initialState: ShipmentMutation = {
   userMarketId: '',
@@ -30,14 +35,24 @@ const initialState: ShipmentMutation = {
   },
 };
 
+interface Props {
+  onSubmit?: (shipmentMutation: ShipmentMutation) => void;
+  initialShipmentState?: ShipmentMutation;
+  isEdit?: boolean;
+}
+
 const isInputValid = (marketIdString: string) => {
   const regex = /^\d{5}$/;
   return regex.test(marketIdString);
 };
 
-const ShipmentsForm = () => {
+const ShipmentsForm: React.FC<Props> = ({
+  onSubmit,
+  initialShipmentState = initialState,
+  isEdit = false,
+}) => {
   const dispatch = useAppDispatch();
-  const [state, setState] = useState<ShipmentMutation>(initialState);
+  const [state, setState] = useState<ShipmentMutation>(initialShipmentState);
   const [marketIdValid, setMarketIdValid] = useState<boolean>(false);
   const [userMarketIdLabel, setUserMarketIdLabel] = useState<string>('');
 
@@ -45,6 +60,7 @@ const ShipmentsForm = () => {
   const loadingPups = useAppSelector(selectPupsLoading);
   const loading = useAppSelector(addShipmentGetLoad);
   const error = useAppSelector(addShipmentGetError);
+  const editing = useAppSelector(selectShipmentEditing);
 
   const valueFields: string[] = [
     'userMarketId',
@@ -60,20 +76,36 @@ const ShipmentsForm = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
+    if (parseFloat(value) <= 0) {
+      return;
+    }
+
     if (isInputValid(state.userMarketId)) {
-      setMarketIdValid(true);
-      setUserMarketIdLabel('Не корректный номер');
+      setMarketIdValid(false);
+      setUserMarketIdLabel('');
     }
 
     if (valueFields.includes(name)) {
-      setState((prevState) => ({
-        ...prevState,
-        [name]: value,
-        dimensions: {
-          ...prevState.dimensions,
+      setState((prevState) => {
+        if (name === 'userMarketId') {
+          if (!isInputValid(value)) {
+            setMarketIdValid(true);
+            setUserMarketIdLabel('Некорректный номер');
+          } else {
+            setMarketIdValid(false);
+            setUserMarketIdLabel('');
+          }
+        }
+
+        return {
+          ...prevState,
           [name]: value,
-        },
-      }));
+          dimensions: {
+            ...prevState.dimensions,
+            [name]: value,
+          },
+        };
+      });
     }
   };
 
@@ -85,7 +117,23 @@ const ShipmentsForm = () => {
 
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
-    await dispatch(createShipment(state));
+
+    if (state.userMarketId && !isInputValid(state.userMarketId)) {
+      setMarketIdValid(true);
+      setUserMarketIdLabel('Некорректный номер');
+      return;
+    }
+
+    const readyState: ShipmentMutation = {
+      ...state,
+      status: state.status ? state.status : 'КНР_ОТПРАВЛЕНО',
+    };
+
+    if (isEdit && onSubmit) {
+      onSubmit(state);
+    } else {
+      await dispatch(createShipment(readyState));
+    }
     setState(initialState);
   };
 
@@ -106,8 +154,8 @@ const ShipmentsForm = () => {
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2} direction={{ xs: 'column', md: 'row' }}>
-          <Grid item xs={4} md={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               type="number"
@@ -126,7 +174,7 @@ const ShipmentsForm = () => {
               autoFocus
             />
           </Grid>
-          <Grid item xs={4} md={12}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               required
@@ -143,7 +191,7 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               name="height"
@@ -159,7 +207,7 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               name="length"
@@ -175,7 +223,7 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               name="width"
@@ -191,7 +239,7 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               required
@@ -208,7 +256,7 @@ const ShipmentsForm = () => {
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               select
@@ -232,7 +280,7 @@ const ShipmentsForm = () => {
                 ))}
             </TextField>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               disabled={loadingPups}
@@ -258,14 +306,27 @@ const ShipmentsForm = () => {
             </TextField>
           </Grid>
         </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ mt: 3 }}
-          disabled={!isFormValid() || loading}
-        >
-          {loading ? <CircularProgress /> : 'Добавить отправку'}
-        </Button>
+        {isEdit ? (
+          <LoadingButton
+            sx={{ mt: 3 }}
+            type="submit"
+            color="primary"
+            variant="contained"
+            disabled={editing}
+            loading={editing}
+          >
+            Редактировать
+          </LoadingButton>
+        ) : (
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mt: 3 }}
+            disabled={!isFormValid() || loading}
+          >
+            {loading ? <CircularProgress /> : 'Добавить отправку'}
+          </Button>
+        )}
       </Box>
     </>
   );

@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Grid,
   MenuItem,
+  Stack,
   TablePagination,
   TextField,
   useMediaQuery,
@@ -20,10 +21,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import {
   fetchShipments,
-  fetchShipmentsByDatetime,
-  fetchShipmentsByRegion,
-  fetchShipmentsByRegionAndDatetime,
-  fetchShipmentsByRegionAndPup,
+  fetchShipmentsByQuery,
 } from '../../shipments/shipmentsThunk';
 import {
   selectShipments,
@@ -40,6 +38,7 @@ import TableBody from '@mui/material/TableBody';
 import { fetchRegions } from '../../regions/regionsThunks';
 import { toast } from 'react-toastify';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
+import { LoadingButton } from '@mui/lab';
 
 const initialState: statistics = {
   pupId: '',
@@ -71,7 +70,7 @@ const Statistics = () => {
   useEffect(() => {
     dispatch(clearItems());
     dispatch(fetchRegions());
-  }, []);
+  }, [dispatch]);
 
   const fetchPupsByRegion = async (region: string) => {
     await dispatch(fetchPups(region));
@@ -129,45 +128,26 @@ const Statistics = () => {
 
   const submitFormHandler = async (event: React.FormEvent) => {
     event.preventDefault();
-    const { pupId, region, datetime } = state;
 
     if (!state.pupId && !state.region && !state.datetime) {
       toast.warning('Пожалуйста, заполните хотя бы одно поле.');
       return;
     }
 
-    try {
-      if (region && !pupId && !datetime) {
-        await dispatch(fetchShipmentsByRegion({ region }));
-      } else if (region && datetime && !pupId) {
-        await dispatch(fetchShipmentsByRegionAndDatetime({ region, datetime }));
-      } else if (!region && datetime) {
-        await dispatch(fetchShipmentsByDatetime({ datetime }));
-      } else if (region && pupId) {
-        await dispatch(
-          fetchShipmentsByRegionAndPup({
-            pupId: state.pupId,
-            datetime: state.datetime,
-          }),
-        );
-      }
-      setSearched(true);
-      console.log(state);
-    } catch (e) {
-      console.error(e);
-    }
+    await dispatch(fetchShipmentsByQuery(state));
+    setSearched(true);
   };
 
   const statisticAll = async () => {
-    await dispatch(fetchShipments());
-    await dispatch(clearItems());
+    dispatch(clearItems());
     setState(initialState);
     setSearched(false);
+    await dispatch(fetchShipments());
   };
 
   return (
     <>
-      <Alert sx={{ width: '100%', marginBottom: 1 }} severity="warning">
+      <Alert sx={{ width: '100%', marginBottom: 3 }} severity="warning">
         Для получения статистики, пожалуйста, укажите нужные параметры
       </Alert>
 
@@ -176,9 +156,9 @@ const Statistics = () => {
         sx={{ justifyContent: 'space-between', flexDirection: 'column' }}
       >
         <Grid
-          component={'form'}
+          component="form"
           onSubmit={submitFormHandler}
-          sx={{ marginRight: 3 }}
+          sx={{ marginBottom: 3 }}
           container
           spacing={2}
         >
@@ -186,6 +166,7 @@ const Statistics = () => {
             <TextField
               sx={{ width: '100%' }}
               select
+              size="small"
               name="region"
               label="Регион"
               type="text"
@@ -201,11 +182,7 @@ const Statistics = () => {
                   key={region._id}
                   value={region._id}
                   onClick={() => {
-                    fetchPupsByRegion(region._id);
-                    setState((prevState) => ({
-                      ...prevState,
-                      pupId: '',
-                    }));
+                    void fetchPupsByRegion(region._id);
                   }}
                 >
                   {region.name}
@@ -219,6 +196,7 @@ const Statistics = () => {
               sx={{ width: '100%' }}
               disabled={loadingPups}
               select
+              size="small"
               name="pupId"
               label="ПВЗ"
               type="text"
@@ -249,6 +227,7 @@ const Statistics = () => {
             <TextField
               sx={{ width: '100%' }}
               select
+              size="small"
               name="datetime"
               label="Период"
               type="text"
@@ -266,32 +245,27 @@ const Statistics = () => {
             </TextField>
           </Grid>
           <Grid item xs={12} sm={3}>
-            <Button
-              disabled={loading}
-              sx={{
-                '&.MuiButton-root:hover': { background: '#018749' },
-                color: 'white',
-                width: 200,
-                background: 'green',
-                marginBottom: 1,
-              }}
-              type={'submit'}
-            >
-              Поиск
-            </Button>
-            <Button
-              variant="contained"
-              disabled={loading || !searched}
-              sx={{
-                '&.MuiButton-root:hover': { background: '#D2122E' },
-                color: 'white',
-                width: 200,
-                background: '#9e1b32',
-              }}
-              onClick={() => statisticAll()}
-            >
-              Сбросить
-            </Button>
+            <Stack direction="row" spacing={2}>
+              <LoadingButton
+                fullWidth
+                disabled={loading}
+                loading={loading}
+                variant="contained"
+                type="submit"
+              >
+                Поиск
+              </LoadingButton>
+              <Button
+                fullWidth
+                type="button"
+                variant="contained"
+                disabled={loading || !searched}
+                color="error"
+                onClick={() => statisticAll()}
+              >
+                Сбросить
+              </Button>
+            </Stack>
           </Grid>
         </Grid>
 

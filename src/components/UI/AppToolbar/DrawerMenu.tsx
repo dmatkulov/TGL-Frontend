@@ -4,20 +4,23 @@ import {
   Button,
   Divider,
   Drawer,
-  List, ListItem, ListItemButton, ListItemIcon, ListItemText,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Stack,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import { appRoutes } from '../../../utils/constants';
-import {useAppDispatch, useAppSelector} from '../../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../../../features/users/usersSlice';
 import UserNavigation from '../../../features/users/components/UserNavigation';
 import AdminNavigation from '../../../features/users/components/AdminNavigation';
-import {logout} from '../../../features/users/usersThunks';
-import {useNavigate} from 'react-router-dom';
+import { logout } from '../../../features/users/usersThunks';
+import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
-
 
 interface Props {
   open: boolean;
@@ -74,18 +77,46 @@ const DrawerMenu: React.FC<Props> = ({ open, toggleDrawer, window }) => {
                       onClick={handleLogOut}
                       sx={{ borderRadius: 2 }}
                     >
-                      <ListItemIcon><LogoutIcon color="primary" /></ListItemIcon>
+                      <ListItemIcon>
+                        <LogoutIcon color="primary" />
+                      </ListItemIcon>
                       <ListItemText
                         primaryTypographyProps={{
                           fontSize: 16,
-                          color:'primary'}}
-                      >Выйти</ListItemText>
+                          color: 'primary',
+                        }}
+                      >
+                        Выйти
+                      </ListItemText>
                     </ListItemButton>
                   </ListItem>
                 )}
               </>
             ) : (
-              <AdminNavigation />
+              <>
+                <AdminNavigation />
+                <Divider />
+                {isExtraSmallScreen && (
+                  <ListItem disableGutters>
+                    <ListItemButton
+                      onClick={handleLogOut}
+                      sx={{ borderRadius: 2 }}
+                    >
+                      <ListItemIcon>
+                        <LogoutIcon color="primary" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primaryTypographyProps={{
+                          fontSize: 16,
+                          color: 'primary',
+                        }}
+                      >
+                        Выйти
+                      </ListItemText>
+                    </ListItemButton>
+                  </ListItem>
+                )}
+              </>
             )
           ) : null}
           {!user && (

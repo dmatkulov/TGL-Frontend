@@ -5,9 +5,10 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  styled,
   useMediaQuery,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { appRoutes } from '../../../utils/constants';
 import { UserNav } from '../../../types/types.User';
 import PinDropIcon from '@mui/icons-material/PinDrop';
@@ -15,6 +16,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HistoryIcon from '@mui/icons-material/History';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import CalculateIcon from '@mui/icons-material/Calculate';
 
 const userLinks: UserNav[] = [
   {
@@ -55,8 +57,17 @@ const userLinks: UserNav[] = [
   },
 ];
 
+const Link = styled(NavLink)({
+  color: 'inherit',
+  textDecoration: 'none',
+  '&:hover': {
+    color: 'inherit',
+  },
+});
+
 const UserNavigation = () => {
   const isSmallScreen = useMediaQuery('(max-width:850px)');
+  const isExtraSmallScreen = useMediaQuery('(max-width:599px)');
 
   const navigate = useNavigate();
   const activePath = location.pathname;
@@ -94,6 +105,20 @@ const UserNavigation = () => {
               </ListItem>
             ))}
           </List>
+          {isExtraSmallScreen && (
+            <Box
+              sx={{
+                padding: '4px 16px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <CalculateIcon color="primary" />
+              <Link to={appRoutes.calculate} sx={{ paddingLeft: '32px' }}>
+                Калькулятор
+              </Link>
+            </Box>
+          )}
         </nav>
       </Box>
     </>

@@ -62,9 +62,9 @@ const Shipments = () => {
     return () => clearInterval(intervalId);
   }, [dispatch]);
 
-  if (user?.role === 'manager' && user.region) {
+  if (user && user?.role === 'manager' && user.region) {
     filteredShipments = shipments.filter(
-      (shipment) => shipment.pupId.region === user.region._id,
+      (shipment) => shipment.pupId?.region === user.region._id,
     );
   }
 

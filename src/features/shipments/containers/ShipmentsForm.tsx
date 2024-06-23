@@ -60,10 +60,6 @@ const ShipmentsForm = () => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
-    if (parseFloat(value) <= 0) {
-      return;
-    }
-
     if (isInputValid(state.userMarketId)) {
       setMarketIdValid(true);
       setUserMarketIdLabel('Не корректный номер');
@@ -75,6 +71,7 @@ const ShipmentsForm = () => {
         [name]: value,
         dimensions: {
           ...prevState.dimensions,
+          [name]: value,
         },
       }));
     }

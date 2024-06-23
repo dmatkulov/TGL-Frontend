@@ -3,12 +3,8 @@ import { ShipmentData, ShipmentsResponse } from '../../types/types.Shipments';
 import {
   createShipment,
   fetchShipments,
-  fetchShipmentsByDatetime,
-  fetchShipmentsByRegion,
-  fetchShipmentsByRegionAndDatetime,
-  fetchShipmentsByRegionAndPup,
+  fetchShipmentsByQuery,
   fetchShipmentsByUser,
-  updateShipmentStatus,
 } from './shipmentsThunk';
 import { RootState } from '../../app/store';
 import { toast } from 'react-toastify';
@@ -80,70 +76,16 @@ export const shipmentsSlice = createSlice({
       });
 
     builder
-      .addCase(fetchShipmentsByRegionAndPup.pending, (state) => {
+      .addCase(fetchShipmentsByQuery.pending, (state) => {
         state.shipmentsLoading = true;
       })
-      .addCase(fetchShipmentsByRegionAndPup.fulfilled, (state, { payload }) => {
+      .addCase(fetchShipmentsByQuery.fulfilled, (state, { payload }) => {
         state.shipments = payload.shipments;
         state.shipmentsLoading = false;
       })
-      .addCase(fetchShipmentsByRegionAndPup.rejected, (state) => {
+      .addCase(fetchShipmentsByQuery.rejected, (state) => {
         state.shipmentsLoading = false;
         state.shipmentsError = true;
-      });
-
-    builder
-      .addCase(fetchShipmentsByRegion.pending, (state) => {
-        state.shipmentsLoading = true;
-      })
-      .addCase(fetchShipmentsByRegion.fulfilled, (state, { payload }) => {
-        state.shipments = payload.shipments;
-        state.shipmentsLoading = false;
-      })
-      .addCase(fetchShipmentsByRegion.rejected, (state) => {
-        state.shipmentsLoading = false;
-        state.shipmentsError = true;
-      });
-
-    builder
-      .addCase(fetchShipmentsByDatetime.pending, (state) => {
-        state.shipmentsLoading = true;
-      })
-      .addCase(fetchShipmentsByDatetime.fulfilled, (state, { payload }) => {
-        state.shipments = payload.shipments;
-        state.shipmentsLoading = false;
-      })
-      .addCase(fetchShipmentsByDatetime.rejected, (state) => {
-        state.shipmentsLoading = false;
-        state.shipmentsError = true;
-      });
-
-    builder
-      .addCase(fetchShipmentsByRegionAndDatetime.pending, (state) => {
-        state.shipmentsLoading = true;
-      })
-      .addCase(
-        fetchShipmentsByRegionAndDatetime.fulfilled,
-        (state, { payload }) => {
-          state.shipments = payload.shipments;
-          state.shipmentsLoading = false;
-        },
-      )
-      .addCase(fetchShipmentsByRegionAndDatetime.rejected, (state) => {
-        state.shipmentsLoading = false;
-        state.shipmentsError = true;
-      });
-
-    builder
-      .addCase(updateShipmentStatus.pending, (state) => {
-        state.addShipmentLoading = true;
-      })
-      .addCase(updateShipmentStatus.fulfilled, (state) => {
-        state.addShipmentLoading = false;
-      })
-      .addCase(updateShipmentStatus.rejected, (state) => {
-        state.addShipmentLoading = false;
-        state.addShipmentError = true;
       });
   },
 });
@@ -152,8 +94,6 @@ export const shipmentsReducer = shipmentsSlice.reducer;
 export const selectShipments = (state: RootState) => state.shipments.shipments;
 export const selectShipmentsLoading = (state: RootState) =>
   state.shipments.shipmentsLoading;
-export const selectShipmentsError = (state: RootState) =>
-  state.shipments.shipmentsError;
 
 export const addShipmentGetLoad = (state: RootState) =>
   state.shipments.addShipmentLoading;

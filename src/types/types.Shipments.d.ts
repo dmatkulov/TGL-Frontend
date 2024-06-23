@@ -64,6 +64,7 @@ export interface Shipment {
   };
   trackerNumber: number;
 }
+
 export interface ShipmentThatDone {
   _id?: string;
   pupId: {
@@ -95,8 +96,10 @@ export interface ShipmentMutation {
   };
 }
 
-export interface ShipmentStatusMutation {
-  status: string;
+export interface ShipmentQueryArgs {
+  region?: string;
+  datetime?: string;
+  pupId?: string;
 }
 
 export interface ShipmentsResponse {

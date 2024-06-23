@@ -14,7 +14,7 @@ const styleBoxSpinner = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: "5rem",
+  marginTop: '5rem',
 };
 
 const CompanyAddresses = () => {

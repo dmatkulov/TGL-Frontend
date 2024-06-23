@@ -1,11 +1,11 @@
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { isWarehousesLoading, warehousesState } from './warehousesSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchWarehouseData } from './warehousesThunks';
 import { selectUser } from '../users/usersSlice';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Slide, toast } from 'react-toastify';
-import {Warehouse} from '../../types/types.Warehouses';
 
 const Warehouses = () => {
   const dispatch = useAppDispatch();
@@ -17,35 +17,30 @@ const Warehouses = () => {
     dispatch(fetchWarehouseData());
   }, [dispatch]);
 
-  const handleCopy = async (warehouse: Warehouse) => {
-    if (user?.marketId) {
-      const text =
-        warehouse.name +
-        ' ' +
-        warehouse.phoneNumber +
-        ' ' +
-        warehouse.address +
-        user?.marketId;
+  const [textToCopy, setTextToCopy] = useState('');
 
-      try {
-        await navigator.clipboard.writeText(text);
-        toast.success('Скопировано', {
-          autoClose: 500,
-          hideProgressBar: true,
-          pauseOnHover: false,
-          draggable: false,
-          transition: Slide,
-        });
-      } catch {
-        toast.error('Не удалось скопировать', {
-          autoClose: 500,
-          hideProgressBar: true,
-          pauseOnHover: false,
-          transition: Slide,
-        });
-      }
-    }
+  const onCopy = async () => {
+    toast.success('Скопировано', {
+      autoClose: 500,
+      hideProgressBar: true,
+      pauseOnHover: false,
+      draggable: false,
+      transition: Slide,
+    });
   };
+
+  useEffect(() => {
+    if (state.length > 0 && user?.marketId) {
+      const string =
+        state[0].name +
+        ' ' +
+        state[0].phoneNumber +
+        ' ' +
+        state[0].address +
+        user?.marketId;
+      setTextToCopy(string);
+    }
+  }, [state, user]);
 
   let content;
 
@@ -59,23 +54,29 @@ const Warehouses = () => {
   content = (
     <>
       {state.map((elem) => (
-        <Typography key={elem._id} sx={{
-          mt: 2,
-          pb: 2,
-          mb: 1,
-          '--Grid-borderWidth': '1px',
-          borderBottom: 'var(--Grid-borderWidth) solid',
-          borderColor: 'divider',
-        }}>
+        <Box
+          key={elem._id}
+          sx={{
+            pb: 4,
+            mb: 4,
+            '--Grid-borderWidth': '1px',
+            borderBottom: 'var(--Grid-borderWidth) solid',
+            borderColor: 'divider',
+          }}
+        >
           <Typography>收货人：{elem.name}</Typography>
           <Typography>电话：{elem.phoneNumber}</Typography>
-          <Typography sx={{mb: 3}}>
+          <Typography sx={{ mb: 3 }}>
             {elem.address + user?.marketId}
           </Typography>
-          <Button variant="contained" onClick={() => handleCopy(elem)}>
-            Скопировать
-          </Button>
-        </Typography>
+          <CopyToClipboard
+            text={textToCopy}
+            onCopy={onCopy}
+            options={{ message: 'fsdfs' }}
+          >
+            <Button variant="contained">Скопировать</Button>
+          </CopyToClipboard>
+        </Box>
       ))}
     </>
   );

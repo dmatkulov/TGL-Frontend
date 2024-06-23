@@ -66,10 +66,6 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     }
   }, [isMultipleSelected, multipleStatus]);
 
-  useEffect(() => {
-    console.log(statusState);
-  }, [statusState]);
-
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -78,7 +74,6 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   };
 
   const sendData = async () => {
-    console.log('QWE', statusState);
     setIsMultipleSelected(false);
     await dispatch(changeShipmentsStatus(statusState));
     onDataSend();
@@ -241,7 +236,6 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
           </TableHead>
           <TableBody>
             {searchResult !== undefined ? renderSingle : renderMultiple}
-            {/*{renderMultiple}*/}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />

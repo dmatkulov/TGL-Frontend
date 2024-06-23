@@ -53,31 +53,31 @@ const Warehouses = () => {
   }
   content = (
     <>
-        {state.map((elem) => (
-          <Box
-            key={elem._id}
-            sx={{
-              pb: 4,
-              mb: 4,
-              '--Grid-borderWidth': '1px',
-              borderBottom: 'var(--Grid-borderWidth) solid',
-              borderColor: 'divider',
-            }}
+      {state.map((elem) => (
+        <Box
+          key={elem._id}
+          sx={{
+            pb: 4,
+            mb: 4,
+            '--Grid-borderWidth': '1px',
+            borderBottom: 'var(--Grid-borderWidth) solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Typography>收货人：{elem.name}</Typography>
+          <Typography>电话：{elem.phoneNumber}</Typography>
+          <Typography sx={{ mb: 3 }}>
+            {elem.address + user?.marketId}
+          </Typography>
+          <CopyToClipboard
+            text={textToCopy}
+            onCopy={onCopy}
+            options={{ message: 'fsdfs' }}
           >
-            <Typography>收货人：{elem.name}</Typography>
-            <Typography>电话：{elem.phoneNumber}</Typography>
-            <Typography sx={{ mb: 3 }}>
-              {elem.address + user?.marketId}
-            </Typography>
-            <CopyToClipboard
-              text={textToCopy}
-              onCopy={onCopy}
-              options={{ message: 'fsdfs' }}
-            >
-              <Button variant="contained">Скопировать</Button>
-            </CopyToClipboard>
-          </Box>
-        ))}
+            <Button variant="contained">Скопировать</Button>
+          </CopyToClipboard>
+        </Box>
+      ))}
     </>
   );
 

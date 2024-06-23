@@ -1,55 +1,56 @@
 import Warehouses from '../../warehouses/Warehouses';
-import { Alert, Box, Grid } from '@mui/material';
+import { Alert, Box, Grid, useMediaQuery } from '@mui/material';
 import Banned from '../../banned/Banned';
 import videoTutorial from '../../../assets/tutorial.webm';
 
 const Information = () => {
+  const isMediumScreen = useMediaQuery('(max-width:1056px)');
   return (
-    <Grid container direction="column">
-
-        <Grid xs={4} item sx={{ display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap' }}>
-          <Box sx={{
-            width: '230px',
-            padding: '5px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-            <Box>
-              <iframe
-                width="220"
-                height="450"
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                src={videoTutorial}>
-              </iframe>
-            </Box>
-            <Box>
-              <Alert severity="info">
-                Краткое обучающее видео о том как вводить ваш адрес на маркетплейсе
-              </Alert>
-            </Box>
-          </Box>
-          <Grid item xs={8}  sx={{
+    <Grid
+      container
+      spacing={2}
+      sx={{
+        flexDirection: isMediumScreen ? 'column' : 'row',
+        alignItems: isMediumScreen ? 'center' : 'flex-start',
+      }}
+    >
+      <Grid item xs={12} md={4}>
+        <Box
+          sx={{
             width: '100%',
             padding: '5px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'flex-start',
             alignItems: 'center',
-          }}>
-            <Box>
-              <Alert severity="info">
-                Ниже представлен Ваш адрес. Скопируйте его и вставьте в графу адреса на маркетплейсах.
-              </Alert>
-            </Box>
-            <Warehouses />
-          </Grid>
-        </Grid>
-
-      <Grid item xs={12} m={2}>
+            marginBottom: 2,
+          }}
+        >
+          <Box>
+            <iframe
+              width="250px"
+              height="600px"
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={videoTutorial}
+            ></iframe>
+          </Box>
+          <Box>
+            <Alert severity="info">Краткое обучающее видео.</Alert>
+          </Box>
+        </Box>
+      </Grid>
+      <Grid item xs={12} md={8}>
+        <Box sx={{ width: '100%', marginBottom: 2 }}>
+          <Alert severity="info">
+            Ниже представлен Ваш адрес. <br /> Скопируйте его и вставьте в графу
+            адреса на маркетплейсах.
+          </Alert>
+        </Box>
+        <Warehouses />
+      </Grid>
+      <Grid item xs={12}>
         <Banned />
       </Grid>
     </Grid>

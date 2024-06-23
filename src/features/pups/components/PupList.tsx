@@ -145,8 +145,7 @@ const PupList: React.FC = () => {
             <CircularProgress size={100} />
           </Box>
         ) : (
-          !isExtraSmallScreen &&
-          <Grid mt={2}>{tableContent}</Grid>
+          !isExtraSmallScreen && <Grid mt={2}>{tableContent}</Grid>
         )}
 
         {!isMediumScreen && (
@@ -176,11 +175,13 @@ const PupList: React.FC = () => {
                             item.address
                           ) : (
                             <span style={{ color: 'red', fontWeight: 700 }}>
-                          Нет ПВЗ
-                        </span>
+                              Нет ПВЗ
+                            </span>
                           )}
                         </Typography>
-                        <Typography>Номер телефона: {item.phoneNumber}</Typography>
+                        <Typography>
+                          Номер телефона: {item.phoneNumber}
+                        </Typography>
                       </CardContent>
                     </Card>
                   </Grid>

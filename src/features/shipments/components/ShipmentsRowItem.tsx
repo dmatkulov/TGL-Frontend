@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShipmentData, ShipmentMutation } from '../../../types/types.Shipments';
 import { appRoutes } from '../../../utils/constants';
 import {
+  Box,
   Button,
   Checkbox,
   Chip,
@@ -59,7 +60,8 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const [modalOpen, setModalOpen] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
 
-  const isLarge = useMediaQuery('(min-width:1200px)');
+  const isLarge = useMediaQuery('(min-width:860px)');
+  const isMobile = useMediaQuery('(min-width:375px)');
 
   const onCheck = () => {
     handleClick(shipment._id);
@@ -130,8 +132,10 @@ const ShipmentsRowItem: React.FC<Props> = ({
     statusColor.color = '#bf360c';
   }
 
-  return (
-    !isLarge && (
+  let tableContent;
+
+  if (!isLarge) {
+    tableContent = (
       <>
         <TableRow
           role="checkbox"
@@ -211,37 +215,47 @@ const ShipmentsRowItem: React.FC<Props> = ({
               direction="row"
               alignItems="center"
               spacing={2}
+              justifyContent="space-between"
               mb={1}
               mt={3}
             >
-              <Button
-                variant="contained"
-                onClick={toggleOpen}
-                disabled={isItemSelected}
-                sx={{
-                  fontSize: '11px',
-                }}
-              >
-                Редактировать
-              </Button>
-              <LoadingButton
-                disabled={isDelete || isItemSelected}
-                loading={isDelete}
-                onClick={openWarningModalWindow}
-                startIcon={<CancelIcon />}
-                color="error"
-              ></LoadingButton>
-            </Stack>
-
-            <Stack>
-              <Button
+              <IconButton
                 aria-label="expand row"
                 size="small"
                 onClick={() => setOpen(!open)}
               >
-                Подробнее{' '}
                 {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </Button>
+              </IconButton>
+              <Box>
+                {isMobile ? (
+                  <Button
+                    variant="contained"
+                    onClick={toggleOpen}
+                    disabled={isItemSelected}
+                    sx={{
+                      fontSize: '11px',
+                      mr: 2,
+                    }}
+                  >
+                    Редактировать
+                  </Button>
+                ) : (
+                  <IconButton
+                    color="primary"
+                    onClick={toggleOpen}
+                    disabled={isItemSelected}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                )}
+                <IconButton
+                  disabled={isDelete || isItemSelected}
+                  onClick={openWarningModalWindow}
+                  color="error"
+                >
+                  <CancelIcon />
+                </IconButton>
+              </Box>
             </Stack>
           </TableCell>
         </TableRow>
@@ -322,10 +336,13 @@ const ShipmentsRowItem: React.FC<Props> = ({
                               fontSize="smaller"
                               style={{ marginLeft: 0 }}
                             >
-                              Высота: {shipment.dimensions.height} см , Ширина:{' '}
-                              {shipment.dimensions.width} см , Длина:{' '}
-                              {shipment.dimensions.length} см , Вес:{' '}
-                              {shipment.weight} кг
+                              Высота: {shipment.dimensions.height} см
+                              <br />
+                              Ширина: {shipment.dimensions.width} см
+                              <br />
+                              Длина: {shipment.dimensions.length} см
+                              <br />
+                              Вес: {shipment.weight} кг
                             </Typography>
                           </Grid>
                         </Grid>
@@ -391,31 +408,10 @@ const ShipmentsRowItem: React.FC<Props> = ({
             </Collapse>
           </TableCell>
         </TableRow>
-
-        <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
-          <DialogContent
-            sx={{
-              mt: '20px',
-            }}
-          >
-            <ShipmentsForm
-              onSubmit={submitFormHandler}
-              initialShipmentState={shipmentMutation}
-              isEdit
-            />
-          </DialogContent>
-        </Dialog>
-        <WarningShipmentModal
-          stateModal={modalOpen}
-          deleteHandler={deleteHandler}
-          closeModal={closeWarningModalWindow}
-        />
       </>
-    )
-  );
-
-  return (
-    isLarge && (
+    );
+  } else {
+    tableContent = (
       <>
         <TableRow
           role="checkbox"
@@ -592,27 +588,32 @@ const ShipmentsRowItem: React.FC<Props> = ({
             </Collapse>
           </TableCell>
         </TableRow>
-
-        <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
-          <DialogContent
-            sx={{
-              mt: '20px',
-            }}
-          >
-            <ShipmentsForm
-              onSubmit={submitFormHandler}
-              initialShipmentState={shipmentMutation}
-              isEdit
-            />
-          </DialogContent>
-        </Dialog>
-        <WarningShipmentModal
-          stateModal={modalOpen}
-          deleteHandler={deleteHandler}
-          closeModal={closeWarningModalWindow}
-        />
       </>
-    )
+    );
+  }
+
+  return (
+    <>
+      {tableContent}
+      <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          <ShipmentsForm
+            onSubmit={submitFormHandler}
+            initialShipmentState={shipmentMutation}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
+      <WarningShipmentModal
+        stateModal={modalOpen}
+        deleteHandler={deleteHandler}
+        closeModal={closeWarningModalWindow}
+      />
+    </>
   );
 };
 

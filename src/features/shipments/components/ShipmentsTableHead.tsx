@@ -12,7 +12,7 @@ const ShipmentsTableHead: React.FC<Props> = ({
   rowCount,
   onSelectAllClick,
 }) => {
-  const isLarge = useMediaQuery('(min-width:1200px)');
+  const isLarge = useMediaQuery('(min-width:860px)');
 
   let tableHead;
 

@@ -54,7 +54,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
 
   const isInitial = statusState.length === 0;
   const [selected, setSelected] = useState<string[]>([]);
-  const isLargeScreen = useMediaQuery('(min-width:768px)');
+  const isLargeScreen = useMediaQuery('(min-width:860px)');
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   useEffect(() => {
@@ -328,7 +328,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
               <TablePagination
                 width={100}
                 rowsPerPageOptions={[5, 10, 20]}
-                colSpan={4}
+                colSpan={!isLargeScreen ? 4 : 12}
                 labelRowsPerPage={
                   !isLargeScreen ? '' : 'Количество на странице'
                 }

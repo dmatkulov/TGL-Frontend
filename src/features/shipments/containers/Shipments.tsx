@@ -154,7 +154,7 @@ const Shipments = () => {
             onClick={clearFilter}
             fullWidth={isSmallScreen}
           >
-            {isSmallScreen ? 'Сбросить' : 'Сбросить фильтр'}
+            Сбросить
           </Button>
         </Grid>
       </Grid>

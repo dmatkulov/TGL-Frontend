@@ -167,7 +167,7 @@ const PupList: React.FC = () => {
                           }}
                           gutterBottom
                         >
-                          <Typography>Номер ПВЗ: {item.name}</Typography>
+                          Номер ПВЗ: {item.name}
                         </Typography>
                         <Typography>
                           Адрес ПВЗ:{' '}

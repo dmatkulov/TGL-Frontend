@@ -148,13 +148,15 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
     <Dialog open={open} onClose={onClose} maxWidth="lg">
       <DialogContent sx={{ mt: '20px' }}>
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginTop: 2,
-            marginBottom: 2,
-          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'flex-end',
+              marginTop: 2,
+              marginBottom: 2,
+            }}
+          >
             <Button
               sx={{
                 '&.MuiButton-root:hover': { background: '#c6001c' },
@@ -167,7 +169,6 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
             </Button>
           </Box>
           <Grid container spacing={2}>
-
             <Grid item xs={12} container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField

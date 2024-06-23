@@ -59,7 +59,7 @@ const OrdersHistory = () => {
             {history
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((item) => (
-                <Grid item xs={12}>
+                <Grid item xs={12} key={item._id}>
                   <OrdersHistoryItemCard
                     key={item._id}
                     pupId={item.pupId}

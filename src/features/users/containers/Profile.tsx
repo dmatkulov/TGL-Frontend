@@ -72,7 +72,7 @@ const Profile: React.FC = () => {
                 </>
               )}
             </Grid>
-            <Grid item sx={{marginTop: 1}}>
+            <Grid item sx={{ marginTop: 1 }}>
               <Button
                 variant="contained"
                 startIcon={<BorderColorIcon />}

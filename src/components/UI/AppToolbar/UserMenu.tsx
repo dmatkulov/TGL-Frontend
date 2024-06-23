@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/hooks';
 import { logout } from '../../../features/users/usersThunks';

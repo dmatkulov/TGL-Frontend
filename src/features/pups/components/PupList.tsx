@@ -21,6 +21,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
@@ -36,6 +37,26 @@ const styleBoxSpinner = {
   marginTop: '50px',
 };
 
+const gridContainer = {
+  marginTop: '15px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const gridItemMain = {
+  marginBottom: '5px',
+  padding: '5px',
+  border: '2px solid #5f9ea0',
+  borderRadius: '10px',
+};
+
+const gridItemInner = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+};
+
 const PupList: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectPupsLoading);
@@ -44,6 +65,8 @@ const PupList: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const isExtraSmallScreen = useMediaQuery('(max-width:680px)');
 
   useEffect(() => {
     dispatch(fetchPups());
@@ -133,7 +156,38 @@ const PupList: React.FC = () => {
             <CircularProgress size={100} />
           </Box>
         ) : (
-          <Grid mt={2}>{tableContent}</Grid>
+          !isExtraSmallScreen && <Grid mt={2}>{tableContent}</Grid>
+        )}
+        {isExtraSmallScreen && (
+          <Grid container sx={gridContainer}>
+            {pups.map((item) => (
+              <Grid item xs={12} key={item._id} sx={gridItemMain}>
+                <Grid item>
+                  <Box sx={gridItemInner}>
+                    <Typography>
+                      <strong>{`Номер ПВЗ: `}</strong> <em>{item.name}</em>
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Box sx={gridItemInner}>
+                    <Typography>
+                      <strong>{`Адрес ПВЗ: `}</strong>
+                      <em>{item.address}</em>
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid item>
+                  <Box sx={gridItemInner}>
+                    <Typography>
+                      <strong>{`Номер телефона: `}</strong>
+                      <em>{item.phoneNumber}</em>
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            ))}
+          </Grid>
         )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>

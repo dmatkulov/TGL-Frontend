@@ -31,6 +31,11 @@ interface Props {
   searchResult?: ShipmentData | null;
 }
 
+interface StatusEdit {
+  statusAll: string;
+  payment: boolean | string;
+}
+
 const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
@@ -38,10 +43,12 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
 
   const statuses = Statuses;
   const [statusState, setStatusState] = useState<ShipmentStatusData[]>([]);
-  const [multipleStatus, setMultipleStatus] = useState({
-    statusAll: 'КР_ПРИБЫЛО',
-    payment: false,
+
+  const [multipleStatus, setMultipleStatus] = useState<StatusEdit>({
+    statusAll: '',
+    payment: '',
   });
+
   const [isMultipleSelected, setIsMultipleSelected] = useState<boolean>(false);
 
   const isInitial = statusState.length === 0;
@@ -54,7 +61,10 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         prevState.map((item) => ({
           ...item,
           status: multipleStatus.statusAll,
-          isPaid: multipleStatus.payment,
+          isPaid:
+            typeof multipleStatus.payment !== 'string'
+              ? multipleStatus.payment
+              : false,
         })),
       );
     }
@@ -197,17 +207,18 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         display="flex"
         alignItems="center"
         sx={{
-          p: 2,
-          mb: 5,
-          backgroundColor: '#f9fbfe',
+          py: 3,
+          px: 2,
+          mb: 6,
+          backgroundColor: '#ECF3F3',
           borderRadius: 2,
         }}
       >
         {!isInitial ? (
           <Grid container alignItems="center" spacing={2}>
             <Grid item xs={12} md={4}>
-              <Typography gutterBottom sx={{ fontSize: '14px' }}>
-                Выбрано {selected.length} грузов
+              <Typography gutterBottom>
+                Выбрано <b>{selected.length}</b> грузов
               </Typography>
             </Grid>
             <Grid

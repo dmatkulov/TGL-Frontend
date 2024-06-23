@@ -128,7 +128,6 @@ const ShipmentsRowItem: React.FC<Props> = ({
   return (
     <>
       <TableRow
-        sx={{ '& > *': { borderBottom: 'unset' } }}
         role="checkbox"
         selected={isItemSelected}
         aria-checked={isItemSelected}

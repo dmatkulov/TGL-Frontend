@@ -110,7 +110,7 @@ const ShipmentsForm: React.FC<Props> = ({
   };
 
   const isFormValid = () => {
-    const { userMarketId, trackerNumber, weight, dimensions, status } = state;
+    const { userMarketId, trackerNumber, weight, dimensions } = state;
 
     return (
       userMarketId &&
@@ -118,8 +118,7 @@ const ShipmentsForm: React.FC<Props> = ({
       weight &&
       dimensions.height &&
       dimensions.length &&
-      dimensions.width &&
-      status
+      dimensions.width
     );
   };
 
@@ -132,10 +131,15 @@ const ShipmentsForm: React.FC<Props> = ({
       return;
     }
 
+    const readyState: ShipmentMutation = {
+      ...state,
+      status: state.status ? state.status : 'КНР_ОТПРАВЛЕНО',
+    };
+
     if (isEdit && onSubmit) {
       onSubmit(state);
     } else {
-      await dispatch(createShipment(state));
+      await dispatch(createShipment(readyState));
     }
     setState(initialState);
   };
@@ -266,7 +270,6 @@ const ShipmentsForm: React.FC<Props> = ({
           <Grid item xs={3}>
             <TextField
               fullWidth
-              required
               select
               name="status"
               label="Статус"

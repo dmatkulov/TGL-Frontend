@@ -23,13 +23,14 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import { Block } from '@mui/icons-material';
 import { useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const adminLinks: UserNav[] = [
   {
     id: 1,
     name: 'Мой профиль',
     navLink: appRoutes.myAdminProfile,
-    icon: <AnalyticsIcon color="primary" />,
+    icon: <AccountBoxIcon color="primary" />,
   },
   {
     id: 2,
@@ -110,7 +111,7 @@ const managerLinks: UserNav[] = [
     id: 1,
     name: 'Мой профиль',
     navLink: appRoutes.myAdminProfile,
-    icon: <AnalyticsIcon color="primary" />,
+    icon: <AccountBoxIcon color="primary" />,
   },
   {
     id: 2,

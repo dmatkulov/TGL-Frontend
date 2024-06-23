@@ -14,7 +14,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   ShipmentData,
   ShipmentStatusData,
@@ -23,8 +23,8 @@ import ShipmentsRowItem from './ShipmentsRowItem';
 import { Statuses } from '../../../utils/constants';
 import { useAppDispatch } from '../../../app/hooks';
 import ShipmentsTableHead from './ShipmentsTableHead';
-import { changeShipmentsStatus } from '../shipmentsThunk';
 import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
+import { changeShipmentsStatus } from '../shipmentsThunk';
 
 interface Props {
   onDataSend: () => void;
@@ -32,48 +32,39 @@ interface Props {
   searchResult?: ShipmentData | null;
 }
 
-interface StatusEdit {
-  statusAll: string;
-  payment: boolean | string;
-}
-
 const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const statuses = Statuses;
+
   const [statusState, setStatusState] = useState<ShipmentStatusData[]>([]);
-
-  const [multipleStatus, setMultipleStatus] = useState<StatusEdit>({
-    statusAll: '',
-    payment: '',
-  });
-
-  const [isMultipleSelected, setIsMultipleSelected] = useState<boolean>(false);
+  const [multipleStatus, setMultipleStatus] = useState<string>('');
+  const [multiplePayment, setMultiplePayment] = useState<string>('');
 
   const isInitial = statusState.length === 0;
   const [selected, setSelected] = useState<string[]>([]);
   const isLargeScreen = useMediaQuery('(min-width:860px)');
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
-  useEffect(() => {
-    if (isMultipleSelected) {
-      setStatusState((prevState) =>
-        prevState.map((item) => ({
-          ...item,
-          status: multipleStatus.statusAll,
-          isPaid:
-            typeof multipleStatus.payment !== 'string'
-              ? multipleStatus.payment
-              : false,
-        })),
-      );
-    }
-  }, [isMultipleSelected, multipleStatus]);
+  const setIsPaidToFalse = () => {
+    setStatusState((prevState) =>
+      prevState.map((item) => ({
+        ...item,
+        isPaid: false,
+      })),
+    );
+  };
+  const setIsPaidToTrue = () => {
+    setStatusState((prevState) =>
+      prevState.map((item) => ({
+        ...item,
+        isPaid: true,
+      })),
+    );
+  };
 
   const sendData = async () => {
-    setIsMultipleSelected(false);
     await dispatch(changeShipmentsStatus(statusState));
     onDataSend();
   };
@@ -92,13 +83,31 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   };
 
   const multipleStatusHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setMultipleStatus((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setMultipleStatus(e.target.value);
+    setStatusState((prevState) =>
+      prevState.map((item) => ({
+        ...item,
+        status: e.target.value,
+      })),
+    );
+  };
 
-    setIsMultipleSelected(true);
+  const multiplePaymentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMultiplePayment(e.target.value);
+  };
+
+  const changeHandler = (_id: string, status: string, isPaid: boolean) => {
+    setStatusState((prevState) =>
+      prevState.map((item) =>
+        item._id === _id
+          ? {
+              ...item,
+              status,
+              isPaid,
+            }
+          : item,
+      ),
+    );
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +186,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         removeItem={removeItem}
         isItemSelected={isItemSelected}
         handleClick={handleClick}
+        changeHandler={changeHandler}
       />
     );
   });
@@ -191,6 +201,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         createItem={createItem}
         removeItem={removeItem}
         handleClick={handleClick}
+        changeHandler={changeHandler}
       />
     );
   } else if (searchResult === null) {
@@ -243,10 +254,10 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
                   size="small"
                   name="statusAll"
                   id="statusAll"
+                  value={multipleStatus}
+                  onChange={multipleStatusHandler}
                   label="Статус"
                   fullWidth
-                  value={multipleStatus.statusAll}
-                  onChange={multipleStatusHandler}
                   sx={{ marginRight: '8px', flexBasis: '25%' }}
                 >
                   <MenuItem disabled style={{ fontSize: '14px' }}>
@@ -272,17 +283,25 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
                   name="payment"
                   id="payment"
                   label="Оплата"
-                  value={multipleStatus.payment}
-                  onChange={multipleStatusHandler}
+                  value={multiplePayment}
+                  onChange={multiplePaymentHandler}
                   sx={{ marginRight: '8px', flexBasis: '25%' }}
                 >
                   <MenuItem disabled style={{ fontSize: '14px' }}>
                     Выберите статус
                   </MenuItem>
-                  <MenuItem value="false" style={{ fontSize: '14px' }}>
+                  <MenuItem
+                    onClick={setIsPaidToFalse}
+                    value="Не оплачено"
+                    style={{ fontSize: '14px' }}
+                  >
                     Не оплачено
                   </MenuItem>
-                  <MenuItem value="true" style={{ fontSize: '14px' }}>
+                  <MenuItem
+                    onClick={setIsPaidToTrue}
+                    value="Оплачено"
+                    style={{ fontSize: '14px' }}
+                  >
                     Оплачено
                   </MenuItem>
                 </TextField>

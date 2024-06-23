@@ -43,6 +43,7 @@ interface Props {
   removeItem: (_id: string) => void;
   isItemSelected?: boolean;
   handleClick: (id: string) => void;
+  changeHandler: (_id: string, status: string, isPaid: boolean) => void;
 }
 
 const ShipmentsRowItem: React.FC<Props> = ({
@@ -51,6 +52,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
   removeItem,
   isItemSelected = false,
   handleClick,
+  changeHandler,
 }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -59,6 +61,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
   const [open, setOpen] = React.useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const isLarge = useMediaQuery('(min-width:860px)');
   const isMobile = useMediaQuery('(min-width:375px)');
@@ -70,6 +73,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
       return;
     }
     createItem(shipment._id, shipment.status, shipment.isPaid);
+    if (checked && isItemSelected) {
+      changeHandler(shipment._id, shipment.status, shipment.isPaid);
+    }
   };
 
   const openWarningModalWindow = () => {
@@ -149,6 +155,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
                 style={{ padding: 0 }}
                 checked={isItemSelected}
                 onClick={onCheck}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setChecked(event.target.checked)
+                }
               />
             </Stack>
             <Stack

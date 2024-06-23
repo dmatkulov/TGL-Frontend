@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
   Button,
   Dialog,
   DialogContent,
@@ -147,20 +148,26 @@ const UserDialog: React.FC<Props> = ({ onSubmit, onClose, open }) => {
     <Dialog open={open} onClose={onClose} maxWidth="lg">
       <DialogContent sx={{ mt: '20px' }}>
         <form autoComplete="off" onSubmit={handleSubmit}>
-          <Button
-            sx={{
-              '&.MuiButton-root:hover': { background: '#c6001c' },
-              color: 'white',
-              background: '#9e1b32',
-              position: 'absolute',
-              top: 0,
-              right: 0,
-            }}
-            onClick={onClose}
-          >
-            X
-          </Button>
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginTop: 2,
+            marginBottom: 2,
+          }}>
+            <Button
+              sx={{
+                '&.MuiButton-root:hover': { background: '#c6001c' },
+                color: 'white',
+                background: '#9e1b32',
+              }}
+              onClick={onClose}
+            >
+              X
+            </Button>
+          </Box>
           <Grid container spacing={2}>
+
             <Grid item xs={12} container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField

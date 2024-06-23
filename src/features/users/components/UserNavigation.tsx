@@ -109,6 +109,7 @@ const UserNavigation = () => {
           {isExtraSmallScreen && (
             <Box
               sx={{
+                marginBottom: 3,
                 padding: '4px 16px',
                 display: 'flex',
                 alignItems: 'center',

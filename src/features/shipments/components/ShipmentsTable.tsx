@@ -14,7 +14,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import {
   ShipmentData,
   ShipmentStatusData,
@@ -42,7 +42,6 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const [multipleStatus, setMultipleStatus] = useState<string>('');
   const [multiplePayment, setMultiplePayment] = useState<string>('');
 
-  const [isMultipleSelected, setIsMultipleSelected] = useState<boolean>(false);
   const isInitial = statusState.length === 0;
   const [selected, setSelected] = useState<string[]>([]);
   const isLargeScreen = useMediaQuery('(min-width:860px)');
@@ -65,19 +64,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
     );
   };
 
-  useEffect(() => {
-    if (isMultipleSelected) {
-      setStatusState((prevState) =>
-        prevState.map((item) => ({
-          ...item,
-          status: multipleStatus,
-        })),
-      );
-    }
-  }, [isMultipleSelected, multipleStatus]);
-
   const sendData = async () => {
-    setIsMultipleSelected(false);
     await dispatch(changeShipmentsStatus(statusState));
     onDataSend();
   };
@@ -97,12 +84,30 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
 
   const multipleStatusHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMultipleStatus(e.target.value);
-    setIsMultipleSelected(true);
+    setStatusState((prevState) =>
+      prevState.map((item) => ({
+        ...item,
+        status: e.target.value,
+      })),
+    );
   };
 
   const multiplePaymentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMultiplePayment(e.target.value);
-    setIsMultipleSelected(true);
+  };
+
+  const changeHandler = (_id: string, status: string, isPaid: boolean) => {
+    setStatusState((prevState) =>
+      prevState.map((item) =>
+        item._id === _id
+          ? {
+              ...item,
+              status,
+              isPaid,
+            }
+          : item,
+      ),
+    );
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -181,6 +186,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         removeItem={removeItem}
         isItemSelected={isItemSelected}
         handleClick={handleClick}
+        changeHandler={changeHandler}
       />
     );
   });
@@ -195,6 +201,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
         createItem={createItem}
         removeItem={removeItem}
         handleClick={handleClick}
+        changeHandler={changeHandler}
       />
     );
   } else if (searchResult === null) {

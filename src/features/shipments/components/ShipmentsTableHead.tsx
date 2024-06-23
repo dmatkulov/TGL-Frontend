@@ -1,4 +1,4 @@
-import { Checkbox, TableCell, TableRow } from '@mui/material';
+import { Checkbox, TableCell, TableRow, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -12,25 +12,47 @@ const ShipmentsTableHead: React.FC<Props> = ({
   rowCount,
   onSelectAllClick,
 }) => {
-  return (
-    <TableRow>
-      <TableCell />
-      <TableCell style={{ fontWeight: 'bold' }} padding="checkbox">
-        <Checkbox
-          color="primary"
-          indeterminate={numSelected > 0 && numSelected < rowCount}
-          checked={rowCount > 0 && numSelected === rowCount}
-          onChange={onSelectAllClick}
-        />
-      </TableCell>
-      <TableCell style={{ fontWeight: 'bold' }}>Трек номер</TableCell>
-      <TableCell style={{ fontWeight: 'bold' }}>Маркет ID</TableCell>
-      <TableCell style={{ fontWeight: 'bold' }}>Статус</TableCell>
-      <TableCell style={{ fontWeight: 'bold' }}>Оплата</TableCell>
-      <TableCell />
-      <TableCell />
-    </TableRow>
-  );
+  const isLarge = useMediaQuery('(min-width:1200px)');
+
+  let tableHead;
+
+  if (!isLarge) {
+    tableHead = (
+      <TableRow>
+        <TableCell style={{ fontWeight: 'bold' }} padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+          />
+          Выбрать все
+        </TableCell>
+      </TableRow>
+    );
+  } else {
+    tableHead = (
+      <TableRow>
+        <TableCell />
+        <TableCell style={{ fontWeight: 'bold' }} padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+          />
+        </TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Трек номер</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Маркет ID</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Статус</TableCell>
+        <TableCell style={{ fontWeight: 'bold' }}>Оплата</TableCell>
+        <TableCell />
+        <TableCell />
+      </TableRow>
+    );
+  }
+
+  return tableHead;
 };
 
 export default ShipmentsTableHead;

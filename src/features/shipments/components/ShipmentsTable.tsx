@@ -12,9 +12,9 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import React, { FC, useEffect, useState } from 'react';
-import TablePaginationActions from './TablePaginationActions';
 import {
   ShipmentData,
   ShipmentStatusData,
@@ -24,6 +24,7 @@ import { Statuses } from '../../../utils/constants';
 import { useAppDispatch } from '../../../app/hooks';
 import ShipmentsTableHead from './ShipmentsTableHead';
 import { changeShipmentsStatus } from '../shipmentsThunk';
+import TablePaginationActions from '@mui/material/TablePagination/TablePaginationActions';
 
 interface Props {
   onDataSend: () => void;
@@ -53,6 +54,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
 
   const isInitial = statusState.length === 0;
   const [selected, setSelected] = useState<string[]>([]);
+  const isLargeScreen = useMediaQuery('(min-width:768px)');
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   useEffect(() => {
@@ -218,7 +220,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
           <Grid container alignItems="center" spacing={2}>
             <Grid item xs={12} md={4}>
               <Typography gutterBottom>
-                Выбрано <b>{selected.length}</b> грузов
+                Выбрано грузов: <b>{selected.length}</b>
               </Typography>
             </Grid>
             <Grid
@@ -324,16 +326,19 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
           <tfoot>
             <TableRow>
               <TablePagination
-                style={{ width: '100%' }}
+                width={100}
                 rowsPerPageOptions={[5, 10, 20]}
-                colSpan={12}
-                labelRowsPerPage="Рядов на странице"
+                colSpan={4}
+                labelRowsPerPage={
+                  !isLargeScreen ? '' : 'Количество на странице'
+                }
                 count={state.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 slotProps={{
                   select: {
                     inputProps: {
+                      display: 'none',
                       'aria-label': 'Показать',
                     },
                     native: true,

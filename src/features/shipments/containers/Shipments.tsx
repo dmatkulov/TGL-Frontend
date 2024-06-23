@@ -131,7 +131,7 @@ const Shipments = () => {
           xs={12}
           md={6}
           display="flex"
-          gap={1}
+          gap={2}
           alignItems="center"
           justifyContent={!isLargeScreen ? 'space-between' : 'flex-start'}
         >
@@ -142,6 +142,7 @@ const Shipments = () => {
             loading={loadingOneOrder}
             loadingPosition="start"
             startIcon={<SearchIcon />}
+            fullWidth={isSmallScreen}
           >
             Поиск
           </LoadingButton>
@@ -151,6 +152,7 @@ const Shipments = () => {
             disabled={loadingOneOrder || !searched}
             color="error"
             onClick={clearFilter}
+            fullWidth={isSmallScreen}
           >
             {isSmallScreen ? 'Сбросить' : 'Сбросить фильтр'}
           </Button>

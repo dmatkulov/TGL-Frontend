@@ -161,8 +161,8 @@ const ShipmentsForm: React.FC<Props> = ({
         </Alert>
       )}
       <Box component="form" onSubmit={onFormHandle}>
-        <Grid container spacing={2} direction={{ xs: 'column', md: 'row' }}>
-          <Grid item xs={4} md={12}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               required
@@ -182,7 +182,7 @@ const ShipmentsForm: React.FC<Props> = ({
               autoFocus
             />
           </Grid>
-          <Grid item xs={4} md={12}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               required
@@ -199,7 +199,7 @@ const ShipmentsForm: React.FC<Props> = ({
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               required
@@ -216,7 +216,7 @@ const ShipmentsForm: React.FC<Props> = ({
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               required
@@ -233,7 +233,7 @@ const ShipmentsForm: React.FC<Props> = ({
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               required
@@ -250,7 +250,7 @@ const ShipmentsForm: React.FC<Props> = ({
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               required
@@ -267,7 +267,7 @@ const ShipmentsForm: React.FC<Props> = ({
               }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               select
@@ -291,7 +291,7 @@ const ShipmentsForm: React.FC<Props> = ({
                 ))}
             </TextField>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               disabled={loadingPups}
@@ -320,7 +320,6 @@ const ShipmentsForm: React.FC<Props> = ({
         {isEdit ? (
           <LoadingButton
             sx={{ mt: 3 }}
-            fullWidth
             type="submit"
             color="primary"
             variant="contained"

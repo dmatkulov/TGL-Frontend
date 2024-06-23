@@ -1,4 +1,11 @@
-import { Box, Button, Modal, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Modal,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import WarningPicture from '../../../assets/warning.png';
 import React from 'react';
 
@@ -15,12 +22,6 @@ const mainBoxStyle = {
   backgroundColor: 'background.paper',
   borderRadius: 3,
   p: 4,
-};
-
-const innerFirstBoxStyle = {
-  display: 'flex',
-  justifyContent: 'left',
-  alignItems: 'center',
 };
 
 const innerSecondBoxStyle = {
@@ -42,21 +43,21 @@ const WarningPupModal: React.FC<PropsModal> = ({
   deleteHandler,
   stateModal,
 }) => {
+  const isLarge = useMediaQuery('(min-width:770px)');
   return (
     <>
       <Modal open={stateModal} onClose={closeModal}>
-        <Box sx={mainBoxStyle}>
-          <Box sx={innerFirstBoxStyle}>
-            <Box
-              component="img"
+        <Box sx={mainBoxStyle} style={{ width: isLarge ? 'auto' : '60%' }}>
+          <Stack style={{ textAlign: 'center' }} alignItems="center">
+            <img
               src={WarningPicture}
               alt="Warning Picture"
-              sx={{ width: 30, height: 30 }}
+              style={{ width: 30, height: 30 }}
             />
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Вы точно хотите удалить заказ?
             </Typography>
-          </Box>
+          </Stack>
           <Box sx={innerSecondBoxStyle}>
             <Button onClick={deleteHandler} variant="contained" color="success">
               Да

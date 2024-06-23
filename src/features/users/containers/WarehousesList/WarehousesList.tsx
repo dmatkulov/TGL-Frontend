@@ -36,7 +36,6 @@ const WarehousesList = () => {
     content = <CircularProgress />;
   }
 
-
   if (state.length === 0) {
     content = (
       <>

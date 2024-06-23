@@ -11,7 +11,6 @@ import React, { useState } from 'react';
 import box from '..//..//../assets/box.png';
 
 const Calculator = () => {
-  // const smallScreen = useMediaQuery('(max-width:810px)');
   const extraSmallScreen = useMediaQuery('(max-width:630px)');
 
   const [dimensions, setDimensions] = useState({

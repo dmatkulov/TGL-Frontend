@@ -2,9 +2,9 @@ import {
   Box,
   Button,
   CircularProgress,
+  Grid,
   TextField,
   Typography,
-  useMediaQuery,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import React, { useState } from 'react';
@@ -12,12 +12,22 @@ import { searchByTrack } from '../../shipments/shipmentsThunk';
 import { selectOneOrder, selectOrdersLoading } from '../ordersSlice';
 import ShipmentsCard from '../../shipments/components/ShipmentsCard';
 
+const inputSearchGrid = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const buttonGridStyle = {
+  sm: 12,
+  display: 'flex',
+  justifyContent: 'flex-start',
+};
+
 const UserOrdersTracking = () => {
   const dispatch = useAppDispatch();
   const order = useAppSelector(selectOneOrder);
   const loadingOneOrder = useAppSelector(selectOrdersLoading);
-  const isSmallScreen = useMediaQuery('(max-width:1000px)');
-  const isExtraSmallScreen = useMediaQuery('(max-width:480px)');
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
 
@@ -34,29 +44,38 @@ const UserOrdersTracking = () => {
   return (
     <>
       <Box component="form" onSubmit={searchOrder}>
-        <TextField
-          required
-          name="search"
-          label="поиск по трек номеру"
-          sx={{
-            width: isExtraSmallScreen
-              ? '175px'
-              : isSmallScreen
-                ? '320px'
-                : '500px',
-            mt: 1,
+        <Grid
+          container
+          spacing={2}
+          direction={{
+            xs: 'column',
+            sm: 'row',
+            md: 'row',
           }}
-          value={state}
-          onChange={handleChange}
-        />
-        <Button
-          type="submit"
-          sx={{ ml: 2, mt: 2 }}
-          variant="contained"
-          disabled={loadingOneOrder}
         >
-          {loadingOneOrder ? <CircularProgress size={25} /> : 'Поиск'}
-        </Button>
+          <Grid item sm={8} md={7} lg={6} sx={inputSearchGrid}>
+            <TextField
+              required
+              name="search"
+              label="поиск по трек номеру"
+              sx={{
+                minWidth: '100%',
+              }}
+              value={state}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item sx={buttonGridStyle}>
+            <Button
+              type="submit"
+              sx={{ width: '100%', height: '100%' }}
+              variant="contained"
+              disabled={loadingOneOrder}
+            >
+              {loadingOneOrder ? <CircularProgress size={25} /> : 'Поиск'}
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
       {order && <ShipmentsCard shipment={order} />}
       {searched && !order && (

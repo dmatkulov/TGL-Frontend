@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemButton,
   ListItemIcon,
-  ListItemText, styled,
+  ListItemText,
+  styled,
   useMediaQuery,
 } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -16,6 +17,7 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import HistoryIcon from '@mui/icons-material/History';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 const userLinks: UserNav[] = [
   {
@@ -28,7 +30,7 @@ const userLinks: UserNav[] = [
     id: 2,
     name: 'Мой профиль',
     navLink: appRoutes.myProfile,
-    icon: <AssignmentIcon color="primary" />,
+    icon: <AccountBoxIcon color="primary" />,
   },
   {
     id: 3,
@@ -105,9 +107,16 @@ const UserNavigation = () => {
             ))}
           </List>
           {isExtraSmallScreen && (
-            <Box sx={{padding: '4px 16px', display: 'flex', alignItems: 'center'}}>
+            <Box
+              sx={{
+                marginBottom: 3,
+                padding: '4px 16px',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <CalculateIcon color="primary" />
-              <Link to={appRoutes.calculate} sx={{paddingLeft: '32px'}}>
+              <Link to={appRoutes.calculate} sx={{ paddingLeft: '32px' }}>
                 Калькулятор
               </Link>
             </Box>

@@ -12,13 +12,13 @@ const Warehouses = () => {
   const state = useAppSelector(warehousesState);
   const isLoading = useAppSelector(isWarehousesLoading);
   const user = useAppSelector(selectUser);
-  
+
   useEffect(() => {
     dispatch(fetchWarehouseData());
   }, [dispatch]);
-  
+
   const [textToCopy, setTextToCopy] = useState('');
-  
+
   const onCopy = async () => {
     toast.success('Скопировано', {
       autoClose: 500,
@@ -28,7 +28,7 @@ const Warehouses = () => {
       transition: Slide,
     });
   };
-  
+
   useEffect(() => {
     if (state.length > 0 && user?.marketId) {
       const string =
@@ -41,39 +41,47 @@ const Warehouses = () => {
       setTextToCopy(string);
     }
   }, [state, user]);
-  
+
   let content;
-  
+
   if (state.length < 1 || user?.marketId) {
     content = (
       <Typography>
         В настоящее время нет доступных складов в Китае. Проверьте позже
       </Typography>
     );
+  } else {
+    content = (
+      <>
+        {state.map((elem) => (
+          <Box
+            key={elem._id}
+            sx={{
+              pb: 4,
+              mb: 4,
+              '--Grid-borderWidth': '1px',
+              borderBottom: 'var(--Grid-borderWidth) solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Typography>收货人：{elem.name}</Typography>
+            <Typography>电话：{elem.phoneNumber}</Typography>
+            <Typography sx={{ mb: 3 }}>
+              {elem.address + user?.marketId}
+            </Typography>
+            <CopyToClipboard
+              text={textToCopy}
+              onCopy={onCopy}
+              options={{ message: 'fsdfs' }}
+            >
+              <Button variant="contained">Скопировать</Button>
+            </CopyToClipboard>
+          </Box>
+        ))}
+      </>
+    );
   }
-  content = (
-    <>
-      {state.map((elem) => (
-        <Box key={elem._id} sx={{
-          pb: 4,
-          mb: 4,
-          '--Grid-borderWidth': '1px',
-          borderBottom: 'var(--Grid-borderWidth) solid',
-          borderColor: 'divider',
-        }}>
-          <Typography>收货人：{elem.name}</Typography>
-          <Typography>电话：{elem.phoneNumber}</Typography>
-          <Typography sx={{ mb: 3 }}>
-            {elem.address + user?.marketId}
-          </Typography>
-          <CopyToClipboard text={textToCopy} onCopy={onCopy} options={{ message: 'fsdfs' }}>
-            <Button variant="contained">Скопировать</Button>
-          </CopyToClipboard>
-        </Box>
-      ))}
-    </>
-  );
-  
+
   return <Box>{isLoading ? <CircularProgress /> : content}</Box>;
 };
 

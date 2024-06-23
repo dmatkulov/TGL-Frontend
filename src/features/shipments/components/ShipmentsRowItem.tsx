@@ -1,261 +1,618 @@
-import React, { useEffect, useState } from 'react';
-import { ShipmentData, ShipmentStatusData } from '../../../types/types.Shipments';
-import { Statuses } from '../../../utils/constants';
+import React, { useState } from 'react';
+import { ShipmentData, ShipmentMutation } from '../../../types/types.Shipments';
+import { appRoutes } from '../../../utils/constants';
 import {
+  Box,
   Button,
   Checkbox,
+  Chip,
   Collapse,
+  Dialog,
+  DialogContent,
   Grid,
   IconButton,
-  MenuItem,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectShipmentDeleting } from '../shipmentsSlice';
+import {
+  deleteShipment,
+  editShipment,
+  fetchShipments,
+} from '../shipmentsThunk';
+import { useNavigate } from 'react-router-dom';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { LoadingButton } from '@mui/lab';
+import WarningShipmentModal from './WarningShipmentModal';
+import ShipmentsForm from '../containers/ShipmentsForm';
 import dayjs from 'dayjs';
-import { useAppSelector } from '../../../app/hooks';
-import { addShipmentGetLoad } from '../shipmentsSlice';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface Props {
   shipment: ShipmentData;
   createItem: (_id: string, status: string, isPaid: boolean) => void;
   removeItem: (_id: string) => void;
-  changeHandler: (_id: string, status: string, isPaid: boolean) => void;
+  isItemSelected?: boolean;
+  handleClick: (id: string) => void;
 }
-
-const initialState: ShipmentStatusData = {
-  _id: '',
-  status: '',
-  isPaid: false,
-};
 
 const ShipmentsRowItem: React.FC<Props> = ({
   shipment,
   createItem,
   removeItem,
-  changeHandler,
+  isItemSelected = false,
+  handleClick,
 }) => {
-  const [localState, setLocalState] =
-    useState<ShipmentStatusData>(initialState);
-  const [checked, setChecked] = useState(false);
-  const [paidToggle, setPaidToggle] = useState(false);
-  const [statusToggle, setStatusToggle] = useState(false);
-  const loading = useAppSelector(addShipmentGetLoad);
-  const statuses = Statuses;
-  
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const isDelete = useAppSelector(selectShipmentDeleting);
+
   const [open, setOpen] = React.useState(false);
-  
-  const inputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setLocalState((prevState) => {
-      return { ...prevState, [name]: value };
-    });
-    setStatusToggle(true);
-  };
-  
-  const onCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(event.target.checked);
-    if (checked) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  const isLarge = useMediaQuery('(min-width:860px)');
+  const isMobile = useMediaQuery('(min-width:375px)');
+
+  const onCheck = () => {
+    handleClick(shipment._id);
+    if (isItemSelected) {
       removeItem(shipment._id);
       return;
     }
     createItem(shipment._id, shipment.status, shipment.isPaid);
   };
-  
-  const paidStatusChangeHandler = () => {
-    if (checked) {
-      setLocalState((prevState) => {
-        return { ...prevState, isPaid: !prevState.isPaid };
-      });
-      setPaidToggle(true);
-    }
+
+  const openWarningModalWindow = () => {
+    setModalOpen(true);
   };
-  
-  useEffect(() => {
-    setLocalState((prevState) => ({
-      ...prevState,
-      _id: shipment._id,
-      status: shipment.status,
-      isPaid: shipment.isPaid,
-    }));
-  }, [shipment._id, shipment.isPaid, shipment.status]);
-  
-  useEffect(() => {
-    if (checked && paidToggle) {
-      changeHandler(localState._id, localState.status, localState.isPaid);
-      setPaidToggle(false);
-    }
-  }, [
-    changeHandler,
-    checked,
-    localState._id,
-    localState.isPaid,
-    localState.status,
-    paidToggle,
-  ]);
-  
-  useEffect(() => {
-    if (statusToggle && checked) {
-      changeHandler(localState._id, localState.status, localState.isPaid);
-      setStatusToggle(false);
-    }
-  }, [
-    changeHandler,
-    checked,
-    localState._id,
-    localState.isPaid,
-    localState.status,
-    statusToggle,
-  ]);
-  
+
+  const closeWarningModalWindow = () => {
+    setModalOpen(false);
+  };
+  const deleteHandler = async () => {
+    await dispatch(deleteShipment(shipment?._id));
+    await dispatch(fetchShipments());
+    navigate(appRoutes.shipments);
+  };
+
+  const toggleOpen = () => {
+    setOpenEditModal(true);
+  };
+  const handleClose = () => {
+    setOpenEditModal(false);
+  };
+
+  const submitFormHandler = async (state: ShipmentMutation) => {
+    await dispatch(
+      editShipment({ shipmentId: shipment._id, shipmentMutation: state }),
+    ).unwrap();
+    await dispatch(fetchShipments());
+    setModalOpen(false);
+  };
+
+  const shipmentMutation: ShipmentMutation = {
+    userMarketId: shipment.userMarketId.toString(),
+    trackerNumber: shipment.trackerNumber.toString(),
+    weight: shipment.weight.toString(),
+    pupId: shipment?.pupId?._id,
+    status: shipment.status,
+    dimensions: {
+      height: shipment.dimensions.height?.toString(),
+      width: shipment.dimensions.width?.toString(),
+      length: shipment.dimensions.length?.toString(),
+    },
+  };
+
+  const statusColor = {
+    bgColor: '#e8f5e9',
+    color: '#1b5e20',
+  };
+
+  if (
+    shipment.status === 'КНР_ПРИБЫЛО' ||
+    shipment.status === 'КНР_ОТПРАВЛЕНО'
+  ) {
+    statusColor.bgColor = '#ede7f6';
+    statusColor.color = '#311b92';
+  } else if (shipment.status === 'ЗАВЕРШЕН') {
+    statusColor.bgColor = '#eceff1';
+    statusColor.color = '#607d8b';
+  } else if (shipment.status === 'ОТКАЗ') {
+    statusColor.bgColor = '#fbe9e7';
+    statusColor.color = '#bf360c';
+  }
+
+  let tableContent;
+
+  if (!isLarge) {
+    tableContent = (
+      <>
+        <TableRow
+          role="checkbox"
+          selected={isItemSelected}
+          aria-checked={isItemSelected}
+          tabIndex={-1}
+        >
+          <TableCell scope="row">
+            <Stack justifyContent="flex-start" alignItems="flex-start" mb={2}>
+              <Checkbox
+                style={{ padding: 0 }}
+                checked={isItemSelected}
+                onClick={onCheck}
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mb={1}
+            >
+              <Typography style={{ fontWeight: 'bold', color: 'gray' }}>
+                Трек номер
+              </Typography>
+              <Typography>{shipment.trackerNumber}</Typography>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mb={1}
+            >
+              <Typography style={{ fontWeight: 'bold', color: 'gray' }}>
+                Маркет ID
+              </Typography>
+              <Typography>{shipment.userMarketId}</Typography>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mb={1}
+            >
+              <Typography style={{ fontWeight: 'bold', color: 'gray' }}>
+                Статус
+              </Typography>
+              <Chip
+                size="small"
+                label={shipment.status}
+                style={{
+                  backgroundColor: statusColor.bgColor,
+                  color: statusColor.color,
+                }}
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+              mb={1}
+            >
+              <Typography style={{ fontWeight: 'bold', color: 'gray' }}>
+                Оплата
+              </Typography>
+              <Chip
+                size="small"
+                label={shipment.isPaid ? 'Оплачено' : 'Не оплачено'}
+                color={shipment.isPaid ? 'success' : 'warning'}
+                variant="outlined"
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={2}
+              justifyContent="space-between"
+              mb={1}
+              mt={3}
+            >
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+              <Box>
+                {isMobile ? (
+                  <Button
+                    variant="contained"
+                    onClick={toggleOpen}
+                    disabled={isItemSelected}
+                    sx={{
+                      fontSize: '11px',
+                      mr: 2,
+                    }}
+                  >
+                    Редактировать
+                  </Button>
+                ) : (
+                  <IconButton
+                    color="primary"
+                    onClick={toggleOpen}
+                    disabled={isItemSelected}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                )}
+                <IconButton
+                  disabled={isDelete || isItemSelected}
+                  onClick={openWarningModalWindow}
+                  color="error"
+                >
+                  <CancelIcon />
+                </IconButton>
+              </Box>
+            </Stack>
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Grid sx={{ margin: 1 }}>
+                <Typography variant="subtitle1" gutterBottom color="primary">
+                  Информация
+                </Typography>
+                <Table
+                  size="small"
+                  sx={{
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '14px',
+                    margin: '10px 0',
+                  }}
+                >
+                  <TableBody>
+                    <TableRow>
+                      <TableCell
+                        scope="row"
+                        style={{
+                          verticalAlign: 'top',
+                          borderBottom: 'none',
+                          paddingTop: '15px',
+                          paddingBottom: '15px',
+                        }}
+                      >
+                        <Grid
+                          container
+                          justifyContent="space-between"
+                          mb={1}
+                          spacing={5}
+                        >
+                          <Grid item xs={4}>
+                            <Typography
+                              variant="body2"
+                              fontWeight="bold"
+                              fontSize="smaller"
+                              width="65px"
+                            >
+                              Время
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography
+                              variant="body2"
+                              fontSize="smaller"
+                              style={{ marginLeft: 0 }}
+                            >
+                              {dayjs(shipment.datetime).format(
+                                'DD.MM.YYYY HH:mm',
+                              )}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          justifyContent="space-between"
+                          mb={1}
+                          spacing={5}
+                        >
+                          <Grid item xs={4}>
+                            <Typography
+                              variant="body2"
+                              fontWeight="bold"
+                              fontSize="smaller"
+                              width="65px"
+                            >
+                              Габариты
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography
+                              variant="body2"
+                              fontSize="smaller"
+                              style={{ marginLeft: 0 }}
+                            >
+                              Высота: {shipment.dimensions.height} см
+                              <br />
+                              Ширина: {shipment.dimensions.width} см
+                              <br />
+                              Длина: {shipment.dimensions.length} см
+                              <br />
+                              Вес: {shipment.weight} кг
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          justifyContent="space-between"
+                          mb={1}
+                          spacing={5}
+                        >
+                          <Grid item xs={4}>
+                            <Typography
+                              variant="body2"
+                              fontWeight="bold"
+                              fontSize="smaller"
+                              width="65px"
+                            >
+                              Цена (сом)
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography
+                              variant="body2"
+                              fontSize="smaller"
+                              style={{ marginLeft: 0 }}
+                            >
+                              USD: {shipment.price.usd} $<br />
+                              SOM: {shipment.price.som} сом
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          container
+                          justifyContent="space-between"
+                          mb={1}
+                          spacing={5}
+                        >
+                          <Grid item xs={4}>
+                            <Typography
+                              variant="body2"
+                              fontWeight="bold"
+                              fontSize="smaller"
+                              width="65px"
+                            >
+                              Создал
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={8}>
+                            <Typography
+                              variant="body2"
+                              fontSize="smaller"
+                              style={{ marginLeft: 0 }}
+                            >
+                              {shipment.userId.firstName}{' '}
+                              {shipment.userId.lastName}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  } else {
+    tableContent = (
+      <>
+        <TableRow
+          role="checkbox"
+          selected={isItemSelected}
+          aria-checked={isItemSelected}
+          tabIndex={-1}
+        >
+          <TableCell>
+            <IconButton
+              aria-label="expand row"
+              size="small"
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell padding="checkbox">
+            <Checkbox checked={isItemSelected} onClick={onCheck} />
+          </TableCell>
+          <TableCell component="th" scope="row">
+            {shipment.trackerNumber}
+          </TableCell>
+          <TableCell>{shipment.userMarketId}</TableCell>
+          <TableCell>
+            <Chip
+              size="small"
+              label={shipment.status}
+              style={{
+                backgroundColor: statusColor.bgColor,
+                color: statusColor.color,
+              }}
+            />
+          </TableCell>
+          <TableCell>
+            <Chip
+              size="small"
+              label={shipment.isPaid ? 'Оплачено' : 'Не оплачено'}
+              color={shipment.isPaid ? 'success' : 'warning'}
+              variant="outlined"
+            />
+          </TableCell>
+          <TableCell>
+            {!isLarge ? (
+              <IconButton
+                color="primary"
+                onClick={toggleOpen}
+                disabled={isItemSelected}
+              >
+                <EditIcon />
+              </IconButton>
+            ) : (
+              <Button
+                variant="contained"
+                onClick={toggleOpen}
+                disabled={isItemSelected}
+                size="small"
+                sx={{
+                  fontSize: '11px',
+                }}
+              >
+                Редактировать
+              </Button>
+            )}
+          </TableCell>
+          <TableCell>
+            <LoadingButton
+              disabled={isDelete || isItemSelected}
+              loading={isDelete}
+              onClick={openWarningModalWindow}
+              sx={{
+                minWidth: '29px',
+                padding: '3px',
+                borderRadius: '50%',
+              }}
+              color="error"
+            >
+              <CancelIcon />
+            </LoadingButton>
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <Grid sx={{ margin: 1 }}>
+                <Typography variant="subtitle1" gutterBottom color="primary">
+                  Информация
+                </Typography>
+                <Table
+                  size="small"
+                  sx={{
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '14px',
+                    margin: '10px 0',
+                  }}
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontWeight: 'bolder' }}>
+                        Время
+                      </TableCell>
+                      <TableCell style={{ fontWeight: 'bolder' }}>
+                        Габариты
+                      </TableCell>
+                      <TableCell style={{ fontWeight: 'bolder' }}>
+                        Цена (сом)
+                      </TableCell>
+                      <TableCell style={{ fontWeight: 'bolder' }}>
+                        Создал
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell
+                        scope="row"
+                        style={{
+                          verticalAlign: 'top',
+                          borderBottom: 'none',
+                          paddingTop: '15px',
+                          paddingBottom: '15px',
+                        }}
+                      >
+                        <Typography variant="body2" fontSize="smaller">
+                          {dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          verticalAlign: 'top',
+                          borderBottom: 'none',
+                          paddingTop: '15px',
+                          paddingBottom: '15px',
+                        }}
+                      >
+                        <Typography variant="body2" fontSize="smaller">
+                          Высота: {shipment.dimensions.height} см
+                          <br />
+                          Ширина: {shipment.dimensions.width} см
+                          <br />
+                          Длина: {shipment.dimensions.length} см
+                          <br />
+                          Вес: {shipment.weight} кг
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          verticalAlign: 'top',
+                          borderBottom: 'none',
+                          paddingTop: '15px',
+                          paddingBottom: '15px',
+                        }}
+                      >
+                        <Typography variant="body2" fontSize="smaller">
+                          USD: {shipment.price.usd} $<br />
+                          SOM: {shipment.price.som} сом
+                        </Typography>
+                      </TableCell>
+                      <TableCell
+                        style={{
+                          verticalAlign: 'top',
+                          borderBottom: 'none',
+                          paddingTop: '15px',
+                          paddingBottom: '15px',
+                        }}
+                      >
+                        <Typography variant="body2" fontSize="smaller">
+                          {shipment.userId.firstName} {shipment.userId.lastName}
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+            </Collapse>
+          </TableCell>
+        </TableRow>
+      </>
+    );
+  }
+
   return (
     <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell scope="row">
-          {shipment.trackerNumber}
-        </TableCell>
-        <TableCell>{shipment.userMarketId}</TableCell>
-        <TableCell>
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            justifyContent="space-between"
-          >
-            <Checkbox checked={checked} onChange={onCheck} />
-            <TextField
-              select
-              disabled={loading || !checked}
-              size="small"
-              variant="standard"
-              required
-              name="status"
-              id="status"
-              InputProps={{
-                disableUnderline: true,
-              }}
-              style={{ flexGrow: 1, marginRight: 2 }}
-              value={localState.status}
-              onChange={inputChangeHandler}
-            >
-              {statuses.map((status) => (
-                <MenuItem
-                  key={status}
-                  value={status}
-                  style={{ fontSize: '14px' }}
-                >
-                  {status}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Stack>
-        </TableCell>
-        <TableCell>
-          <Button
-            onClick={paidStatusChangeHandler}
-            variant="contained"
-            color={localState.isPaid ? 'success' : 'error'}
-          >
-            {localState.isPaid ? 'Оплачено' : 'Не оплачено'}
-          </Button>
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Grid sx={{ margin: 1 }}>
-              <Typography variant="subtitle1" gutterBottom color="primary">
-                Информация
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
-                      Время
-                    </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
-                      Габариты
-                    </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
-                      Цена (сом)
-                    </TableCell>
-                    <TableCell style={{ fontWeight: 'bolder', color: 'gray' }}>
-                      Создал
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      style={{ verticalAlign: 'top' }}
-                    >
-                      <Typography
-                        variant="body2"
-                        fontSize="smaller"
-                        color="gray"
-                      >
-                        {dayjs(shipment.datetime).format('DD.MM.YYYY HH:mm')}
-                      </Typography>
-                    </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
-                      <Typography
-                        variant="body2"
-                        fontSize="smaller"
-                        color="gray"
-                      >
-                        Высота: {shipment.dimensions.height} см
-                        <br />
-                        Ширина: {shipment.dimensions.width} см
-                        <br />
-                        Длина: {shipment.dimensions.length} см
-                        <br />
-                        Вес: {shipment.weight} кг
-                      </Typography>
-                    </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
-                      <Typography
-                        variant="body2"
-                        fontSize="smaller"
-                        color="gray"
-                      >
-                        USD: {shipment.price.usd} $<br />
-                        SOM: {shipment.price.som} сом
-                      </Typography>
-                    </TableCell>
-                    <TableCell style={{ verticalAlign: 'top' }}>
-                      <Typography
-                        variant="body2"
-                        fontSize="smaller"
-                        color="gray"
-                      >
-                        {shipment.userId.firstName} {shipment.userId.lastName}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </Grid>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+      {tableContent}
+      <Dialog open={openEditModal} onClose={handleClose} maxWidth="lg">
+        <DialogContent
+          sx={{
+            mt: '20px',
+          }}
+        >
+          <ShipmentsForm
+            onSubmit={submitFormHandler}
+            initialShipmentState={shipmentMutation}
+            isEdit
+          />
+        </DialogContent>
+      </Dialog>
+      <WarningShipmentModal
+        stateModal={modalOpen}
+        deleteHandler={deleteHandler}
+        closeModal={closeWarningModalWindow}
+      />
     </>
   );
 };

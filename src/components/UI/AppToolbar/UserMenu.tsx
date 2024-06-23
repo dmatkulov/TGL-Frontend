@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
-import {
-  // CircularProgress,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../app/hooks';
 import { logout } from '../../../features/users/usersThunks';
-// import { selectLogOutLoading } from '../../../features/users/usersSlice';
 import { appRoutes } from '../../../utils/constants';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { User } from '../../../types/types.User';
@@ -37,9 +29,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
   return (
     <>
       <Stack direction="row" alignItems="center">
-          <Typography id="username" color="inherit" onClick={handleClick}>
-            {user.firstName} {user.lastName}
-          </Typography>
+        <Typography id="username" color="inherit" onClick={handleClick}>
+          {user.firstName} {user.lastName}
+        </Typography>
         <IconButton
           onClick={handleClick}
           sx={{ display: 'flex', gap: 1 }}
@@ -72,7 +64,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             key="profileAdmin"
             onClick={() => navigate(appRoutes.myAdminProfile)}
           >
-              Профиль руководства
+            Профиль руководства
           </MenuItem>
         )}
         <MenuItem onClick={handleLogOut}>Выйти</MenuItem>

@@ -5,6 +5,8 @@ import { createPup, fetchPups } from '../pupsThunks';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   CircularProgress,
   Dialog,
   DialogContent,
@@ -21,6 +23,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import 'react-phone-input-2/lib/material.css';
 import PupItem from './PupItem';
@@ -36,6 +39,12 @@ const styleBoxSpinner = {
   marginTop: '50px',
 };
 
+const gridContainer = {
+  marginTop: '15px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 const PupList: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectPupsLoading);
@@ -44,6 +53,9 @@ const PupList: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const isExtraSmallScreen = useMediaQuery('(max-width:680px)');
+  const isMediumScreen = useMediaQuery('(min-width:680px)');
 
   useEffect(() => {
     dispatch(fetchPups());
@@ -133,7 +145,61 @@ const PupList: React.FC = () => {
             <CircularProgress size={100} />
           </Box>
         ) : (
-          <Grid mt={2}>{tableContent}</Grid>
+          !isExtraSmallScreen && <Grid mt={2}>{tableContent}</Grid>
+        )}
+
+        {!isMediumScreen && (
+          <>
+            <Grid container sx={gridContainer}>
+              {pups
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item) => (
+                  <Grid item xs={12} key={item._id}>
+                    <Card sx={{ mt: 2, mb: 2 }}>
+                      <CardContent>
+                        <Typography
+                          sx={{
+                            mt: 1,
+                            mb: 1,
+                            '--Grid-borderWidth': '2px',
+                            borderBottom: 'var(--Grid-borderWidth) solid',
+                            borderColor: 'divider',
+                          }}
+                          gutterBottom
+                        >
+                          Номер ПВЗ: {item.name}
+                        </Typography>
+                        <Typography>
+                          Адрес ПВЗ:{' '}
+                          {item ? (
+                            item.address
+                          ) : (
+                            <span style={{ color: 'red', fontWeight: 700 }}>
+                              Нет ПВЗ
+                            </span>
+                          )}
+                        </Typography>
+                        <Typography>
+                          Номер телефона: {item.phoneNumber}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              <Grid item xs={12}>
+                <TablePagination
+                  labelRowsPerPage={isExtraSmallScreen && ''}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={pups.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+              </Grid>
+            </Grid>
+          </>
         )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>

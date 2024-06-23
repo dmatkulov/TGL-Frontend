@@ -68,7 +68,7 @@ const PriceForm: React.FC<Props> = ({
             onChange={inputChangeHandler}
             name="exchangeRate"
             type="number"
-            sx={{marginTop: 1}}
+            sx={{ marginTop: 1 }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="start">USD</InputAdornment>

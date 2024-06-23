@@ -50,36 +50,37 @@ const Warehouses = () => {
         В настоящее время нет доступных складов в Китае. Проверьте позже
       </Typography>
     );
-  }
-  content = (
-    <>
-      {state.map((elem) => (
-        <Box
-          key={elem._id}
-          sx={{
-            pb: 4,
-            mb: 4,
-            '--Grid-borderWidth': '1px',
-            borderBottom: 'var(--Grid-borderWidth) solid',
-            borderColor: 'divider',
-          }}
-        >
-          <Typography>收货人：{elem.name}</Typography>
-          <Typography>电话：{elem.phoneNumber}</Typography>
-          <Typography sx={{ mb: 3 }}>
-            {elem.address + user?.marketId}
-          </Typography>
-          <CopyToClipboard
-            text={textToCopy}
-            onCopy={onCopy}
-            options={{ message: 'fsdfs' }}
+  } else {
+    content = (
+      <>
+        {state.map((elem) => (
+          <Box
+            key={elem._id}
+            sx={{
+              pb: 4,
+              mb: 4,
+              '--Grid-borderWidth': '1px',
+              borderBottom: 'var(--Grid-borderWidth) solid',
+              borderColor: 'divider',
+            }}
           >
-            <Button variant="contained">Скопировать</Button>
-          </CopyToClipboard>
-        </Box>
-      ))}
-    </>
-  );
+            <Typography>收货人：{elem.name}</Typography>
+            <Typography>电话：{elem.phoneNumber}</Typography>
+            <Typography sx={{ mb: 3 }}>
+              {elem.address + user?.marketId}
+            </Typography>
+            <CopyToClipboard
+              text={textToCopy}
+              onCopy={onCopy}
+              options={{ message: 'fsdfs' }}
+            >
+              <Button variant="contained">Скопировать</Button>
+            </CopyToClipboard>
+          </Box>
+        ))}
+      </>
+    );
+  }
 
   return <Box>{isLoading ? <CircularProgress /> : content}</Box>;
 };

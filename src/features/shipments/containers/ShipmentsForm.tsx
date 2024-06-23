@@ -25,7 +25,7 @@ import { LoadingButton } from '@mui/lab';
 const initialState: ShipmentMutation = {
   userMarketId: '',
   trackerNumber: '',
-  weight: '',
+  weight: '1',
   pupId: '',
   status: '',
   dimensions: {
@@ -110,22 +110,15 @@ const ShipmentsForm: React.FC<Props> = ({
   };
 
   const isFormValid = () => {
-    const { userMarketId, trackerNumber, weight, dimensions } = state;
+    const { trackerNumber } = state;
 
-    return (
-      userMarketId &&
-      trackerNumber &&
-      weight &&
-      dimensions.height &&
-      dimensions.length &&
-      dimensions.width
-    );
+    return trackerNumber;
   };
 
   const onFormHandle = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isInputValid(state.userMarketId)) {
+    if (state.userMarketId && !isInputValid(state.userMarketId)) {
       setMarketIdValid(true);
       setUserMarketIdLabel('Некорректный номер');
       return;
@@ -165,7 +158,6 @@ const ShipmentsForm: React.FC<Props> = ({
           <Grid item xs={12}>
             <TextField
               fullWidth
-              required
               type="number"
               name="userMarketId"
               label="Маркет"
@@ -202,7 +194,6 @@ const ShipmentsForm: React.FC<Props> = ({
           <Grid item xs={12} md={3}>
             <TextField
               fullWidth
-              required
               name="height"
               type="number"
               label="Высота"
@@ -219,7 +210,6 @@ const ShipmentsForm: React.FC<Props> = ({
           <Grid item xs={12} md={3}>
             <TextField
               fullWidth
-              required
               name="length"
               type="number"
               label="Длина"
@@ -236,7 +226,6 @@ const ShipmentsForm: React.FC<Props> = ({
           <Grid item xs={12} md={3}>
             <TextField
               fullWidth
-              required
               name="width"
               type="number"
               label="Ширина"

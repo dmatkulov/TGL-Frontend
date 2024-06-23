@@ -44,7 +44,7 @@ const Warehouses = () => {
 
   let content;
 
-  if (state.length < 1 || user?.marketId) {
+  if (state.length < 1) {
     content = (
       <Typography>
         В настоящее время нет доступных складов в Китае. Проверьте позже

@@ -5,6 +5,8 @@ import { createPup, fetchPups } from '../pupsThunks';
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   CircularProgress,
   Dialog,
   DialogContent,
@@ -43,20 +45,6 @@ const gridContainer = {
   justifyContent: 'center',
   alignItems: 'center',
 };
-
-const gridItemMain = {
-  marginBottom: '5px',
-  padding: '5px',
-  border: '2px solid #5f9ea0',
-  borderRadius: '10px',
-};
-
-const gridItemInner = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  alignItems: 'center',
-};
-
 const PupList: React.FC = () => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectPupsLoading);
@@ -67,6 +55,7 @@ const PupList: React.FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const isExtraSmallScreen = useMediaQuery('(max-width:680px)');
+  const isMediumScreen = useMediaQuery('(min-width:680px)');
 
   useEffect(() => {
     dispatch(fetchPups());
@@ -158,36 +147,59 @@ const PupList: React.FC = () => {
         ) : (
           !isExtraSmallScreen && <Grid mt={2}>{tableContent}</Grid>
         )}
-        {isExtraSmallScreen && (
-          <Grid container sx={gridContainer}>
-            {pups.map((item) => (
-              <Grid item xs={12} key={item._id} sx={gridItemMain}>
-                <Grid item>
-                  <Box sx={gridItemInner}>
-                    <Typography>
-                      <strong>{`Номер ПВЗ: `}</strong> <em>{item.name}</em>
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={gridItemInner}>
-                    <Typography>
-                      <strong>{`Адрес ПВЗ: `}</strong>
-                      <em>{item.address}</em>
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid item>
-                  <Box sx={gridItemInner}>
-                    <Typography>
-                      <strong>{`Номер телефона: `}</strong>
-                      <em>{item.phoneNumber}</em>
-                    </Typography>
-                  </Box>
-                </Grid>
+
+        {!isMediumScreen && (
+          <>
+            <Grid container sx={gridContainer}>
+              {pups
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((item) => (
+                  <Grid item xs={12} key={item._id}>
+                    <Card sx={{ mt: 2, mb: 2 }}>
+                      <CardContent>
+                        <Typography
+                          sx={{
+                            mt: 1,
+                            mb: 1,
+                            '--Grid-borderWidth': '2px',
+                            borderBottom: 'var(--Grid-borderWidth) solid',
+                            borderColor: 'divider',
+                          }}
+                          gutterBottom
+                        >
+                          Номер ПВЗ: {item.name}
+                        </Typography>
+                        <Typography>
+                          Адрес ПВЗ:{' '}
+                          {item ? (
+                            item.address
+                          ) : (
+                            <span style={{ color: 'red', fontWeight: 700 }}>
+                              Нет ПВЗ
+                            </span>
+                          )}
+                        </Typography>
+                        <Typography>
+                          Номер телефона: {item.phoneNumber}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              <Grid item xs={12}>
+                <TablePagination
+                  labelRowsPerPage={isExtraSmallScreen && ''}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={pups.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
               </Grid>
-            ))}
-          </Grid>
+            </Grid>
+          </>
         )}
         <Dialog open={open} onClose={handleClose} maxWidth="lg">
           <DialogTitle>

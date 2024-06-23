@@ -72,11 +72,12 @@ const Profile: React.FC = () => {
                 </>
               )}
             </Grid>
-            <Grid item>
+            <Grid item sx={{ marginTop: 1 }}>
               <Button
+                variant="contained"
                 startIcon={<BorderColorIcon />}
                 onClick={handleClickOpen}
-                color="secondary"
+                color="primary"
                 sx={{ textTransform: 'none' }}
               >
                 Редактировать профиль

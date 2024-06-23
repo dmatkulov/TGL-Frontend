@@ -1,5 +1,6 @@
 import PageTitle from '../components/PageTitle';
 import {
+  Grid,
   Paper,
   Table,
   TableBody,
@@ -26,6 +27,8 @@ const OrdersHistory = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const isExtraSmallScreen = useMediaQuery('(max-width:680px)');
+
   useEffect(() => {
     if (user) {
       dispatch(fetchShipmentsHistoryByUser(user.marketId));
@@ -51,15 +54,35 @@ const OrdersHistory = () => {
     <>
       <PageTitle title="История заказов" />
       {extraSmallScreen ? (
-        history.map((item) => (
-          <OrdersHistoryItemCard
-            key={item._id}
-            pupId={item.pupId}
-            price={item.price}
-            trackerNumber={item.trackerNumber}
-            datetime={item.datetime}
-          />
-        ))
+        <>
+          <Grid container>
+            {history
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((item) => (
+                <Grid item xs={12} key={item._id}>
+                  <OrdersHistoryItemCard
+                    key={item._id}
+                    pupId={item.pupId}
+                    price={item.price}
+                    trackerNumber={item.trackerNumber}
+                    datetime={item.datetime}
+                  />
+                </Grid>
+              ))}
+            <Grid item xs={12}>
+              <TablePagination
+                labelRowsPerPage={isExtraSmallScreen ? '' : undefined}
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={history.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </Grid>
+          </Grid>
+        </>
       ) : (
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
@@ -92,6 +115,7 @@ const OrdersHistory = () => {
             </TableBody>
           </Table>
           <TablePagination
+            labelRowsPerPage="Рядов на таблице"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={history.length}

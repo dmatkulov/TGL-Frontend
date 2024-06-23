@@ -107,9 +107,9 @@ const ShipmentsRowItem: React.FC<Props> = ({
     pupId: shipment?.pupId?._id,
     status: shipment.status,
     dimensions: {
-      height: shipment.dimensions.height.toString(),
-      width: shipment.dimensions.width.toString(),
-      length: shipment.dimensions.length.toString(),
+      height: shipment.dimensions.height?.toString(),
+      width: shipment.dimensions.width?.toString(),
+      length: shipment.dimensions.length?.toString(),
     },
   };
 

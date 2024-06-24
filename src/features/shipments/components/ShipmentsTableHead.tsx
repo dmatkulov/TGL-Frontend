@@ -19,8 +19,12 @@ const ShipmentsTableHead: React.FC<Props> = ({
   if (!isLarge) {
     tableHead = (
       <TableRow>
-        <TableCell style={{ fontWeight: 'bold' }} padding="checkbox">
+        <TableCell
+          style={{ fontWeight: 'bold', padding: '10px 0 10px 16px' }}
+          padding="checkbox"
+        >
           <Checkbox
+            style={{ marginRight: '10px' }}
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -33,8 +37,13 @@ const ShipmentsTableHead: React.FC<Props> = ({
   } else {
     tableHead = (
       <TableRow>
-        <TableCell />
-        <TableCell style={{ fontWeight: 'bold' }} padding="checkbox">
+        <TableCell
+          style={{ fontWeight: 'bold', paddingRight: '0', paddingLeft: 0 }}
+        />
+        <TableCell
+          style={{ fontWeight: 'bold', paddingRight: '0', paddingLeft: 0 }}
+          padding="checkbox"
+        >
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -42,12 +51,20 @@ const ShipmentsTableHead: React.FC<Props> = ({
             onChange={onSelectAllClick}
           />
         </TableCell>
-        <TableCell style={{ fontWeight: 'bold' }}>Трек номер</TableCell>
-        <TableCell style={{ fontWeight: 'bold' }}>Маркет ID</TableCell>
-        <TableCell style={{ fontWeight: 'bold' }}>Статус</TableCell>
-        <TableCell style={{ fontWeight: 'bold' }}>Оплата</TableCell>
-        <TableCell />
-        <TableCell />
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }}>
+          Трек номер
+        </TableCell>
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }}>
+          Маркет ID
+        </TableCell>
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }}>
+          Статус
+        </TableCell>
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }}>
+          Оплата
+        </TableCell>
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }} />
+        <TableCell style={{ fontWeight: 'bold', paddingRight: '0' }} />
       </TableRow>
     );
   }

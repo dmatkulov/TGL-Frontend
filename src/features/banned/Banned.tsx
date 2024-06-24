@@ -27,14 +27,10 @@ const Banned = () => {
   const user = useAppSelector(selectUser);
 
   const [inputData, setInputData] = useState<string>('');
-  const [editId, setEditId] = useState<string>('');
-  const [editMode, setEditMode] = useState<boolean>(false);
 
-  const editFn = (value: BannedInterface) => {
-    setInputData(value.name);
-    setEditMode(true);
-    setEditId(value._id);
-    setOpen(true);
+  const editFn = async (value: BannedInterface) => {
+    await dispatch(updateBanned(value));
+    dispatch(fetchBanned());
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,88 +53,85 @@ const Banned = () => {
 
   let content;
 
-  isLoading
-    ? (content = <CircularProgress />)
-    : isEmpty
-      ? (content = (
-          <Typography>
-            Товаров или категорий запрещенных к ввозу не найдено
-          </Typography>
-        ))
-      : (content = (
-          <>
-            <Alert severity="error" sx={{ marginTop: '8px' }}>
-              Товары и категории товаров частично или полностью запрещенные к
-              ввозу на территорию КР
-            </Alert>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                component: 'form',
-                onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
-                  event.preventDefault();
+  const dialog = (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        component: 'form',
+        onSubmit: async (event: React.FormEvent<HTMLFormElement>) => {
+          event.preventDefault();
+          await dispatch(uploadBanned(inputData));
+          dispatch(fetchBanned());
+          setInputData('');
+          handleClose();
+        },
+      }}
+    >
+      <DialogTitle>Добавить товар или категорию товаров</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Здесь инструкция для сотрудников если нужна
+        </DialogContentText>
+        <TextField
+          onChange={inputChangeHandler}
+          value={inputData}
+          autoFocus
+          required
+          margin="dense"
+          id="name"
+          name="name"
+          label="Название"
+          type="text"
+          fullWidth
+          variant="standard"
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Отмена</Button>
+        <Button type="submit">Подтвердить</Button>
+      </DialogActions>
+    </Dialog>
+  );
 
-                  if (editMode) {
-                    const newData: BannedInterface = {
-                      _id: editId,
-                      name: inputData,
-                    };
-                    await dispatch(updateBanned(newData));
-                    dispatch(fetchBanned());
-                    setInputData('');
-                    setEditMode(false);
-                    setEditId('');
-                    handleClose();
-                    return;
-                  }
-                  await dispatch(uploadBanned(inputData));
-                  dispatch(fetchBanned());
-                  setInputData('');
-                  handleClose();
-                },
-              }}
-            >
-              <DialogTitle>Добавить товар или категорию товаров</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Здесь инструкция для сотрудников если нужна
-                </DialogContentText>
-                <TextField
-                  onChange={inputChangeHandler}
-                  value={inputData}
-                  autoFocus
-                  required
-                  margin="dense"
-                  id="name"
-                  name="name"
-                  label="Название"
-                  type="text"
-                  fullWidth
-                  variant="standard"
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Отмена</Button>
-                <Button type="submit">Подтвердить</Button>
-              </DialogActions>
-            </Dialog>
-            {user && (user?.role === 'admin' || user?.role === 'super') && (
-              <Button
-                variant="contained"
-                onClick={handleClickOpen}
-                sx={{ marginTop: '8px' }}
-              >
-                Добавить
-              </Button>
-            )}
-            <List dense={true}>
-              {state.map((item) => (
-                <BannedItem key={item._id} banned={item} editFn={editFn} />
-              ))}
-            </List>
-          </>
-        ));
+  const addBtn = (
+    <Button
+      variant="contained"
+      onClick={handleClickOpen}
+      sx={{ marginTop: '8px', marginBottom: '30px' }}
+    >
+      Добавить
+    </Button>
+  );
+  if (isLoading) {
+    content = <CircularProgress />;
+  } else if (isEmpty) {
+    content = (
+      <>
+        <Typography>
+          Товаров или категорий запрещенных к ввозу не найдено
+        </Typography>
+        {dialog}
+        {user && (user?.role === 'admin' || user?.role === 'super') && addBtn}
+      </>
+    );
+  } else {
+    content = (
+      <>
+        <Alert severity="error" sx={{ marginTop: '8px', marginBottom: '32px' }}>
+          Товары и категории товаров частично или полностью запрещенные к ввозу
+          на территорию КР
+        </Alert>
+        <List dense={true}>
+          {state.map((item) => (
+            <BannedItem key={item._id} banned={item} editFn={editFn} />
+          ))}
+        </List>
+        {dialog}
+        {user && (user?.role === 'admin' || user?.role === 'super') && addBtn}
+      </>
+    );
+  }
 
   return content;
 };

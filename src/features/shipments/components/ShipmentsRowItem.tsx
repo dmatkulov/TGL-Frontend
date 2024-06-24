@@ -65,6 +65,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
 
   const isLarge = useMediaQuery('(min-width:860px)');
   const isMobile = useMediaQuery('(min-width:375px)');
+  const isExtraLarge = useMediaQuery('(min-width:1024px)');
 
   const onCheck = () => {
     handleClick(shipment._id);
@@ -428,7 +429,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
           aria-checked={isItemSelected}
           tabIndex={-1}
         >
-          <TableCell>
+          <TableCell style={{ paddingRight: 0, paddingLeft: 0 }}>
             <IconButton
               aria-label="expand row"
               size="small"
@@ -437,24 +438,30 @@ const ShipmentsRowItem: React.FC<Props> = ({
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell padding="checkbox">
+          <TableCell
+            style={{ paddingRight: 0, paddingLeft: 0 }}
+            padding="checkbox"
+          >
             <Checkbox checked={isItemSelected} onClick={onCheck} />
           </TableCell>
-          <TableCell component="th" scope="row">
+          <TableCell style={{ paddingRight: 0 }} component="th" scope="row">
             {shipment.trackerNumber}
           </TableCell>
-          <TableCell>{shipment.userMarketId}</TableCell>
-          <TableCell>
+          <TableCell style={{ paddingRight: 0 }}>
+            {shipment.userMarketId}
+          </TableCell>
+          <TableCell style={{ paddingRight: 0 }}>
             <Chip
               size="small"
               label={shipment.status}
               style={{
                 backgroundColor: statusColor.bgColor,
                 color: statusColor.color,
+                paddingRight: 0,
               }}
             />
           </TableCell>
-          <TableCell>
+          <TableCell style={{ paddingRight: 0 }}>
             <Chip
               size="small"
               label={shipment.isPaid ? 'Оплачено' : 'Не оплачено'}
@@ -462,8 +469,8 @@ const ShipmentsRowItem: React.FC<Props> = ({
               variant="outlined"
             />
           </TableCell>
-          <TableCell>
-            {!isLarge ? (
+          <TableCell style={{ paddingRight: 0 }}>
+            {!isExtraLarge ? (
               <IconButton
                 color="primary"
                 onClick={toggleOpen}
@@ -485,7 +492,7 @@ const ShipmentsRowItem: React.FC<Props> = ({
               </Button>
             )}
           </TableCell>
-          <TableCell>
+          <TableCell style={{ paddingLeft: 0 }}>
             <LoadingButton
               disabled={isDelete || isItemSelected}
               loading={isDelete}

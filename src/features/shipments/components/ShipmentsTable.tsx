@@ -45,6 +45,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
   const isInitial = statusState.length === 0;
   const [selected, setSelected] = useState<string[]>([]);
   const isLargeScreen = useMediaQuery('(min-width:860px)');
+  const isExtraLarge = useMediaQuery('(min-width:1024px)');
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   const setIsPaidToFalse = () => {
@@ -326,7 +327,7 @@ const ShipmentsTable: FC<Props> = ({ onDataSend, state, searchResult }) => {
       </Grid>
 
       <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
+        <Table stickyHeader size={!isExtraLarge ? 'small' : 'medium'}>
           <TableHead>
             <ShipmentsTableHead
               numSelected={selected.length}

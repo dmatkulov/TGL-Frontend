@@ -108,76 +108,89 @@ const Calculator = () => {
   }
   return (
     <>
-      {errorMessage && <Alert>{errorMessage}</Alert>}
-      <Typography>
-        При отправке легких, но крупногабаритных (объемных) грузов стоимость
-        доставки рассчитывается по "объемному весу" в соответствии с формулой:
-        <br />
-        <b>Длина(см) х Ширина(см) х Высота(см)/6000 = объемный вес(кг)</b>
-      </Typography>
-      <Grid container justifyContent="start" direction="row">
-        <Grid item xs={extraSmallScreen ? 12 : 4} m={4}>
-          <Grid item xs={12} m={2}>
-            <TextField
-              required
-              type="number"
-              name="length"
-              value={dimensions.length}
-              label="Длина в см"
-              onChange={inputChangeHandler}
-              fullWidth
-            />
+      <Grid container style={{ padding: '0 20px' }}>
+        <Grid item xs={12} md={8} sx={{ margin: '0 auto' }}>
+          {errorMessage && <Alert>{errorMessage}</Alert>}
+          <Typography textAlign="center">
+            При отправке легких, но крупногабаритных (объемных) грузов стоимость
+            доставки рассчитывается по "объемному весу" в соответствии с
+            формулой:
+            <br />
+            <b>Длина(см) х Ширина(см) х Высота(см)/6000 = объемный вес(кг)</b>
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          container
+          justifyContent="center"
+          direction="row"
+          alignItems="center"
+          gap={2}
+          mt={4}
+        >
+          <Grid item xs={extraSmallScreen ? 12 : 4}>
+            <Grid item xs={12} m={2}>
+              <TextField
+                required
+                type="number"
+                name="length"
+                value={dimensions.length}
+                label="Длина в см"
+                onChange={inputChangeHandler}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} m={2}>
+              <TextField
+                required
+                name="width"
+                type="number"
+                value={dimensions.width}
+                label="Ширина в см"
+                onChange={inputChangeHandler}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} m={2}>
+              <TextField
+                required
+                type="number"
+                name="height"
+                value={dimensions.height}
+                label="Высота в см"
+                onChange={inputChangeHandler}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} m={2}>
+              <TextField
+                required
+                type="number"
+                name="weight"
+                value={weight}
+                label="Вес в кг"
+                onChange={handleWeightChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} md={6} m={2}>
+              <Button fullWidth variant="contained" onClick={calculateResult}>
+                Рассчитать
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} m={2}>
-            <TextField
-              required
-              name="width"
-              type="number"
-              value={dimensions.width}
-              label="Ширина в см"
-              onChange={inputChangeHandler}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} m={2}>
-            <TextField
-              required
-              type="number"
-              name="height"
-              value={dimensions.height}
-              label="Высота в см"
-              onChange={inputChangeHandler}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} m={2}>
-            <TextField
-              required
-              type="number"
-              name="weight"
-              value={weight}
-              label="Вес в кг"
-              onChange={handleWeightChange}
-              fullWidth
+          <Grid>
+            <CardMedia
+              sx={{ width: 300, display: extraSmallScreen ? 'none' : 'block' }}
+              component="img"
+              alt="Изображение"
+              image={box}
             />
           </Grid>
         </Grid>
-        <Grid>
-          <CardMedia
-            sx={{ width: 300, display: extraSmallScreen ? 'none' : 'block' }}
-            component="img"
-            alt="Изображение"
-            image={box}
-          />
+        <Grid container marginLeft={2} mt={3} alignItems="center">
+          {answer}
         </Grid>
-      </Grid>
-      <Grid marginLeft={6}>
-        <Button variant="contained" color="inherit" onClick={calculateResult}>
-          Рассчитать
-        </Button>
-      </Grid>
-      <Grid container marginLeft={2} mt={3} alignItems="center">
-        {answer}
       </Grid>
     </>
   );

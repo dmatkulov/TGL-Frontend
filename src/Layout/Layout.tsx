@@ -14,6 +14,7 @@ const Layout = () => {
         <AppToolbar />
       </header>
       <Container
+        disableGutters
         maxWidth="xl"
         component="main"
         sx={{ minHeight: '100vh', pt: 4, mb: 4 }}

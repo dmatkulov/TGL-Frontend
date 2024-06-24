@@ -99,19 +99,20 @@ const BannedItem: FC<Props> = ({ banned, editFn }) => {
                 setIsToggled(false);
                 setState(banned);
               }}
+              color="warning"
               variant="text"
-              startIcon={<CancelIcon />}
+              startIcon={isLargeScreen && <CancelIcon />}
             >
-              {isLargeScreen && 'Отменить'}
+              {isLargeScreen ? 'Отменить' : <CancelIcon />}
             </Button>
           ) : (
             <Button
               onClick={handleOpen}
               variant="contained"
               color="error"
-              startIcon={<Remove />}
+              startIcon={isLargeScreen && <Remove />}
             >
-              {isLargeScreen && 'Удалить'}
+              {isLargeScreen ? 'Удалить' : <Remove />}
             </Button>
           )}
         </Stack>

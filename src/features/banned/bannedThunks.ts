@@ -40,10 +40,7 @@ export const updateBanned = createAsyncThunk<void, Banned>(
   'banned/update',
   async (arg) => {
     try {
-      console.log(arg);
-
       const { _id, name } = arg;
-
       await axiosApi.patch(serverRoute.banned + '/' + _id, { name: name });
     } catch (e) {
       console.log('Caught on try - UPDATE BANNED - ', e);

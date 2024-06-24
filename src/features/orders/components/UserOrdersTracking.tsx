@@ -37,6 +37,9 @@ const UserOrdersTracking = () => {
 
   const searchOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (state.trim() === '') {
+      return;
+    }
     setSearched(true);
     await dispatch(searchByTrack(state));
   };

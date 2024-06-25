@@ -6,6 +6,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  MenuItem,
   TextField,
   useMediaQuery,
 } from '@mui/material';
@@ -14,6 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
 import { selectUser } from '../../users/usersSlice';
+import dayjs from 'dayjs';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -31,11 +33,16 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
+  const [datetime, setDatetime] = useState<string>('');
   const isSmallScreen = useMediaQuery('(max-width:380px)');
   const isLargeScreen = useMediaQuery('(min-width:678px)');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
+  };
+
+  const handleDatetimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDatetime(e.target.value);
   };
 
   const searchOrder = async (e: React.FormEvent) => {
@@ -50,6 +57,7 @@ const Shipments = () => {
   const clearFilter = async () => {
     setSearched(false);
     setState('');
+    setDatetime('')
     await dispatch(fetchShipments());
   };
 
@@ -79,6 +87,18 @@ const Shipments = () => {
     );
   }
 
+  const getShipmentsWithDatetime = shipments.filter(
+    (elem) => dayjs(elem.datetime).format('YYYY-MM-DD') === datetime,
+  );
+
+  const uniqueDates = shipments.reduce((acc: string[], shipment) => {
+    const date = dayjs(shipment.datetime).format('YYYY-MM-DD');
+    if (!acc.includes(date)) {
+      acc.push(date);
+    }
+    return acc;
+  }, []);
+
   let content;
 
   if (loading) {
@@ -94,6 +114,10 @@ const Shipments = () => {
         state={filteredShipments}
         searchResult={order}
       />
+    );
+  } else if (datetime !== '') {
+    content = (
+      <ShipmentsTable onDataSend={refetchData} state={getShipmentsWithDatetime} />
     );
   } else {
     content = (
@@ -138,7 +162,7 @@ const Shipments = () => {
           <LoadingButton
             type="submit"
             variant="contained"
-            disabled={loadingOneOrder}
+            disabled={!(loadingOneOrder || !datetime)}
             loading={loadingOneOrder}
             loadingPosition="start"
             startIcon={<SearchIcon />}
@@ -153,6 +177,43 @@ const Shipments = () => {
             color="error"
             onClick={clearFilter}
             fullWidth={isSmallScreen}
+          >
+            Сбросить
+          </Button>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          display="flex"
+          gap={2}
+          alignItems="center"
+          justifyContent={!isLargeScreen ? 'space-between' : 'flex-start'}
+        >
+          <TextField
+            fullWidth
+            select
+            name="datetime"
+            label="Получить грузы по дате"
+            type="text"
+            value={datetime}
+            onChange={handleDatetimeChange}
+            disabled={!!state}
+          >
+            {uniqueDates.map((date) => (
+              <MenuItem key={date} value={date}>
+                {date}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Button
+            type="button"
+            variant="contained"
+            disabled={loadingOneOrder || !datetime}
+            color="error"
+            onClick={clearFilter}
+            fullWidth={isSmallScreen}
+            sx={{ pl: "30px", pr: "30px" }}
           >
             Сбросить
           </Button>

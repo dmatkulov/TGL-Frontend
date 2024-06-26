@@ -14,6 +14,10 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
 import { selectUser } from '../../users/usersSlice';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -31,11 +35,16 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
+  const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:380px)');
   const isLargeScreen = useMediaQuery('(min-width:678px)');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState(e.target.value);
+  };
+
+  const handleDatetimeChange = (date: Dayjs | null) => {
+    setDatetime(date);
   };
 
   const searchOrder = async (e: React.FormEvent) => {
@@ -50,6 +59,7 @@ const Shipments = () => {
   const clearFilter = async () => {
     setSearched(false);
     setState('');
+    setDatetime(null);
     await dispatch(fetchShipments());
   };
 
@@ -79,6 +89,10 @@ const Shipments = () => {
     );
   }
 
+  const getShipmentsWithDatetime = shipments.filter(
+    (elem) => dayjs(elem.datetime).format('YYYY-MM-DD') === dayjs(datetime).format('YYYY-MM-DD'),
+  );
+
   let content;
 
   if (loading) {
@@ -94,6 +108,10 @@ const Shipments = () => {
         state={filteredShipments}
         searchResult={order}
       />
+    );
+  } else if (datetime !== null) {
+    content = (
+      <ShipmentsTable onDataSend={refetchData} state={getShipmentsWithDatetime} />
     );
   } else {
     content = (
@@ -138,7 +156,7 @@ const Shipments = () => {
           <LoadingButton
             type="submit"
             variant="contained"
-            disabled={loadingOneOrder}
+            disabled={!!(loadingOneOrder || datetime)}
             loading={loadingOneOrder}
             loadingPosition="start"
             startIcon={<SearchIcon />}
@@ -153,6 +171,36 @@ const Shipments = () => {
             color="error"
             onClick={clearFilter}
             fullWidth={isSmallScreen}
+          >
+            Сбросить
+          </Button>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          display="flex"
+          gap={2}
+          alignItems="center"
+          justifyContent={!isLargeScreen ? 'space-between' : 'flex-start'}
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Получить грузы по дате"
+              value={datetime}
+              onChange={handleDatetimeChange}
+              format="DD/MM/YYYY"
+              disabled={!!state}
+            />
+          </LocalizationProvider>
+          <Button
+            type="button"
+            variant="contained"
+            disabled={loadingOneOrder || !datetime}
+            color="error"
+            onClick={clearFilter}
+            fullWidth={isSmallScreen}
+            sx={{ pl: "30px", pr: "30px" }}
           >
             Сбросить
           </Button>

@@ -6,7 +6,6 @@ import {
   Button,
   CircularProgress,
   Grid,
-  MenuItem,
   TextField,
   useMediaQuery,
 } from '@mui/material';
@@ -15,7 +14,10 @@ import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import ShipmentsTable from '../components/ShipmentsTable';
 import { selectUser } from '../../users/usersSlice';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const styleBoxSpinner = {
   display: 'flex',
@@ -33,7 +35,7 @@ const Shipments = () => {
   let filteredShipments = [...shipments];
   const [state, setState] = useState<string>('');
   const [searched, setSearched] = useState<boolean>(false);
-  const [datetime, setDatetime] = useState<string>('');
+  const [datetime, setDatetime] = useState<Dayjs | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:380px)');
   const isLargeScreen = useMediaQuery('(min-width:678px)');
 
@@ -41,8 +43,8 @@ const Shipments = () => {
     setState(e.target.value);
   };
 
-  const handleDatetimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDatetime(e.target.value);
+  const handleDatetimeChange = (date: Dayjs | null) => {
+    setDatetime(date);
   };
 
   const searchOrder = async (e: React.FormEvent) => {
@@ -57,7 +59,7 @@ const Shipments = () => {
   const clearFilter = async () => {
     setSearched(false);
     setState('');
-    setDatetime('')
+    setDatetime(null);
     await dispatch(fetchShipments());
   };
 
@@ -88,16 +90,8 @@ const Shipments = () => {
   }
 
   const getShipmentsWithDatetime = shipments.filter(
-    (elem) => dayjs(elem.datetime).format('YYYY-MM-DD') === datetime,
+    (elem) => dayjs(elem.datetime).format('YYYY-MM-DD') === dayjs(datetime).format('YYYY-MM-DD'),
   );
-
-  const uniqueDates = shipments.reduce((acc: string[], shipment) => {
-    const date = dayjs(shipment.datetime).format('YYYY-MM-DD');
-    if (!acc.includes(date)) {
-      acc.push(date);
-    }
-    return acc;
-  }, []);
 
   let content;
 
@@ -115,7 +109,7 @@ const Shipments = () => {
         searchResult={order}
       />
     );
-  } else if (datetime !== '') {
+  } else if (datetime !== null) {
     content = (
       <ShipmentsTable onDataSend={refetchData} state={getShipmentsWithDatetime} />
     );
@@ -162,7 +156,7 @@ const Shipments = () => {
           <LoadingButton
             type="submit"
             variant="contained"
-            disabled={!(loadingOneOrder || !datetime)}
+            disabled={!!(loadingOneOrder || datetime)}
             loading={loadingOneOrder}
             loadingPosition="start"
             startIcon={<SearchIcon />}
@@ -190,22 +184,15 @@ const Shipments = () => {
           alignItems="center"
           justifyContent={!isLargeScreen ? 'space-between' : 'flex-start'}
         >
-          <TextField
-            fullWidth
-            select
-            name="datetime"
-            label="Получить грузы по дате"
-            type="text"
-            value={datetime}
-            onChange={handleDatetimeChange}
-            disabled={!!state}
-          >
-            {uniqueDates.map((date) => (
-              <MenuItem key={date} value={date}>
-                {date}
-              </MenuItem>
-            ))}
-          </TextField>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Получить грузы по дате"
+              value={datetime}
+              onChange={handleDatetimeChange}
+              format="DD/MM/YYYY"
+              disabled={!!state}
+            />
+          </LocalizationProvider>
           <Button
             type="button"
             variant="contained"

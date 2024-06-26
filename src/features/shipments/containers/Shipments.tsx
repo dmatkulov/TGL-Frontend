@@ -90,7 +90,9 @@ const Shipments = () => {
   }
 
   const getShipmentsWithDatetime = shipments.filter(
-    (elem) => dayjs(elem.datetime).format('YYYY-MM-DD') === dayjs(datetime).format('YYYY-MM-DD'),
+    (elem) =>
+      dayjs(elem.datetime).format('YYYY-MM-DD') ===
+      dayjs(datetime).format('YYYY-MM-DD'),
   );
 
   let content;
@@ -111,7 +113,10 @@ const Shipments = () => {
     );
   } else if (datetime !== null) {
     content = (
-      <ShipmentsTable onDataSend={refetchData} state={getShipmentsWithDatetime} />
+      <ShipmentsTable
+        onDataSend={refetchData}
+        state={getShipmentsWithDatetime}
+      />
     );
   } else {
     content = (
@@ -200,7 +205,7 @@ const Shipments = () => {
             color="error"
             onClick={clearFilter}
             fullWidth={isSmallScreen}
-            sx={{ pl: "30px", pr: "30px" }}
+            sx={{ pl: '30px', pr: '30px' }}
           >
             Сбросить
           </Button>

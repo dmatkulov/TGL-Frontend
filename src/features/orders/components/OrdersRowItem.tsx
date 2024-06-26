@@ -1,43 +1,92 @@
 import { Button, TableCell, TableRow } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import CancelIcon from '@mui/icons-material/Cancel';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectOrdersCancelLoading, toggleModal } from '../ordersSlice';
+import { useAppDispatch } from '../../../app/hooks';
+import { toggleModal } from '../ordersSlice';
+import { FC, useState } from 'react';
+import { Shipment } from '../../../types/types.Shipments';
+import WarningModal from './WarningModal';
 
-const OrdersRowItem = () => {
+const OrdersRowItem: FC<Shipment> = ({
+  _id,
+  pupId,
+  price,
+  trackerNumber,
+  status,
+  delivery,
+}) => {
   const dispatch = useAppDispatch();
-  const cancelLoading = useAppSelector(selectOrdersCancelLoading);
+  const [state, setState] = useState(false);
+  const [color, setColor] = useState(false);
+
+  const openWarningModalWindow = () => {
+    setState(true);
+  };
+
+  const closeWarningModalWindow = () => {
+    setState(false);
+  };
+
+  const changeColorField = () => {
+    setColor(true);
+    setState(false);
+  };
 
   const showModal = () => {
-    dispatch(toggleModal(true));
+    dispatch(toggleModal({ toggle: true, id: { _id } }));
+  };
+
+  const handleDeliveryButtonClick = () => {
+    if (delivery.status) {
+      const confirmed = window.confirm('Вы правда хотите отменити доставку');
+      if (confirmed) {
+        showModal();
+      }
+    } else {
+      showModal();
+    }
   };
 
   return (
     <>
+      <WarningModal
+        changeColor={changeColorField}
+        closeModal={closeWarningModalWindow}
+        stateModal={state}
+      />
       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
         <TableCell component="th" scope="row">
-          0101 0000 0000
+          {trackerNumber}
         </TableCell>
-        <TableCell align="left">Адрес пункта выдачи заказа</TableCell>
-        <TableCell align="left">990 сом</TableCell>
+        <TableCell align="left">
+          {pupId ? (
+            pupId.address
+          ) : (
+            <span style={{ color: 'red', fontWeight: 700 }}>Нет ПВЗ</span>
+          )}
+        </TableCell>
+        <TableCell align="left">{price.usd} USD</TableCell>
+        <TableCell align="left">{status}</TableCell>
         <TableCell align="left">
           <Button
             variant="contained"
-            startIcon={<LocalShippingIcon />}
-            onClick={showModal}
+            onClick={handleDeliveryButtonClick}
+            disabled={color}
           >
-            Доставка
+            {delivery.status
+              ? 'Отменить доставку'
+              : color
+                ? 'Отмена'
+                : 'Доставка'}
           </Button>
         </TableCell>
-        <TableCell align="left">
+        <TableCell align="center">
           <LoadingButton
-            startIcon={<CancelIcon />}
-            loading={cancelLoading}
-            disabled={cancelLoading}
+            sx={{ minWidth: '29px', padding: '3px', borderRadius: '50%' }}
+            onClick={openWarningModalWindow}
             color="error"
           >
-            Отменить заказ
+            <CancelIcon />
           </LoadingButton>
         </TableCell>
       </TableRow>

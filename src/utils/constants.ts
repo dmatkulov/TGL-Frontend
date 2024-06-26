@@ -1,13 +1,34 @@
-import { UserNav } from '../types/types';
-
-export const apiURL = 'http://localhost:8000';
+export const apiURL = import.meta.env['VITE_API_URL'];
 
 export const serverRoute = {
   users: '/users',
   sessions: '/users/sessions',
+  lastSession: '/users/sessions/lastSession',
   pups: '/pups',
+  prices: '/price',
+  shipments: '/shipments',
+  companyAddresses: '/company-addresses',
+  companyAddressesAdd: '/company-addresses/add',
+  staff: '/users/staff',
+  clients: '/users/clients',
+  socials: '/socials',
+  banned: '/banned-categories',
 };
 
+export const Roles = [
+  { id: 1, name: 'admin' },
+  { id: 2, name: 'manager' },
+  { id: 3, name: 'client' },
+];
+
+export const ShipmentStatus = [
+  { id: 1, name: 'КР_ОТПРАВЛЕНО' },
+  { id: 2, name: 'КР_ПРИБЫЛО' },
+  { id: 3, name: 'КНР_ОТПРАВЛЕНО' },
+  { id: 4, name: 'КНР_ПРИБЫЛО' },
+  { id: 5, name: 'ЗАВЕРШЕН' },
+  { id: 6, name: 'ОТКАЗ' },
+];
 export const appRoutes = {
   notFound: '*',
   home: '/',
@@ -18,58 +39,39 @@ export const appRoutes = {
   orders: '/profile/orders',
   address: '/profile/address',
   history: '/profile/history',
+  information: '/profile/information',
+  myProfile: '/profile/myProfile',
+  profileAdmin: '/admin-profile',
+  statistics: '/admin-profile/statistics',
+  pups: '/admin-profile/pups',
+  staff: '/admin-profile/staff',
+  shipmentForm: '/admin-profile/shipmentForm',
+  shipments: '/admin-profile/shipments',
+  adminWarehousesAdd: '/admin-profile/warehouses-new',
+  adminWarehouses: '/admin-profile/warehouses',
+  adminWarehousesEdit: '/admin-profile/warehouse/:id',
+  adminCompanyAddress: '/admin-profile/company-addresses',
+  myAdminProfile: '/admin-profile/myProfile',
+  calculate: '/calculate',
+  warehouse: 'warehouseForm',
+  price: '/admin-profile/price',
+  priceLists: '/admin-profile/price-lists',
+  priceListsAdd: '/admin-profile/price-lists/add',
+  priceEdit: '/admin-profile/price/edit',
+  socials: '/admin-profile/socials',
+  socialsAdd: '/admin-profile/social-new',
+  socialsEdit: '/admin-profile/social/:id',
+  adminClients: '/admin-profile/clients',
+  adminBanned: '/admin-profile/banned',
 };
 
-export const userLinks: UserNav[] = [
-  {
-    id: 1,
-    name: 'Трекинг по номеру',
-    navLink: appRoutes.tracking,
-  },
-  {
-    id: 2,
-    name: 'Мои заказы',
-    navLink: appRoutes.orders,
-  },
-  {
-    id: 3,
-    name: 'Адреса складов',
-    navLink: appRoutes.address,
-  },
-  {
-    id: 4,
-    name: 'История заказов',
-    navLink: appRoutes.history,
-  },
+export const Statuses = [
+  'КР_ОТПРАВЛЕНО',
+  'КР_ПРИБЫЛО',
+  'КНР_ОТПРАВЛЕНО',
+  'КНР_ПРИБЫЛО',
+  'ЗАВЕРШЕН',
+  'ОТКАЗ',
 ];
 
-export const regions = [
-  {
-    id: 1,
-    name: 'Чуй',
-  },
-  {
-    id: 2,
-    name: 'Иссык-Куль',
-  },
-  {
-    id: 3,
-    name: 'Ош',
-  },
-  {
-    id: 4,
-    name: 'Талас',
-  },
-  {
-    id: 5,
-    name: 'Баткен',
-  },
-  {
-    id: 6,
-    name: 'Нарын',
-  },
-  {
-    id: 7,
-    name: 'Джалал-Абад',
-  },
-];
+export const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;

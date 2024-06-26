@@ -1,169 +1,93 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import { useAppSelector } from '../../../app/hooks';
+import React, { useState } from 'react';
+import { Button, Grid, Typography } from '@mui/material';
+
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser } from '../usersSlice';
-import { regions } from '../../../utils/constants';
-import { ProfileMutation } from '../../../types/typeProfile';
 
-const Profile = () => {
+import UserDialog from '../components/UserDialog';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import { IUser } from '../../../types/types.User';
+import { getOneUser, update } from '../usersThunks';
+
+const Profile: React.FC = () => {
   const user = useAppSelector(selectUser);
-
   const [open, setOpen] = useState(false);
-  const [state, setState] = useState<ProfileMutation>({
-    email: user?.email || '',
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    middleName: user?.middleName || '',
-    region: user?.region || '',
-    settlement: user?.settlement || '',
-    address: user?.address || '',
-  });
+  const dispatch = useAppDispatch();
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const isAdmin = user?.role === 'super' || user?.role === 'admin';
+  const handleClickOpen = async () => {
+    if (user !== null) {
+      await dispatch(getOneUser(user._id)).unwrap();
+      setOpen(true);
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setState((prevState) => {
-      return { ...prevState, [name]: value };
-    });
+  const onFormSubmit = async (userMutation: IUser) => {
+    dispatch(update(userMutation));
   };
 
   return (
-    <>
-      <Grid container direction="column" spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h2">ХардИмя ХардФамилия</Typography>
-          <Typography variant="h4">Ваш персональный код: ХардКод</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" onClick={handleClickOpen}>
-            Редактировать профиль
-          </Button>
-        </Grid>
-      </Grid>
-      {/* Modal */}
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogTitle>Редактирование профиля</DialogTitle>
-        <DialogContent>
-          <form autoComplete="off" style={{ paddingTop: '10px' }}>
-            {/*onsubmit */}
-            <Grid container direction="column" spacing={2}>
-              <Grid item xs={12} container gap={'10px'}>
-                <TextField
-                  id="firstName"
-                  label="Имя"
-                  value={state.firstName}
-                  onChange={inputChangeHandler}
-                  name="firstName"
-                  required
-                />
-                <TextField
-                  id="lastName"
-                  label="Фамилия"
-                  value={state.lastName}
-                  onChange={inputChangeHandler}
-                  name="lastName"
-                  required
-                />
-
-                <TextField
-                  id="middleName"
-                  label="Отчество"
-                  value={state.middleName}
-                  onChange={inputChangeHandler}
-                  name="middleName"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="email"
-                  label="Адрес электронной почты"
-                  value={state.email}
-                  onChange={inputChangeHandler}
-                  name="email"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  select
-                  required
-                  name="region"
-                  label="Регион"
-                  type="text"
-                  value={state.region}
-                  autoComplete="new-region"
-                  onChange={inputChangeHandler}
-                >
-                  <MenuItem value="" disabled>
-                    Выберите регион
-                  </MenuItem>
-                  {regions.map((region) => (
-                    <MenuItem key={region.id} value={region.name}>
-                      {region.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="settlement"
-                  label="Населенный пункт"
-                  value={state.settlement}
-                  onChange={inputChangeHandler}
-                  name="settlement"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="address"
-                  label="Адрес"
-                  value={state.address}
-                  onChange={inputChangeHandler}
-                  name="address"
-                  required
-                />
-              </Grid>
-
-              <Grid item xs>
-                <Button
-                  fullWidth
-                  type="submit"
-                  color="primary"
-                  variant="contained"
-                >
-                  Редактировать данные
-                </Button>
-              </Grid>
+    user && (
+      <>
+        <Grid container spacing={2} flexWrap="nowrap">
+          <Grid container direction="column" item>
+            <Grid item flexGrow={1}>
+              <Typography
+                gutterBottom
+                variant="h6"
+                component="h1"
+                fontWeight="bold"
+              >
+                {user?.firstName} {user?.lastName}
+              </Typography>
+              {isAdmin ? (
+                <></>
+              ) : (
+                <>
+                  <Typography variant="subtitle1">
+                    Ваш персональный код: {user?.marketId}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Ваш адрес: {user?.region.name} область, {user?.settlement}{' '}
+                    {user?.address}
+                  </Typography>
+                  {!user?.pupID ? (
+                    <Typography
+                      color={'red'}
+                      sx={{ fontWeight: 600 }}
+                      variant="subtitle1"
+                    >
+                      Нет ПВЗ
+                    </Typography>
+                  ) : (
+                    <Typography variant="subtitle1">
+                      Ваш {user?.pupID.name} находится по адресу:{' '}
+                      {user?.pupID.address}
+                    </Typography>
+                  )}
+                </>
+              )}
             </Grid>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+            <Grid item sx={{ marginTop: 1 }}>
+              <Button
+                variant="contained"
+                startIcon={<BorderColorIcon />}
+                onClick={handleClickOpen}
+                color="primary"
+                sx={{ textTransform: 'none' }}
+              >
+                Редактировать профиль
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <UserDialog onSubmit={onFormSubmit} open={open} onClose={handleClose} />
+      </>
+    )
   );
 };
 

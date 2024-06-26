@@ -1,19 +1,22 @@
-import { Grid } from '@mui/material';
+import { Grid, useMediaQuery } from '@mui/material';
 import UserNavigation from './components/UserNavigation';
 import { Outlet } from 'react-router-dom';
-import Profile from './containers/Profile';
 
 const UserPage = () => {
+  const isSmallScreen = useMediaQuery('(max-width:850px)');
+
   return (
     <>
       <Grid container>
-        <Grid item xs={12} bgcolor="#f5f5f5" px={3} mb={5}>
-          <Profile />
-        </Grid>
-        <Grid item xs={4} pr={2} borderRight="1px solid #f5f5f5">
+        <Grid
+          item
+          xs={3}
+          pr={2}
+          sx={{ display: isSmallScreen ? 'none' : 'block' }}
+        >
           <UserNavigation />
         </Grid>
-        <Grid item xs={8} pl={2}>
+        <Grid item xs={12} px={3} pt={2} sm={isSmallScreen ? false : 9}>
           <Outlet />
         </Grid>
       </Grid>

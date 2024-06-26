@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Grid, Modal, TextField, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import {
-  selectOrderModal,
-  selectOrdersDeliveryLoading,
-  toggleModal,
-} from '../ordersSlice';
+import { idToModalState, selectOrderModal, toggleModal } from '../ordersSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
-import { ShipmentAddress, ShipmentMutation } from '../../../types/typeOrder';
+import { DeliveryData, ShipmentAddress } from '../../../types/types.Order';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { selectUser } from '../../users/usersSlice';
+import PhoneInput from 'react-phone-input-2';
+import {
+  fetchShipmentsByUser,
+  orderDelivery,
+} from '../../shipments/shipmentsThunk';
 
 const style = {
   position: 'absolute',
@@ -27,26 +29,38 @@ const style = {
 
 const initialState: ShipmentAddress = {
   address: '',
+  phoneNumber: '',
   date: dayjs(new Date()),
 };
 const OrderModal = () => {
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const open = useAppSelector(selectOrderModal);
-  const setDelivery = useAppSelector(selectOrdersDeliveryLoading);
-
+  const selectedShipmentId = useAppSelector(idToModalState);
   const [state, setState] = useState<ShipmentAddress>(initialState);
-  const [isFilled, setIsFilled] = useState(false);
+
+  useEffect(() => {
+    if (user?.address !== '') {
+      setState((prevState) => ({
+        ...prevState,
+        address: user?.address as string,
+      }));
+    }
+    if (user?.phoneNumber !== '') {
+      setState((prevState) => ({
+        ...prevState,
+        phoneNumber: user?.phoneNumber as string,
+      }));
+    }
+  }, [user?.address, user?.phoneNumber]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const toggleResult = () => {
-    if (state.address.length > 0) {
-      setIsFilled(!isFilled);
-    }
+  const handlePhoneChange = (value: string) => {
+    setState((prevState) => ({ ...prevState, phoneNumber: value }));
   };
 
   const handleDateChange = (newValue: dayjs.Dayjs | null) => {
@@ -58,8 +72,7 @@ const OrderModal = () => {
 
   const handleClose = () => {
     dispatch(toggleModal(false));
-    setState(initialState);
-    setIsFilled(false);
+    dispatch(fetchShipmentsByUser(user?.marketId as string));
   };
 
   const dateFormatted = state.date
@@ -69,96 +82,89 @@ const OrderModal = () => {
   const onFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const stateMutation: ShipmentMutation = {
+    const deliveryData: DeliveryData = {
+      _id: selectedShipmentId,
       address: state.address,
+      phoneNumber: state.phoneNumber,
       date: dateFormatted,
     };
 
-    console.log(stateMutation);
+    dispatch(orderDelivery(deliveryData));
+    if (user) {
+      dispatch(fetchShipmentsByUser(user?.marketId));
+    }
+    handleClose();
   };
 
   return (
     <>
       <Modal
-        open={open}
+        open={open === undefined ? false : open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box component="form" sx={style} onSubmit={onFormSubmit}>
-          {!isFilled && (
-            <>
-              <Typography gutterBottom variant="h5" component="h2" mb={3}>
-                Укажите адрес и время доставки
-              </Typography>
-
-              <Grid container mb={5}>
-                <Grid item xs={12} mb={2} flexGrow={1}>
-                  <TextField
-                    fullWidth
-                    required
-                    variant="standard"
-                    name="address"
-                    label="Адрес"
-                    type="text"
-                    value={state.address}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item xs={12} mb={3}>
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    adapterLocale={'ru'}
-                  >
-                    <DatePicker
-                      label="Дата доставки"
-                      name="date"
-                      value={state.date}
-                      onChange={handleDateChange}
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    startIcon={<CheckCircleIcon />}
-                    color="success"
-                    onClick={toggleResult}
-                  >
-                    Подтвердить
-                  </Button>
-                </Grid>
+          <>
+            <Typography gutterBottom variant="h5" component="h2" mb={3}>
+              Введите данные
+            </Typography>
+            <Grid container mb={5}>
+              <Grid item xs={12} mb={2} flexGrow={1}>
+                <TextField
+                  fullWidth
+                  required
+                  variant="standard"
+                  name="address"
+                  label="Адрес"
+                  type="text"
+                  value={state.address}
+                  onChange={handleChange}
+                />
               </Grid>
-            </>
-          )}
-
-          {isFilled && (
-            <>
+              <Grid item xs={12} mb={2} flexGrow={1}>
+                <PhoneInput
+                  country="kg"
+                  masks={{ kg: '(...) ..-..-..' }}
+                  onlyCountries={['kg']}
+                  containerStyle={{ width: '100%' }}
+                  value={state.phoneNumber}
+                  onChange={handlePhoneChange}
+                  defaultErrorMessage={'Неправильный ввод'}
+                  specialLabel="Номер телефона*"
+                  disableDropdown
+                  inputStyle={{ width: '100%' }}
+                  inputProps={{
+                    name: 'phoneNumber',
+                    required: true,
+                  }}
+                />
+              </Grid>
               <Grid item xs={12} mb={3}>
-                <Typography gutterBottom variant="h5" component="h2" mb={3}>
-                  Пожалуйста, проверьте введенные данные перед отправкой:
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <strong>Адрес:</strong> {state.address}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  <strong>Дата доставки:</strong> {dateFormatted}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} display="flex" gap={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  disabled={setDelivery}
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale={'ru'}
                 >
-                  Оформить доставку
-                </Button>
-                <Button variant="text" onClick={toggleResult}>
-                  Редактировать
+                  <DatePicker
+                    label="Дата доставки"
+                    name="date"
+                    value={state.date}
+                    onChange={handleDateChange}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  startIcon={<CheckCircleIcon />}
+                  color="success"
+                  type="submit"
+                >
+                  Подтвердить
                 </Button>
               </Grid>
-            </>
-          )}
+            </Grid>
+          </>
         </Box>
       </Modal>
     </>

@@ -1,7 +1,6 @@
 import Warehouses from '../../warehouses/Warehouses';
 import { Alert, Box, Grid, useMediaQuery } from '@mui/material';
 import Banned from '../../banned/Banned';
-import videoTutorial from '../../../assets/tutorial.webm';
 
 const Information = () => {
   const isMediumScreen = useMediaQuery('(max-width:1056px)');
@@ -33,7 +32,7 @@ const Information = () => {
               loading="lazy"
               allowFullScreen
               referrerPolicy="no-referrer-when-downgrade"
-              src={videoTutorial}
+              src={'https://www.youtube.com/embed/__XzIIELWZw'}
             ></iframe>
           </Box>
           <Box>
